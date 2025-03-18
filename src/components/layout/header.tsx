@@ -1,0 +1,178 @@
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import {
+  Bell,
+  ChevronDown,
+  LayoutDashboard,
+  Loader,
+  LogOut,
+} from "lucide-react";
+
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+import { useAlert } from "~/hooks/use-alert";
+import { useNotifications } from "~/hooks/use-notifications";
+import { useAppDispatch, useAppSelector } from "~/store";
+import { logout } from "~/store/auth-slice";
+import { getError } from "~/utils/error";
+import { cn } from "~/utils/style";
+import { ButtonLink } from "../custom-ui/button-link";
+import { Skeleton } from "../ui/skeleton";
+
+interface HeaderProps {
+  dashboard?: boolean;
+}
+
+const Header = (props: HeaderProps) => {
+  const { dashboard } = props;
+
+  const router = useRouter();
+
+  const { component, openAlert } = useAlert();
+  const { userData, status } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+
+  const { data: notifications, loading } = useNotifications({
+    receiver: userData?.id,
+    enabled: !!userData,
+  });
+
+  const handleLogout = async () => {
+    try {
+      // const redirect = userData?.role === "admin" ? "/admin/login" : "/login";
+
+      await dispatch(logout()).unwrap();
+
+      router.replace("/login");
+    } catch (error) {
+      const err = getError(error, "Failed user logout.");
+
+      openAlert({
+        title: "Failed",
+        description: err.message,
+      });
+    }
+  };
+
+  return (
+    <>
+      <header className="fixed left-0 right-0 top-0 z-50 border-b-4 border-b-flush-orange-500 bg-violet-950 text-white">
+        <div
+          className={cn(
+            "flex h-24 items-center justify-between gap-4",
+            !dashboard && "container",
+            dashboard && "px-4",
+          )}
+        >
+          <div className="flex items-center gap-4">
+            <Link href="/">
+              <Image
+                className="size-12"
+                src="/images/logo.png"
+                alt="logo"
+                width={1600}
+                height={1600}
+              />
+            </Link>
+
+            <span className="">BISU - BALILIHAN CAMPUS</span>
+          </div>
+
+          <div className="flex items-center gap-8">
+            {status !== "fetched" ? (
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-12 w-12 rounded-full" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+            ) : userData ? (
+              <>
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="outline-none">
+                    <Bell className="h-6 w-6" />
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent className="w-40">
+                    {loading && (
+                      <DropdownMenuItem>
+                        <Loader className="h-4 w-4 animate-spin" />
+                      </DropdownMenuItem>
+                    )}
+
+                    {!loading && notifications.length === 0 && (
+                      <DropdownMenuItem>
+                        <span>No notifications.</span>
+                      </DropdownMenuItem>
+                    )}
+
+                    {!loading &&
+                      notifications.map((n) => (
+                        <DropdownMenuItem className="flex flex-col" key={n.id}>
+                          <span>{n.title}</span>
+                          <span className="text-sm text-gray-500">
+                            {n.body}
+                          </span>
+                        </DropdownMenuItem>
+                      ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="flex items-center gap-2 rounded-md bg-flush-orange-500 p-2 outline-none">
+                    <Avatar>
+                      <AvatarImage
+                        src={userData.profile}
+                        alt={userData.firstName}
+                      />
+
+                      <AvatarFallback>
+                        {userData.firstName.substring(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+
+                    <span>{userData.firstName}</span>
+
+                    <ChevronDown className="size-4" />
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent className="w-40">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+
+                    <DropdownMenuSeparator />
+
+                    <DropdownMenuItem asChild>
+                      <Link href={`/${userData.role}`}>
+                        <LayoutDashboard className="size-4" />
+                        <span>Dashboard</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem onClick={handleLogout}>
+                      <LogOut className="size-4" />
+                      <span>Logout</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+            ) : (
+              <ButtonLink variant="yellow" href="/login">
+                LOGIN
+              </ButtonLink>
+            )}
+          </div>
+        </div>
+      </header>
+
+      {component}
+    </>
+  );
+};
+
+export { Header };

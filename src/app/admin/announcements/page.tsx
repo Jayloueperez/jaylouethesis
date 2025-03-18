@@ -1,0 +1,78 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+import { AnnouncementCard } from "~/components/custom-ui/announcement-card";
+import { CreateAnnouncementDialog } from "~/components/dialogs/create-announcement-dialog";
+import { AdminLayout } from "~/components/layout/admin-layout";
+import { Button } from "~/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { getAnnouncementsRealtime } from "~/lib/firebase/client/firestore";
+import { AnnouncementSchema } from "~/schema/data";
+
+const AdminAnnouncementsPage = () => {
+  const [announcements, setAnnouncements] = useState<AnnouncementSchema[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [sort, setSort] = useState<
+    "latest" | "oldest" | "latest-by-date" | "oldest-by-date"
+  >("latest");
+
+  useEffect(() => {
+    const unsubscribe = getAnnouncementsRealtime({ sort })(setAnnouncements);
+
+    return unsubscribe;
+  }, [sort]);
+
+  return (
+    <AdminLayout className="gap-4 p-4">
+      <div className="flex h-16 items-center justify-between">
+        <span className="text-xl font-medium">Announcements</span>
+
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2">
+            <span>Sort:</span>
+
+            <Select
+              value={sort}
+              onValueChange={(v) => setSort(v as "latest" | "oldest")}
+            >
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+
+              <SelectContent>
+                <SelectItem value="latest">Latest created</SelectItem>
+                <SelectItem value="oldest">Oldest created</SelectItem>
+                <SelectItem value="latest-by-date">Latest by date</SelectItem>
+                <SelectItem value="oldest-by-date">Oldest by date</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button variant="yellow" onClick={() => setOpen(true)}>
+            Create Announcement
+          </Button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        {announcements.map((announcement, i) => (
+          <AnnouncementCard
+            key={`announcement-${i}`}
+            announcement={announcement}
+          />
+        ))}
+      </div>
+
+      {open && <CreateAnnouncementDialog open={open} onOpenChange={setOpen} />}
+    </AdminLayout>
+  );
+};
+
+export default AdminAnnouncementsPage;

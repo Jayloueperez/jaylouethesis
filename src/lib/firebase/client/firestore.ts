@@ -1,0 +1,972 @@
+import {
+  and,
+  collection,
+  CollectionReference,
+  deleteDoc,
+  doc,
+  DocumentData,
+  getDoc,
+  getDocs,
+  limit,
+  onSnapshot,
+  or,
+  orderBy,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from "firebase/firestore";
+import _ from "lodash";
+
+import {
+  CreateAnnouncementInputSchema,
+  CreateNotificationInputSchema,
+  CreateTalentInputSchema,
+  CreateTalentTryoutInputSchema,
+  UpdateAnnouncementInputSchema,
+  UpdateTalentInputSchema,
+  UpdateTalentTryoutInputSchema,
+} from "~/schema/crud";
+import {
+  announcementSchema,
+  AnnouncementSchema,
+  AnnouncementTypeSchema,
+  applicationSchema,
+  ApplicationSchema,
+  ApplicationStatusSchema,
+  MessageContainerSchema,
+  MessageSchema,
+  notificationSchema,
+  NotificationSchema,
+  talentSchema,
+  TalentSchema,
+  talentTryoutSchema,
+  TalentTryoutSchema,
+  TalentTypeSchema,
+  UserRoleSchema,
+  userSchema,
+  UserSchema,
+} from "~/schema/data";
+import { getError } from "~/utils/error";
+import { generateKeywords } from "~/utils/string";
+import { firestore } from ".";
+import { sendNotification } from "./messaging";
+
+export const createCollection = <T extends DocumentData>(
+  path: string,
+  ...pathSegments: string[]
+) => collection(firestore, path, ...pathSegments) as CollectionReference<T, T>;
+
+export const USERS_COLLECTION = createCollection<UserSchema>("users");
+export const TALENTS_COLLECTION = createCollection<TalentSchema>("talents");
+export const ANNOUNCEMENTS_COLLECTION =
+  createCollection<AnnouncementSchema>("announcements");
+export const MESSAGE_CONTAINERS_COLLECTION =
+  createCollection<MessageContainerSchema>("message-containers");
+export const MESSAGES_COLLECTION = createCollection<MessageSchema>("messages");
+export const APPLICATION_COLLECTION =
+  createCollection<ApplicationSchema>("application");
+export const NOTIFICATION_COLLECTION =
+  createCollection<NotificationSchema>("notification");
+export const TALENT_TRYOUT_COLLECTION =
+  createCollection<TalentTryoutSchema>("talent-tryout");
+
+export const checkUser = async (email: string, role: UserRoleSchema) => {
+  try {
+    const result = await getDocs(
+      query(USERS_COLLECTION, where("email", "==", email), limit(1)),
+    );
+
+    if (result.docs.length === 0) throw new Error("User not found.");
+
+    const { data, error } = userSchema.safeParse(result.docs[0].data());
+
+    if (error) {
+      console.log("getUserBy error:", error);
+      throw new Error("Invalid user data.");
+    }
+
+    if (data.role !== role) throw new Error(`User is not ${role}.`);
+
+    return data;
+  } catch (error) {
+    console.log("getUserBy error:", error);
+    const err = getError(error, "Failed getting user.");
+
+    throw err;
+  }
+};
+
+export const checkUserExist = async (id: string) => {
+  try {
+    const result = await getDoc(doc(USERS_COLLECTION, id));
+
+    return result.exists();
+  } catch (error) {
+    console.log("checkUserExist error:", error);
+    const err = getError(error, "Failed checking if user exist.");
+
+    throw err;
+  }
+};
+
+export const createUser = async (
+  id: string,
+  data: Omit<UserSchema, "id" | "dateCreated" | "dateUpdated">,
+) => {
+  try {
+    const ref = doc(USERS_COLLECTION, id);
+
+    await setDoc(ref, {
+      id,
+      ...data,
+      dateCreated: new Date(),
+      dateUpdated: new Date(),
+    });
+
+    return id;
+  } catch (error) {
+    console.log("createUser error:", error);
+    const err = getError(error, "Failed creating new user.");
+
+    throw err;
+  }
+};
+
+export const updateUser = async (
+  id: string,
+  data: Partial<Omit<UserSchema, "id" | "dateCreated" | "dateUpdated">>,
+) => {
+  try {
+    const ref = doc(USERS_COLLECTION, id);
+
+    await updateDoc(ref, {
+      ...data,
+      dateUpdated: new Date(),
+    });
+
+    return true;
+  } catch (error) {
+    console.log("updateUser error:", error);
+    const err = getError(error, "Failed updating user data.");
+
+    throw err;
+  }
+};
+
+export const deleteUser = async (id: string) => {
+  try {
+    const ref = doc(USERS_COLLECTION, id);
+
+    return deleteDoc(ref);
+  } catch (error) {
+    console.log("deleteUser error:", error);
+    const err = getError(error, "Failed deleting user.");
+
+    throw err;
+  }
+};
+
+export const getUser = async (id: string) => {
+  try {
+    const snapshot = await getDoc(doc(USERS_COLLECTION, id));
+
+    const { data, error } = userSchema.safeParse(snapshot.data());
+
+    if (error) {
+      console.log("getUser error:", error);
+      throw new Error("Invalid user data.");
+    }
+
+    return data;
+  } catch (error) {
+    console.log("getUser error:", error);
+    const err = getError(error, "Failed getting user.");
+
+    throw err;
+  }
+};
+
+export const getUserRealtime =
+  (id: string) => (callback: (user: UserSchema | null) => void) =>
+    onSnapshot(doc(USERS_COLLECTION, id), (snapshot) => {
+      if (!snapshot.exists()) return callback(null);
+
+      const { data, error } = userSchema.safeParse(snapshot.data());
+
+      if (error) console.log("getUserRealtime error:", error);
+
+      callback(data ?? null);
+    });
+
+export const getUsers = async (params?: {
+  ids?: string[];
+  role?: UserRoleSchema;
+}) => {
+  try {
+    const { ids, role } = params ?? {};
+
+    let q = query(USERS_COLLECTION);
+
+    if (ids && ids.length > 0) q = query(q, where("id", "in", ids));
+    if (role) q = query(q, where("role", "==", role));
+
+    const snapshot = await getDocs(q);
+    if (snapshot.docs.length === 0) return [];
+
+    const { data, error } = userSchema
+      .array()
+      .safeParse(snapshot.docs.map((d) => d.data()));
+
+    if (error) console.log("getUsers error:", error);
+
+    return data ?? [];
+  } catch (error) {
+    console.log("getUsers error:", error);
+    const err = getError(error, "Failed getting users.");
+
+    throw err;
+  }
+};
+
+export const getUsersRealtime =
+  (params?: { ids?: string[]; role?: UserRoleSchema }) =>
+  (callback: (users: UserSchema[]) => void) => {
+    const { ids, role } = params ?? {};
+
+    let q = query(USERS_COLLECTION);
+
+    if (ids && ids.length > 0) q = query(q, where("id", "in", ids));
+    if (role) q = query(q, where("role", "==", role));
+
+    return onSnapshot(q, (snapshot) => {
+      if (snapshot.size === 0) return callback([]);
+
+      const { data, error } = userSchema
+        .array()
+        .safeParse(snapshot.docs.map((d) => d.data()));
+
+      if (error) console.log("getUsersRealtime error:", error);
+
+      callback(data ?? []);
+    });
+  };
+
+/**
+ * TALENT
+ */
+export const createTalent = async (data: CreateTalentInputSchema) => {
+  try {
+    const ref = doc(TALENTS_COLLECTION);
+
+    await setDoc(ref, {
+      ...data,
+      keywords: generateKeywords(data.name),
+      id: ref.id,
+      dateCreated: new Date(),
+      dateUpdated: new Date(),
+    });
+
+    return ref.id;
+  } catch (error) {
+    console.log("createTalent error:", error);
+    const err = getError(error, "Failed creating talent.");
+
+    throw err;
+  }
+};
+
+export const updateTalent = async (
+  id: string,
+  data: UpdateTalentInputSchema,
+) => {
+  try {
+    const ref = doc(TALENTS_COLLECTION, id);
+
+    return updateDoc(ref, {
+      ...data,
+      ...(data.name ? { keywords: generateKeywords(data.name) } : {}),
+      dateUpdated: new Date(),
+    });
+  } catch (error) {
+    console.log("updateTalent error:", error);
+    const err = getError(error, "Failed updating talent.");
+
+    throw err;
+  }
+};
+
+export const deleteTalent = async (id: string) => {
+  try {
+    const ref = doc(TALENTS_COLLECTION, id);
+
+    return deleteDoc(ref);
+  } catch (error) {
+    console.log("deleteTalent error:", error);
+    const err = getError(error, "Failed deleting talent.");
+
+    throw err;
+  }
+};
+
+export const getTalent = async (id: string) => {
+  try {
+    const ref = doc(TALENTS_COLLECTION, id);
+    const snapshot = await getDoc(ref);
+
+    const { data, error } = talentSchema.safeParse(snapshot.data());
+
+    if (error) {
+      console.log("getTalent error:", error);
+      throw new Error(error.issues[0].message);
+    }
+
+    return data;
+  } catch (error) {
+    console.log("getTalent error:", error);
+    const err = getError(error, "Failed getting talent.");
+
+    throw err;
+  }
+};
+
+export const getTalentRealtime =
+  (id: string) => (callback: (talent: TalentSchema | null) => void) => {
+    const ref = doc(TALENTS_COLLECTION, id);
+
+    return onSnapshot(ref, (snapshot) => {
+      const { data, error } = talentSchema.safeParse(snapshot.data());
+
+      if (error) console.log("getTalentRealtime error:", error);
+
+      callback(data ?? null);
+    });
+  };
+
+export const getTalents = async (params?: {
+  ids?: string[];
+  type?: TalentTypeSchema;
+}) => {
+  try {
+    const { ids, type } = params ?? {};
+
+    let q = query(TALENTS_COLLECTION);
+
+    if (ids) q = query(q, where("id", "in", ids));
+    if (type) q = query(q, where("type", "==", type));
+
+    const snapshot = await getDocs(q);
+
+    const { data, error } = talentSchema
+      .array()
+      .safeParse(snapshot.docs.map((d) => d.data()));
+
+    if (error) {
+      console.log("getTalents error:", error);
+      throw new Error(error.issues[0].message);
+    }
+
+    return data;
+  } catch (error) {
+    console.log("getTalents error:", error);
+    const err = getError(error, "Failed getting talents.");
+
+    throw err;
+  }
+};
+
+export const getTalentsRealtime =
+  (params?: { ids?: string[]; type?: TalentTypeSchema }) =>
+  (callback: (talents: TalentSchema[]) => void) => {
+    const { ids, type } = params ?? {};
+
+    let q = query(TALENTS_COLLECTION);
+
+    if (ids) q = query(q, where("id", "in", ids));
+    if (type) q = query(q, where("type", "==", type));
+
+    return onSnapshot(q, (snapshot) => {
+      if (snapshot.size === 0) return callback([]);
+
+      const { data, error } = talentSchema
+        .array()
+        .safeParse(snapshot.docs.map((d) => d.data()));
+
+      if (error) console.log("getTalentsRealtime error:", error);
+
+      callback(data ?? []);
+    });
+  };
+
+/**
+ * TALENT_TRYOUT
+ */
+export const createTalentTryout = async (
+  data: CreateTalentTryoutInputSchema,
+) => {
+  try {
+    const ref = doc(TALENT_TRYOUT_COLLECTION);
+
+    await setDoc(ref, {
+      ...data,
+      id: ref.id,
+      dateCreated: new Date(),
+      dateUpdated: new Date(),
+    });
+
+    return ref.id;
+  } catch (error) {
+    console.log("createTalentTryout error:", error);
+    const err = getError(error, "Failed creating talent tryout.");
+
+    throw err;
+  }
+};
+
+export const updateTalentTryout = async (
+  id: string,
+  data: UpdateTalentTryoutInputSchema,
+) => {
+  try {
+    const ref = doc(TALENT_TRYOUT_COLLECTION, id);
+
+    return updateDoc(ref, {
+      ...data,
+      dateUpdated: new Date(),
+    });
+  } catch (error) {
+    console.log("updateTalentTryout error:", error);
+    const err = getError(error, "Failed updating talent tryout.");
+
+    throw err;
+  }
+};
+
+export const deleteTalentTryout = async (id: string) => {
+  try {
+    const ref = doc(TALENT_TRYOUT_COLLECTION, id);
+
+    return deleteDoc(ref);
+  } catch (error) {
+    console.log("deleteTalentTryout error:", error);
+    const err = getError(error, "Failed deleting talent tryout.");
+
+    throw err;
+  }
+};
+
+export const getTalentTryouts = async (params?: {
+  talentId?: string;
+  talentType?: TalentTypeSchema;
+  dateAfter?: number;
+  dateBefore?: number;
+}) => {
+  try {
+    const { dateAfter, dateBefore, talentId, talentType } = params ?? {};
+
+    let q = query(TALENT_TRYOUT_COLLECTION);
+
+    if (talentId) q = query(q, where("talentId", "==", talentId));
+    if (talentType) q = query(q, where("talentType", "==", talentType));
+    if (dateAfter) q = query(q, where("date", ">=", dateAfter));
+    if (dateBefore) q = query(q, where("date", "<=", dateBefore));
+
+    q = query(q, orderBy("date", "asc"));
+
+    const result = await getDocs(q);
+
+    if (result.size === 0) return [];
+
+    const { data, error } = talentTryoutSchema
+      .array()
+      .safeParse(result.docs.map((d) => d.data()));
+
+    if (error) console.log("getTalentTryouts error:", error);
+
+    return data ?? [];
+  } catch (error) {
+    console.log("getTalentTryouts error:", error);
+    const err = getError(error, "Failed getting talent tryouts.");
+
+    throw err;
+  }
+};
+
+export const getTalentTryoutsRealtime =
+  (params?: {
+    talentId?: string;
+    talentType?: TalentTypeSchema;
+    dateAfter?: number;
+    dateBefore?: number;
+  }) =>
+  (callback: (talentTryouts: TalentTryoutSchema[]) => void) => {
+    const { dateAfter, dateBefore, talentId, talentType } = params ?? {};
+
+    let q = query(TALENT_TRYOUT_COLLECTION);
+
+    if (talentId) q = query(q, where("talentId", "==", talentId));
+    if (talentType) q = query(q, where("talentType", "==", talentType));
+    if (dateAfter) q = query(q, where("date", ">=", dateAfter));
+    if (dateBefore) q = query(q, where("date", "<=", dateBefore));
+
+    q = query(q, orderBy("date", "asc"));
+
+    return onSnapshot(q, (snapshot) => {
+      if (snapshot.size === 0) return callback([]);
+
+      const { data, error } = talentTryoutSchema
+        .array()
+        .safeParse(snapshot.docs.map((d) => d.data()));
+
+      if (error) console.log("getTalentTryoutsRealtime error:", error);
+
+      callback(data ?? []);
+    });
+  };
+
+/**
+ * ANNOUNCEMENT
+ */
+export const createAnnouncement = async (
+  data: CreateAnnouncementInputSchema,
+) => {
+  try {
+    const ref = doc(ANNOUNCEMENTS_COLLECTION);
+
+    await setDoc(ref, {
+      ...data,
+      id: ref.id,
+      dateCreated: new Date(),
+      dateUpdated: new Date(),
+    });
+
+    return ref.id;
+  } catch (error) {
+    console.log("createAnnouncement error:", error);
+    const err = getError(error, "Failed creating announcement.");
+
+    throw err;
+  }
+};
+
+export const updateAnnouncement = async (
+  id: string,
+  data: UpdateAnnouncementInputSchema,
+) => {
+  try {
+    const ref = doc(ANNOUNCEMENTS_COLLECTION, id);
+
+    return updateDoc(ref, {
+      ...data,
+      dateUpdated: new Date(),
+    });
+  } catch (error) {
+    console.log("updateAnnouncement error:", error);
+    const err = getError(error, "Failed updating announcement.");
+
+    throw err;
+  }
+};
+
+export const deleteAnnouncement = async (id: string) => {
+  try {
+    const ref = doc(ANNOUNCEMENTS_COLLECTION, id);
+
+    return deleteDoc(ref);
+  } catch (error) {
+    console.log("deleteAnnouncement error:", error);
+    const err = getError(error, "Failed deleting announcement.");
+
+    throw err;
+  }
+};
+
+export const getAnnouncement = async (id: string) => {
+  try {
+    const snapshot = await getDoc(doc(ANNOUNCEMENTS_COLLECTION, id));
+    const { data, error } = announcementSchema.safeParse(snapshot.data());
+
+    if (error) console.log("getAnnouncement error:", error);
+
+    return data ?? null;
+  } catch (error) {
+    console.log("getAnnouncement error:", error);
+    const err = getError(error, "Failed getting announcement.");
+
+    throw err;
+  }
+};
+
+export const getAnnouncementRealtime =
+  (id: string) =>
+  (callback: (announcement: AnnouncementSchema | null) => void) =>
+    onSnapshot(doc(ANNOUNCEMENTS_COLLECTION, id), (snapshot) => {
+      const { data, error } = announcementSchema.safeParse(snapshot.data());
+
+      if (error) console.log("getAnnouncementRealtime error:", error);
+
+      callback(data ?? null);
+    });
+
+export const getAnnouncementsRealtime =
+  (params?: {
+    ids?: string[];
+    type?:
+      | Exclude<AnnouncementTypeSchema, "ids">
+      | Exclude<AnnouncementTypeSchema, "ids">[];
+    forIds?: string[];
+    sort?: "latest" | "oldest" | "latest-by-date" | "oldest-by-date";
+  }) =>
+  (callback: (announcements: AnnouncementSchema[]) => void) => {
+    const { ids, type, forIds, sort = "latest" } = params ?? {};
+
+    let q = query(ANNOUNCEMENTS_COLLECTION);
+
+    if (ids) q = query(q, where("id", "in", ids));
+    if (type && forIds && forIds.length > 0) {
+      if (typeof type === "string") {
+        q = query(
+          q,
+          or(
+            where("type", "==", type),
+            and(
+              where("type", "==", "ids"),
+              where("for", "array-contains-any", forIds),
+            ),
+          ),
+        );
+      }
+
+      if (typeof type === "object" && type.length > 0) {
+        q = query(
+          q,
+          or(
+            where("type", "in", type),
+            and(
+              where("type", "==", "ids"),
+              where("for", "array-contains-any", forIds),
+            ),
+          ),
+        );
+      }
+    } else {
+      if (typeof type === "string") q = query(q, where("type", "==", type));
+      if (typeof type === "object" && type.length > 0)
+        q = query(q, where("type", "in", type));
+      if (forIds && forIds.length > 0)
+        q = query(
+          q,
+          where("type", "==", "ids"),
+          where("for", "array-contains-any", forIds),
+        );
+    }
+
+    if (sort === "latest") q = query(q, orderBy("dateCreated", "desc"));
+    else if (sort === "oldest") q = query(q, orderBy("dateCreated", "asc"));
+    else if (sort === "latest-by-date") q = query(q, orderBy("date", "desc"));
+    else q = query(q, orderBy("date", "asc"));
+
+    return onSnapshot(q, (snapshot) => {
+      if (snapshot.size === 0) return callback([]);
+
+      const { data, error } = announcementSchema
+        .array()
+        .safeParse(snapshot.docs.map((d) => d.data()));
+
+      if (error) console.log("getAnnouncementsRealtime error:", error);
+
+      callback(data ?? []);
+    });
+  };
+
+/**
+ * NOTIFICATIONS
+ */
+export const createNotification = async (
+  data: CreateNotificationInputSchema,
+) => {
+  try {
+    const ref = doc(NOTIFICATION_COLLECTION);
+
+    await setDoc(ref, {
+      ...data,
+      id: ref.id,
+      isRead: [],
+      dateCreated: new Date(),
+      dateUpdated: new Date(),
+    });
+
+    return ref.id;
+  } catch (error) {
+    console.log("createNotification error:", error);
+    const err = getError(error, "Failed creating new notification.");
+
+    throw err;
+  }
+};
+
+export const getNotificationsRealtime =
+  (params?: { sender?: string; receiver?: string }) =>
+  (callback: (notifications: NotificationSchema[]) => void) => {
+    const { receiver, sender } = params ?? {};
+
+    let q = query(NOTIFICATION_COLLECTION);
+
+    if (receiver) q = query(q, where("receiver", "==", receiver));
+    if (sender) q = query(q, where("sender", "==", sender));
+
+    return onSnapshot(q, (snapshot) => {
+      if (snapshot.size === 0) return callback([]);
+
+      const { data, error } = notificationSchema
+        .array()
+        .safeParse(snapshot.docs.map((d) => d.data()));
+
+      if (error) console.log("getNotificationsRealtime error", error);
+
+      callback(data ?? []);
+    });
+  };
+
+/**
+ * APPLICATIONS
+ */
+export const createApplication = async (
+  data: Omit<ApplicationSchema, "id" | "dateCreated" | "dateUpdated">,
+) => {
+  try {
+    const studentData = await getUser(data.userId);
+    const talentData = await getTalent(data.talentId);
+
+    if (!talentData) throw new Error(`Cannot find ${data.talentType} data.`);
+
+    const exists = await getDocs(
+      query(
+        APPLICATION_COLLECTION,
+        where("talentType", "==", data.talentType),
+        where("talentId", "==", data.talentId),
+        where("userId", "==", data.userId),
+        where("status", "not-in", ["rejected", "accepted"]),
+        limit(1),
+      ),
+    );
+
+    if (exists.size > 0)
+      throw new Error(
+        `You currently have an ongoing application of this ${data.talentType}.`,
+      );
+
+    const ref = doc(APPLICATION_COLLECTION);
+
+    await setDoc(ref, {
+      ...data,
+      id: ref.id,
+      dateCreated: new Date(),
+      dateUpdated: new Date(),
+    });
+
+    await sendNotification({
+      title: `New ${_.upperFirst(data.talentType)} Application`,
+      body: `${studentData.firstName} sent an application for ${talentData.name}.`,
+      // isRead: [],
+      receiver: data.talentId,
+      sender: data.userId,
+    });
+
+    await createNotification({
+      title: `New ${_.upperFirst(data.talentType)} Application`,
+      body: `${studentData.firstName} sent an application for ${talentData.name}.`,
+      // isRead: [],
+      receiver: data.talentId,
+      sender: data.userId,
+    });
+
+    return ref.id;
+  } catch (error) {
+    console.log("createApplication error:", error);
+    const err = getError(error, "Failed creating new application.");
+
+    throw err;
+  }
+};
+
+export const updateApplication = async (
+  id: string,
+  data: Partial<Omit<ApplicationSchema, "id" | "dateCreated" | "dateUpdated">>,
+) => {
+  try {
+    const ref = doc(APPLICATION_COLLECTION, id);
+
+    return updateDoc(ref, { ...data, dateUpdated: new Date() });
+  } catch (error) {
+    console.log("updateApplication error:", error);
+    const err = getError(error, "Failed updating application.");
+
+    throw err;
+  }
+};
+
+export const getApplicationBy = async (
+  params: Pick<ApplicationSchema, "talentType" | "talentId" | "userId">,
+) => {
+  try {
+    const { talentType, talentId, userId } = params;
+
+    const snapshot = await getDocs(
+      query(
+        APPLICATION_COLLECTION,
+        where("talentType", "==", talentType),
+        where("talentId", "==", talentId),
+        where("userId", "==", userId),
+      ),
+    );
+
+    if (snapshot.docs.length === 0) return null;
+
+    const { data, error } = applicationSchema.safeParse(
+      snapshot.docs[0].data(),
+    );
+
+    if (error) console.log("getApplicationBy error:", error);
+
+    return data ?? null;
+  } catch (error) {
+    console.log("checkApplication error:", error);
+    const err = getError(error, "Failed checking application.");
+
+    throw err;
+  }
+};
+
+export const getApplicationByRealtime =
+  (
+    params: Pick<ApplicationSchema, "talentType" | "talentId" | "userId"> & {
+      status?: ApplicationStatusSchema | ApplicationStatusSchema[];
+    },
+  ) =>
+  (callback: (application: ApplicationSchema | null) => void) => {
+    const { status, talentType, talentId, userId } = params;
+
+    let q = query(
+      APPLICATION_COLLECTION,
+      where("talentType", "==", talentType),
+      where("talentId", "==", talentId),
+      where("userId", "==", userId),
+    );
+
+    if (_.isString(status) && status)
+      q = query(q, where("status", "==", status));
+    if (_.isArray(status) && status.length > 0)
+      q = query(q, where("status", "in", status));
+
+    q = query(q, orderBy("dateCreated", "desc"));
+
+    return onSnapshot(q, (snapshot) => {
+      if (snapshot.docs.length === 0) return callback(null);
+
+      const { data, error } = applicationSchema.safeParse(
+        snapshot.docs[0].data(),
+      );
+
+      if (error) console.log("getApplicationBy error:", error);
+
+      callback(data ?? null);
+    });
+  };
+
+export const getApplication = async (id: string) => {
+  try {
+    const snapshot = await getDoc(doc(APPLICATION_COLLECTION, id));
+
+    const { data, error } = applicationSchema.safeParse(snapshot.data());
+
+    if (error) console.log("getApplication error:", error);
+
+    return data ?? null;
+  } catch (error) {
+    console.log("getApplication error:", error);
+    const err = getError(error, "Failed getting application.");
+
+    throw err;
+  }
+};
+
+export const getApplicationRealtime =
+  (id: string) => (callback: (application: ApplicationSchema | null) => void) =>
+    onSnapshot(doc(APPLICATION_COLLECTION, id), (snapshot) => {
+      if (!snapshot.exists()) return callback(null);
+
+      const { data, error } = applicationSchema.safeParse(snapshot.data());
+
+      if (error) console.log("getApplicationRealtime error", error);
+
+      callback(data ?? null);
+    });
+
+export const getApplications = async (params?: {
+  status?: ApplicationStatusSchema | ApplicationStatusSchema[];
+  talentType?: TalentTypeSchema;
+  talentId?: string;
+}) => {
+  try {
+    const { status, talentType, talentId } = params ?? {};
+
+    let q = query(APPLICATION_COLLECTION);
+
+    if (_.isString(status) && status)
+      q = query(q, where("status", "==", status));
+    if (_.isArray(status) && status.length > 0)
+      q = query(q, where("status", "in", status));
+    if (talentType) q = query(q, where("talentType", "==", talentType));
+    if (talentId) q = query(q, where("talentId", "==", talentId));
+
+    const snapshot = await getDocs(q);
+    if (snapshot.docs.length === 0) return [];
+
+    const { data, error } = applicationSchema
+      .array()
+      .safeParse(snapshot.docs.map((d) => d.data()));
+
+    if (error) console.log("getApplications error", error);
+
+    return data ?? [];
+  } catch (error) {
+    console.log("getApplications error:", error);
+    const err = getError(error, "Failed getting applications.");
+
+    throw err;
+  }
+};
+
+export const getApplicationsRealtime =
+  (params?: {
+    status?: ApplicationStatusSchema | ApplicationStatusSchema[];
+    talentType?: TalentTypeSchema;
+    talentId?: string;
+    ids?: string[];
+  }) =>
+  (callback: (applications: ApplicationSchema[]) => void) => {
+    const { status, talentType, talentId, ids } = params ?? {};
+
+    let q = query(APPLICATION_COLLECTION);
+
+    if (_.isString(status) && status)
+      q = query(q, where("status", "==", status));
+    if (_.isArray(status) && status.length > 0)
+      q = query(q, where("status", "in", status));
+    if (talentType) q = query(q, where("talentType", "==", talentType));
+    if (talentId) q = query(q, where("talentId", "==", talentId));
+    if (ids && ids.length > 0) q = query(q, where("id", "in", ids));
+
+    return onSnapshot(q, (snapshot) => {
+      if (snapshot.size === 0) return callback([]);
+
+      const { data, error } = applicationSchema
+        .array()
+        .safeParse(snapshot.docs.map((d) => d.data()));
+
+      if (error) console.log("getApplications error", error);
+
+      callback(data ?? []);
+    });
+  };

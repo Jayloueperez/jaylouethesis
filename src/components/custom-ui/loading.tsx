@@ -1,0 +1,24 @@
+import Image from "next/image";
+import { Loader } from "lucide-react";
+
+const Loading = () => {
+  return (
+    <div className="flex h-screen w-screen flex-col items-center justify-center gap-4 p-4">
+      <Image
+        className="h-40 w-40"
+        src="/images/logo.png"
+        alt="logo"
+        width={1600}
+        height={1600}
+      />
+
+      <div className="flex items-center gap-2">
+        <span>Loading...</span>
+
+        <Loader className="size-4 animate-spin" />
+      </div>
+    </div>
+  );
+};
+
+export { Loading };
