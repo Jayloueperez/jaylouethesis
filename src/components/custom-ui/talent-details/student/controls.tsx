@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { CheckCheck, Plus, X } from "lucide-react";

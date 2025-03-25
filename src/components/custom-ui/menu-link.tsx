@@ -1,3 +1,5 @@
+"use client";
+
 import { ComponentProps } from "react";
 import Link, { LinkProps } from "next/link";
 import { Slot } from "@radix-ui/react-slot";

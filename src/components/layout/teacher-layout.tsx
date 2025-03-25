@@ -1,3 +1,5 @@
+"use client";
+
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Club, Home, ListTodo, Megaphone, Volleyball } from "lucide-react";

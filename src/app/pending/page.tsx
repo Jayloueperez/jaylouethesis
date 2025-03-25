@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
+import { Loading } from "~/components/custom-ui/loading";
 import { PageLayout } from "~/components/layout/page-layout";
 import { Button } from "~/components/ui/button";
 import { useAlert } from "~/hooks/use-alert";
@@ -13,7 +15,7 @@ export default function PendingPage() {
   const router = useRouter();
 
   const { component, openAlert } = useAlert();
-  const { status } = useAppSelector((state) => state.user);
+  const { userData, status } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   const handleLogout = async () => {
@@ -31,13 +33,20 @@ export default function PendingPage() {
     }
   };
 
+  useEffect(() => {
+    if (userData && userData.role !== "unassigned")
+      router.replace(`/${userData.role}`);
+  }, [userData]);
+
+  if (!userData) return <Loading />;
+
   return (
     <PageLayout className="items-center justify-center gap-8">
       <div className="flex flex-col gap-2">
-        <h1 className="text-center text-4xl font-medium">Account Pending</h1>
+        <h1 className="text-center text-3xl font-medium">Account Pending</h1>
 
         <span className="text-center">
-          Your account hasn&apos;t been confirmed or hasn&apos;t been assigned to a role.
+          Your account hasn&apos;t been assigned to a role yet.
         </span>
       </div>
 

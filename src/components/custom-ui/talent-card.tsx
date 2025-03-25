@@ -1,3 +1,5 @@
+"use client";
+
 import { UrlObject } from "url";
 import _ from "lodash";
 import { ChevronsRight } from "lucide-react";

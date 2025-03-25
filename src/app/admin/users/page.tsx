@@ -1,20 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Eye, Loader, Trash } from "lucide-react";
+import { format } from "date-fns";
+import { Loader } from "lucide-react";
 
+import { AssignRoleDialog } from "~/components/dialogs/assign-role-dialog";
 import { AdminLayout } from "~/components/layout/admin-layout";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -28,7 +19,9 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { getUsersRealtime } from "~/lib/firebase/client/firestore";
+import { useAlert } from "~/hooks/use-alert";
+import { getUsersRealtime, updateUser } from "~/lib/firebase/client/firestore";
+import { UserRoleSchema } from "~/schema/data-base";
 import { UserSchema } from "~/schema/data-client";
 
 export default function AdminUsersPage() {
@@ -36,8 +29,12 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [all, setAll] = useState<boolean>(false);
   const [selected, setSelected] = useState<string[]>([]);
+  const [assignUserRole, setAssignUserRole] = useState<string>("");
+  const [assigning, setAssigning] = useState<boolean>(false);
 
   const filteredUsers = users;
+
+  const { component, openAlert } = useAlert();
 
   const handleToggleUser = (id: string) => {
     const exist = selected.indexOf(id) !== -1;
@@ -45,6 +42,33 @@ export default function AdminUsersPage() {
     if (exist) return setSelected((v) => v.filter((v1) => v1 !== id));
 
     setSelected((v) => [...v, id]);
+  };
+
+  const handleAssignUserRole = async (
+    role: Exclude<UserRoleSchema, "unassigned">,
+  ) => {
+    if (!assignUserRole) return;
+
+    setAssigning(true);
+
+    try {
+      await updateUser(assignUserRole, { role, status: "confirmed" });
+      setAssignUserRole("");
+
+      openAlert({
+        title: "Success",
+        description: `Successfully assigned user role to ${role}.`,
+      });
+    } catch (error) {
+      console.log("handleAssignUserRole error:", error);
+
+      openAlert({
+        title: "Failed",
+        description: "Failed assigning user role.",
+      });
+    }
+
+    setAssigning(false);
   };
 
   useEffect(() => {
@@ -84,10 +108,10 @@ export default function AdminUsersPage() {
                 <Checkbox checked={all} onCheckedChange={(v) => setAll(!!v)} />
               </TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Course</TableHead>
-              <TableHead>Year</TableHead>
-              <TableHead>Section</TableHead>
-              <TableHead className="w-36">Actions</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Date Created</TableHead>
+              <TableHead className="w-36 text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -125,32 +149,41 @@ export default function AdminUsersPage() {
                     <div className="flex items-center gap-4">
                       <Avatar className="size-12">
                         <AvatarImage
-                          src="https://placehold.co/400x400"
-                          alt="Example Club 1"
+                          src={user.profile}
+                          alt={user.firstName[0].toUpperCase()}
                         />
-                        <AvatarFallback>{user.firstName}</AvatarFallback>
+
+                        <AvatarFallback>
+                          {user.firstName[0].toUpperCase()}
+                        </AvatarFallback>
                       </Avatar>
 
                       <span>
-                        {user.firstName} {user.middleInitial}. {user.surname}
+                        {user.firstName}{" "}
+                        {user.middleInitial ? `${user.middleInitial}.` : ""}{" "}
+                        {user.surname}
                       </span>
                     </div>
                   </TableCell>
-                  <TableCell>{user.course}</TableCell>
-                  <TableCell>{user.year}</TableCell>
-                  <TableCell>{user.section}</TableCell>
+                  <TableCell className="uppercase">{user.role}</TableCell>
+                  <TableCell className="uppercase">{user.status}</TableCell>
+                  <TableCell className="uppercase">
+                    {format(user.dateCreated, "MMM dd, yyyy")}
+                  </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button
-                        type="button"
-                        variant="blue"
-                        size="icon"
-                        shape="pill"
-                      >
-                        <Eye className="size-4" />
-                      </Button>
+                    <div className="flex items-center justify-center gap-2">
+                      {user.role === "unassigned" && (
+                        <Button
+                          type="button"
+                          variant="yellow"
+                          loading={assigning && assignUserRole === user.id}
+                          onClick={() => setAssignUserRole(user.id)}
+                        >
+                          Assign Role
+                        </Button>
+                      )}
 
-                      <AlertDialog>
+                      {/* <AlertDialog>
                         <AlertDialogTrigger asChild>
                           <Button
                             type="button"
@@ -171,7 +204,10 @@ export default function AdminUsersPage() {
                             <AlertDialogDescription>
                               Are you sure you want to delete{" "}
                               <span className="text-destructive font-bold">
-                                {user.firstName} {user.middleInitial}.{" "}
+                                {user.firstName}{" "}
+                                {user.middleInitial
+                                  ? `${user.middleInitial}.`
+                                  : ""}{" "}
                                 {user.surname}
                               </span>
                               ?
@@ -185,7 +221,7 @@ export default function AdminUsersPage() {
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
-                      </AlertDialog>
+                      </AlertDialog> */}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -193,6 +229,14 @@ export default function AdminUsersPage() {
           </TableBody>
         </Table>
       </Card>
+
+      <AssignRoleDialog
+        open={!!assignUserRole}
+        onOpenChange={(b) => setAssignUserRole((v) => (b ? v : ""))}
+        onRoleSelect={handleAssignUserRole}
+      />
+
+      {component}
     </AdminLayout>
   );
 }
