@@ -37,10 +37,10 @@ import { useAlert } from "~/hooks/use-alert";
 import { useTalentTypeParams } from "~/hooks/use-talent-type-params";
 import { updateApplication } from "~/lib/firebase/client/firestore";
 import { useTalentContext } from "~/providers/TalentProvider";
-import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data";
+import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 import { getError } from "~/utils/error";
 
-const TalentApplicantsPage = () => {
+export default function Page() {
   const [filter, setFilter] = useState<{
     status: ApplicationStatusSchema | "all";
   }>({ status: "all" });
@@ -345,6 +345,4 @@ const TalentApplicantsPage = () => {
       {/* MODALS */}
     </AdminLayout>
   );
-};
-
-export default TalentApplicantsPage;
+}

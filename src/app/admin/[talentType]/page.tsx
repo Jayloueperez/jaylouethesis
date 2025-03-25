@@ -13,9 +13,10 @@ import { Input } from "~/components/ui/input";
 import { talentTypePlurals } from "~/const/text";
 import { useTalentTypeParams } from "~/hooks/use-talent-type-params";
 import { getTalentsRealtime } from "~/lib/firebase/client/firestore";
-import { TalentSchema, TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
+import { TalentSchema } from "~/schema/data-client";
 
-const TalentList = () => {
+export default function TalentListPage() {
   const [talents, setTalents] = useState<TalentSchema[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -78,15 +79,11 @@ const TalentList = () => {
 
       {filteredTalents.length === 0 && (
         <div className="flex flex-1 items-center justify-center">
-          <span className="text-gray-500">
-            No {talentType} records found.
-          </span>
+          <span className="text-gray-500">No {talentType} records found.</span>
         </div>
       )}
 
       <TalentFormDialog type={talentType} open={open} onOpenChange={setOpen} />
     </AdminLayout>
   );
-};
-
-export default TalentList;
+}

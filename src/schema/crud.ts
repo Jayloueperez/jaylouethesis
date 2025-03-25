@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 import {
-  announcementSchema,
-  applicationSchema,
-  notificationSchema,
-  talentSchema,
-  talentTeamSchema,
-  talentTryoutSchema,
-} from "./data";
+  announcementBaseSchema,
+  applicationBaseSchema,
+  notificationBaseSchema,
+  talentBaseSchema,
+  talentTeamBaseSchema,
+  talentTryoutBaseSchema,
+} from "./data-base";
 
 /**
  * USER
@@ -16,11 +16,9 @@ import {
 /**
  * TALENT
  */
-export const createTalentInputSchema = talentSchema.omit({
+export const createTalentInputSchema = talentBaseSchema.omit({
   id: true,
   keywords: true,
-  dateCreated: true,
-  dateUpdated: true,
 });
 export type CreateTalentInputSchema = z.infer<typeof createTalentInputSchema>;
 
@@ -30,11 +28,9 @@ export type UpdateTalentInputSchema = z.infer<typeof updateTalentInputSchema>;
 /**
  * TALENT TEAM
  */
-export const createTalentTeamInputSchema = talentTeamSchema.omit({
+export const createTalentTeamInputSchema = talentTeamBaseSchema.omit({
   id: true,
   keywords: true,
-  dateCreated: true,
-  dateUpdated: true,
 });
 export type CreateTalentTeamInputSchema = z.infer<
   typeof createTalentTeamInputSchema
@@ -49,10 +45,8 @@ export type UpdateTalentTeamInputSchema = z.infer<
 /**
  * TALENT TRYOUT
  */
-export const createTalentTryoutInputSchema = talentTryoutSchema.omit({
+export const createTalentTryoutInputSchema = talentTryoutBaseSchema.omit({
   id: true,
-  dateCreated: true,
-  dateUpdated: true,
 });
 export type CreateTalentTryoutInputSchema = z.infer<
   typeof createTalentTryoutInputSchema
@@ -67,10 +61,8 @@ export type UpdateTalentTryoutInputSchema = z.infer<
 /**
  * ANNOUNCEMENT
  */
-export const createAnnouncementInputSchema = announcementSchema.omit({
+export const createAnnouncementInputSchema = announcementBaseSchema.omit({
   id: true,
-  dateCreated: true,
-  dateUpdated: true,
 });
 export type CreateAnnouncementInputSchema = z.infer<
   typeof createAnnouncementInputSchema
@@ -85,10 +77,8 @@ export type UpdateAnnouncementInputSchema = z.infer<
 /**
  * APPLICATION
  */
-export const createApplicationInputSchema = applicationSchema.omit({
+export const createApplicationInputSchema = applicationBaseSchema.omit({
   id: true,
-  dateCreated: true,
-  dateUpdated: true,
 });
 export type CreateApplicationInputSchema = z.infer<
   typeof createApplicationInputSchema
@@ -97,11 +87,9 @@ export type CreateApplicationInputSchema = z.infer<
 /**
  * NOTIFICATION
  */
-export const createNotificationInputSchema = notificationSchema.omit({
+export const createNotificationInputSchema = notificationBaseSchema.omit({
   id: true,
   isRead: true,
-  dateCreated: true,
-  dateUpdated: true,
 });
 export type CreateNotificationInputSchema = z.infer<
   typeof createNotificationInputSchema

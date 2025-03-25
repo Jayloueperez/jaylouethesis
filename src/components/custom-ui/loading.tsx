@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Loader } from "lucide-react";
 
-const Loading = () => {
+function Loading() {
   return (
     <div className="flex h-screen w-screen flex-col items-center justify-center gap-4 p-4">
       <Image
@@ -19,6 +19,6 @@ const Loading = () => {
       </div>
     </div>
   );
-};
+}
 
 export { Loading };

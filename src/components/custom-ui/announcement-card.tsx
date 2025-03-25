@@ -1,8 +1,11 @@
+"use client";
+
 import { useState } from "react";
 import { format } from "date-fns";
 import { ChevronsRight } from "lucide-react";
 
-import { AnnouncementSchema, AnnouncementTypeSchema } from "~/schema/data";
+import { AnnouncementTypeSchema } from "~/schema/data-base";
+import { AnnouncementSchema } from "~/schema/data-client";
 import { ViewAnnouncementDialog } from "../dialogs/view-announcement-dialog";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
@@ -19,13 +22,13 @@ export interface AnnouncementCardProps {
   announcement: AnnouncementSchema;
 }
 
-const AnnouncementCard = (props: AnnouncementCardProps) => {
+function AnnouncementCard(props: AnnouncementCardProps) {
   const { announcement } = props;
 
   const [open, setOpen] = useState<boolean>(false);
 
   return (
-    <Card className="flex flex-col gap-4 border-b-4 border-b-flush-orange-500 bg-violet-950 p-4 text-white">
+    <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 bg-violet-950 p-4 text-white">
       <div className="flex flex-col">
         <span className="text-xl font-medium">{announcement.title}</span>
 
@@ -64,6 +67,6 @@ const AnnouncementCard = (props: AnnouncementCardProps) => {
       />
     </Card>
   );
-};
+}
 
 export { AnnouncementCard };

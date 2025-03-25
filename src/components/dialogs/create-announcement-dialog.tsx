@@ -27,7 +27,7 @@ import {
   createAnnouncementInputSchema,
   CreateAnnouncementInputSchema,
 } from "~/schema/crud";
-import { AnnouncementSchema } from "~/schema/data";
+import { AnnouncementSchema } from "~/schema/data-client";
 import { getError } from "~/utils/error";
 import { Button } from "../ui/button";
 import {
@@ -47,7 +47,7 @@ interface CreateAnnouncementDialogProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-const CreateAnnouncementDialog = (props: CreateAnnouncementDialogProps) => {
+function CreateAnnouncementDialog(props: CreateAnnouncementDialogProps) {
   const { announcement, open, onOpenChange } = props;
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -238,6 +238,6 @@ const CreateAnnouncementDialog = (props: CreateAnnouncementDialogProps) => {
       {component}
     </Dialog>
   );
-};
+}
 
 export { CreateAnnouncementDialog };

@@ -2,7 +2,8 @@ import { UrlObject } from "url";
 import _ from "lodash";
 import { ChevronsRight } from "lucide-react";
 
-import { TalentSchema, TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
+import { TalentSchema } from "~/schema/data-client";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Card } from "../ui/card";
 import { Separator } from "../ui/separator";
@@ -14,11 +15,11 @@ export interface TalentCardProps {
   type: TalentTypeSchema;
 }
 
-const TalentCard = (props: TalentCardProps) => {
+function TalentCard(props: TalentCardProps) {
   const { href, talent, type } = props;
 
   return (
-    <Card className="flex flex-col gap-4 border-b-4 border-b-flush-orange-500 p-4">
+    <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 p-4">
       <div className="flex items-center gap-4">
         <Avatar className="size-12">
           <AvatarImage src={talent.image} alt={talent.name} />
@@ -41,6 +42,6 @@ const TalentCard = (props: TalentCardProps) => {
       </div>
     </Card>
   );
-};
+}
 
 export { TalentCard };

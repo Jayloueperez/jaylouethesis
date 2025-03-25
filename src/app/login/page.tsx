@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from "~/store";
 import { loginWithGoogle } from "~/store/auth-slice";
 import { getError } from "~/utils/error";
 
-const LoginPage = () => {
+export default function LoginPage() {
   const router = useRouter();
 
   const { openAlert, component } = useAlert();
@@ -63,6 +63,4 @@ const LoginPage = () => {
       {component}
     </PageLayout>
   );
-};
-
-export default LoginPage;
+}

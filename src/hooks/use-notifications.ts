@@ -4,7 +4,7 @@ import {
   getNotificationsRealtime,
   getUser,
 } from "~/lib/firebase/client/firestore";
-import { NotificationSchema, UserSchema } from "~/schema/data";
+import { NotificationSchema, UserSchema } from "~/schema/data-client";
 
 interface UseNotificationsParams {
   sender?: string;
@@ -12,7 +12,7 @@ interface UseNotificationsParams {
   enabled?: boolean;
 }
 
-const useNotifications = (params: UseNotificationsParams) => {
+function useNotifications(params: UseNotificationsParams) {
   const { receiver, sender, enabled } = params ?? {};
 
   const [loading, setLoading] = useState<boolean>(true);
@@ -41,6 +41,6 @@ const useNotifications = (params: UseNotificationsParams) => {
   }, [enabled, receiver, sender]);
 
   return { data: notifications, loading };
-};
+}
 
 export { useNotifications };

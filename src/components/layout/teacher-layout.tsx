@@ -1,13 +1,6 @@
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  Club,
-  Home,
-  ListTodo,
-  Megaphone,
-  Users2,
-  Volleyball,
-} from "lucide-react";
+import { Club, Home, ListTodo, Megaphone, Volleyball } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { useAppSelector } from "~/store";
@@ -20,7 +13,7 @@ interface TeacherLayoutProps {
   className?: string;
 }
 
-const TeacherLayout = (props: TeacherLayoutProps) => {
+function TeacherLayout(props: TeacherLayoutProps) {
   const { children, className } = props;
 
   const router = useRouter();
@@ -107,6 +100,6 @@ const TeacherLayout = (props: TeacherLayoutProps) => {
       </main>
     </div>
   );
-};
+}
 
 export { TeacherLayout };

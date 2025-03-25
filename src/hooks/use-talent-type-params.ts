@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 
-import { TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
 import { useAppSelector } from "~/store";
 
-const useTalentTypeParams = () => {
+function useTalentTypeParams() {
   const [loadingState, setLoadingState] = useState<"none" | "loading">("none");
 
   const { talentType } = useParams<{
@@ -27,6 +27,6 @@ const useTalentTypeParams = () => {
   }, [router, status, talentType, userData]);
 
   return { loading: loadingState === "loading" || loading };
-};
+}
 
 export { useTalentTypeParams };

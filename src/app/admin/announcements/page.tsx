@@ -14,9 +14,9 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { getAnnouncementsRealtime } from "~/lib/firebase/client/firestore";
-import { AnnouncementSchema } from "~/schema/data";
+import { AnnouncementSchema } from "~/schema/data-client";
 
-const AdminAnnouncementsPage = () => {
+export default function AdminAnnouncementsPage() {
   const [announcements, setAnnouncements] = useState<AnnouncementSchema[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [sort, setSort] = useState<
@@ -81,6 +81,4 @@ const AdminAnnouncementsPage = () => {
       {open && <CreateAnnouncementDialog open={open} onOpenChange={setOpen} />}
     </AdminLayout>
   );
-};
-
-export default AdminAnnouncementsPage;
+}

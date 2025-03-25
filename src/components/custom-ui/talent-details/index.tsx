@@ -1,7 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { TalentSchema } from "~/schema/data";
+import { TalentSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 import { Loading } from "../loading";
 import { TalentDetailsAdminAnnouncements } from "./admin/announcements";
@@ -15,7 +15,7 @@ interface TalentDetailsProps {
   talent: TalentSchema;
 }
 
-const TalentDetails = (props: TalentDetailsProps) => {
+function TalentDetails(props: TalentDetailsProps) {
   const { talent } = props;
 
   const { userData, loading } = useAppSelector((state) => state.user);
@@ -78,6 +78,6 @@ const TalentDetails = (props: TalentDetailsProps) => {
       {/* MEMBERS */}
     </>
   );
-};
+}
 
 export { TalentDetails };

@@ -16,7 +16,7 @@ import {
 } from "~/components/ui/table";
 import { useApplications } from "~/hooks/firestore/use-applications";
 
-const AdminPage = () => {
+export default function AdminPage() {
   // const [] = useState<ApplicationSchema[]>([])
 
   const {
@@ -261,6 +261,4 @@ const AdminPage = () => {
       </div>
     </AdminLayout>
   );
-};
-
-export default AdminPage;
+}

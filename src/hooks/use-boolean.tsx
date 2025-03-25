@@ -30,7 +30,7 @@ interface UseBooleanProps {
   negativeLoading?: boolean;
 }
 
-const useBoolean = (props?: UseBooleanProps) => {
+function useBoolean(props?: UseBooleanProps) {
   const {
     onPositive,
     onNegative,
@@ -96,6 +96,6 @@ const useBoolean = (props?: UseBooleanProps) => {
       </AlertDialog>
     ) : null,
   };
-};
+}
 
 export { useBoolean };

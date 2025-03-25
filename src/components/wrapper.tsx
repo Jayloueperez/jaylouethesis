@@ -24,7 +24,7 @@ interface WrapperProps {
   children?: ReactNode;
 }
 
-const Wrapper = (props: WrapperProps) => {
+function Wrapper(props: WrapperProps) {
   const { children } = props;
 
   const { user, loading, status } = useAppSelector((state) => state.auth);
@@ -89,6 +89,6 @@ const Wrapper = (props: WrapperProps) => {
   }, []);
 
   return <>{children}</>;
-};
+}
 
 export { Wrapper };

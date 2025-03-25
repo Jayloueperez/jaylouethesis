@@ -2,8 +2,6 @@
 
 import { AdminLayout } from "~/components/layout/admin-layout";
 
-const TalentScheduleDetails = () => {
+export default function TalentScheduleDetailsPage() {
   return <AdminLayout></AdminLayout>;
-};
-
-export default TalentScheduleDetails;
+}

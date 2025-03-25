@@ -5,17 +5,17 @@ import "./globals.css";
 
 import { Montserrat, Open_Sans } from "next/font/google";
 
-import { Providers } from "~/components/providers";
 import { Wrapper } from "~/components/wrapper";
 import { cn } from "~/lib/utils";
+import { MainProvider } from "~/providers/MainProvider";
 
 const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
+  src: "../../public/fonts/GeistVF.woff",
   variable: "--font-geist-sans",
   weight: "100 200 300 400 500 600 700 800 900",
 });
 const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
+  src: "../../public/fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
   weight: "100 200 300 400 500 600 700 800 900",
 });
@@ -36,11 +36,11 @@ export const metadata: Metadata = {
   icons: "/logo.ico",
 };
 
-const RootLayout = ({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) => {
+}>) {
   return (
     <html lang="en">
       <body
@@ -52,12 +52,10 @@ const RootLayout = ({
           montserrat.variable,
         )}
       >
-        <Providers>
+        <MainProvider>
           <Wrapper>{children}</Wrapper>
-        </Providers>
+        </MainProvider>
       </body>
     </html>
   );
-};
-
-export default RootLayout;
+}

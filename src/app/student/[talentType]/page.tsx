@@ -11,9 +11,10 @@ import { Input } from "~/components/ui/input";
 import { talentTypePlurals } from "~/const/text";
 import { useTalentTypeParams } from "~/hooks/use-talent-type-params";
 import { getTalentsRealtime } from "~/lib/firebase/client/firestore";
-import { TalentSchema, TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
+import { TalentSchema } from "~/schema/data-client";
 
-const TalentList = () => {
+export default function TalentListPage() {
   const [talents, setTalents] = useState<TalentSchema[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
@@ -71,6 +72,4 @@ const TalentList = () => {
       <TalentFormDialog type={talentType} open={open} onOpenChange={setOpen} />
     </StudentLayout>
   );
-};
-
-export default TalentList;
+}

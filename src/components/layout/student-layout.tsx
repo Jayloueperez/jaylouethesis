@@ -13,7 +13,7 @@ interface StudentLayoutProps {
   className?: string;
 }
 
-const StudentLayout = (props: StudentLayoutProps) => {
+function StudentLayout(props: StudentLayoutProps) {
   const { children, className } = props;
 
   const router = useRouter();
@@ -96,6 +96,6 @@ const StudentLayout = (props: StudentLayoutProps) => {
       </main>
     </div>
   );
-};
+}
 
 export { StudentLayout };

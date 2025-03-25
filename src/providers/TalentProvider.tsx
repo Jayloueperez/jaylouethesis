@@ -11,7 +11,8 @@ import { useRouter } from "next/navigation";
 
 import { Loading } from "~/components/custom-ui/loading";
 import { getTalentRealtime } from "~/lib/firebase/client/firestore";
-import { TalentSchema, TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
+import { TalentSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 
 interface TalentContextValue {
@@ -30,7 +31,7 @@ interface TalentProviderProps {
   children?: ReactNode;
 }
 
-const TalentProvider = (props: TalentProviderProps) => {
+function TalentProvider(props: TalentProviderProps) {
   const { talentId, talentType, children } = props;
 
   const [talent, setTalent] = useState<TalentSchema | null>(null);
@@ -61,7 +62,7 @@ const TalentProvider = (props: TalentProviderProps) => {
       {children}
     </TalentContext.Provider>
   );
-};
+}
 
 const useTalentContext = () => useContext(TalentContext);
 

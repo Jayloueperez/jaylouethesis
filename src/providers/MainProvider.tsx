@@ -5,14 +5,14 @@ import { Provider as ReduxProvider } from "react-redux";
 
 import { store } from "~/store";
 
-interface ProvidersProps {
+interface MainProviderProps {
   children?: ReactNode;
 }
 
-const Providers = (props: ProvidersProps) => {
+function MainProvider(props: MainProviderProps) {
   const { children } = props;
 
   return <ReduxProvider store={store}>{children}</ReduxProvider>;
-};
+}
 
-export { Providers };
+export { MainProvider };

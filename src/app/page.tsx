@@ -4,7 +4,7 @@ import Image from "next/image";
 
 import { PageLayout } from "~/components/layout/page-layout";
 
-const HomePage = () => {
+export default function HomePage() {
   return (
     <PageLayout>
       <div className="">
@@ -36,6 +36,4 @@ const HomePage = () => {
       </div>
     </PageLayout>
   );
-};
-
-export default HomePage;
+}

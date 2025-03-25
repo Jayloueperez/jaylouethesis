@@ -1,9 +1,9 @@
 import { z } from "zod";
 
-import { userSchema } from "./data";
+import { userBaseSchema } from "./data-base";
 
 export const loginSchema = z.object({
-  email: userSchema.shape.email,
+  email: userBaseSchema.shape.email,
   password: z
     .string()
     .min(8, "Password should have be at least 8 characters long."),
@@ -17,13 +17,11 @@ export const registerSchema = z
       .min(8, "Password should have be at least 8 characters long."),
   })
   .and(
-    userSchema.omit({
+    userBaseSchema.omit({
       id: true,
       profile: true,
       role: true,
       provider: true,
-      dateCreated: true,
-      dateUpdated: true,
     }),
   );
 export type RegisterSchema = z.infer<typeof registerSchema>;

@@ -10,12 +10,8 @@ import {
   getApplicationByRealtime,
 } from "~/lib/firebase/client/firestore";
 import { CreateApplicationInputSchema } from "~/schema/crud";
-import {
-  ApplicationSchema,
-  ApplicationStatusSchema,
-  TalentSchema,
-  TalentTypeSchema,
-} from "~/schema/data";
+import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
+import { ApplicationSchema, TalentSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 import { getError } from "~/utils/error";
 import { Loading } from "../../loading";
@@ -34,9 +30,9 @@ interface TalentDetailsStudentControlsProps {
   talent: TalentSchema;
 }
 
-const TalentDetailsStudentControls = (
+function TalentDetailsStudentControls(
   props: TalentDetailsStudentControlsProps,
-) => {
+) {
   const { talent } = props;
 
   const [application, setApplication] = useState<ApplicationSchema | null>(
@@ -139,6 +135,6 @@ const TalentDetailsStudentControls = (
       {component}
     </>
   );
-};
+}
 
 export { TalentDetailsStudentControls };

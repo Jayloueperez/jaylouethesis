@@ -9,7 +9,7 @@ import {
   updateTalent,
 } from "~/lib/firebase/client/firestore";
 import { useTalentContext } from "~/providers/TalentProvider";
-import { ApplicationSchema, UserSchema } from "~/schema/data";
+import { ApplicationSchema, UserSchema } from "~/schema/data-client";
 import { getError } from "~/utils/error";
 import { BooleanDialog } from "../boolean-dialog";
 
@@ -17,7 +17,7 @@ interface StudentItemProps {
   application: ApplicationSchema & { student: UserSchema };
 }
 
-const StudentItem = (props: StudentItemProps) => {
+function StudentItem(props: StudentItemProps) {
   const { application } = props;
   const { student, status } = application;
 
@@ -192,6 +192,6 @@ const StudentItem = (props: StudentItemProps) => {
       />
     </>
   );
-};
+}
 
 export { StudentItem };

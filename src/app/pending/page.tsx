@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from "~/store";
 import { logout } from "~/store/auth-slice";
 import { getError } from "~/utils/error";
 
-const PendingPage = () => {
+export default function PendingPage() {
   const router = useRouter();
 
   const { component, openAlert } = useAlert();
@@ -37,7 +37,7 @@ const PendingPage = () => {
         <h1 className="text-center text-4xl font-medium">Account Pending</h1>
 
         <span className="text-center">
-          Your account hasn't been confirmed or hasn't been assigned to a role.
+          Your account hasn&apos;t been confirmed or hasn&apos;t been assigned to a role.
         </span>
       </div>
 
@@ -52,6 +52,4 @@ const PendingPage = () => {
       {component}
     </PageLayout>
   );
-};
-
-export default PendingPage;
+}

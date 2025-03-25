@@ -15,7 +15,7 @@ import {
   createApplicationInputSchema,
   CreateApplicationInputSchema,
 } from "~/schema/crud";
-import { TalentSchema } from "~/schema/data";
+import { TalentSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 import { getError } from "~/utils/error";
 import { Button } from "../ui/button";
@@ -36,7 +36,7 @@ interface JoinTalentDialogProps {
   talent: TalentSchema;
 }
 
-const JoinTalentDialog = (props: JoinTalentDialogProps) => {
+function JoinTalentDialog(props: JoinTalentDialogProps) {
   const { open, onOpenChange, onSubmit, talent } = props;
 
   const [loading, setLoading] = useState<boolean>(false);
@@ -121,6 +121,6 @@ const JoinTalentDialog = (props: JoinTalentDialogProps) => {
       {component}
     </Dialog>
   );
-};
+}
 
 export { JoinTalentDialog };

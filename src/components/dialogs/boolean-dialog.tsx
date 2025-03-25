@@ -27,7 +27,7 @@ interface BooleanDialogProps {
   negativeLoading?: boolean;
 }
 
-const BooleanDialog = (props: BooleanDialogProps) => {
+function BooleanDialog(props: BooleanDialogProps) {
   const {
     open,
     onOpenChange,
@@ -90,6 +90,6 @@ const BooleanDialog = (props: BooleanDialogProps) => {
       </AlertDialogContent>
     </AlertDialog>
   );
-};
+}
 
 export { BooleanDialog };

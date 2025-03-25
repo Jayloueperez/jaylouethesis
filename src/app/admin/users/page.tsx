@@ -29,9 +29,9 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { getUsersRealtime } from "~/lib/firebase/client/firestore";
-import { UserSchema } from "~/schema/data";
+import { UserSchema } from "~/schema/data-client";
 
-const AdminUsersPage = () => {
+export default function AdminUsersPage() {
   const [users, setUsers] = useState<UserSchema[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [all, setAll] = useState<boolean>(false);
@@ -132,8 +132,7 @@ const AdminUsersPage = () => {
                       </Avatar>
 
                       <span>
-                        {user.firstName} {user.middleInitial}.{" "}
-                        {user.surname}
+                        {user.firstName} {user.middleInitial}. {user.surname}
                       </span>
                     </div>
                   </TableCell>
@@ -196,6 +195,4 @@ const AdminUsersPage = () => {
       </Card>
     </AdminLayout>
   );
-};
-
-export default AdminUsersPage;
+}

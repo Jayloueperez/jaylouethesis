@@ -27,7 +27,7 @@ import {
 } from "~/components/ui/table";
 import { useApplications } from "~/hooks/firestore/use-applications";
 
-const AdminRegistrationsPage = () => {
+export default function AdminRegistrationsPage() {
   // const [all, setAll] = useState<boolean>(false);
   // const [selected, setSelected] = useState<string[]>([]);
   const [filterBy, setFilterBy] = useState<string>("all");
@@ -196,6 +196,4 @@ const AdminRegistrationsPage = () => {
       </Card>
     </AdminLayout>
   );
-};
-
-export default AdminRegistrationsPage;
+}

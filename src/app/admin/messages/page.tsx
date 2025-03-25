@@ -83,13 +83,13 @@ const messages = [
   },
 ];
 
-const AdminMessagesPage = () => {
+export default function AdminMessagesPage() {
   const [selectedChat, setSelectedChat] = useState<string | null>("1");
 
   return (
     <AdminLayout className="flex-row items-start gap-4">
       <TooltipProvider>
-        <div className="flex h-screen flex-1 bg-background">
+        <div className="bg-background flex h-screen flex-1">
           <div className="flex w-80 flex-col border-r">
             <div className="border-b p-4">
               <div className="mb-4 flex items-center justify-between">
@@ -102,7 +102,7 @@ const AdminMessagesPage = () => {
               </div>
 
               <div className="relative">
-                <Search className="absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
 
                 <Input placeholder="Search Messenger" className="pl-8" />
               </div>
@@ -114,7 +114,7 @@ const AdminMessagesPage = () => {
                   key={chat.id}
                   onClick={() => setSelectedChat(chat.id)}
                   className={cn(
-                    "flex w-full items-center gap-3 rounded-lg p-3 hover:bg-accent",
+                    "hover:bg-accent flex w-full items-center gap-3 rounded-lg p-3",
                     selectedChat === chat.id && "bg-accent",
                   )}
                 >
@@ -127,11 +127,11 @@ const AdminMessagesPage = () => {
                   <div className="flex-1 text-left">
                     <div className="flex items-center justify-between">
                       <span className="font-medium">{chat.name}</span>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {chat.lastMessageTime}
                       </span>
                     </div>
-                    <p className="truncate text-sm text-muted-foreground">
+                    <p className="text-muted-foreground truncate text-sm">
                       {chat.lastMessage}
                     </p>
                   </div>
@@ -160,7 +160,7 @@ const AdminMessagesPage = () => {
                     <h2 className="font-semibold">
                       {chats.find((c) => c.id === selectedChat)?.name}
                     </h2>
-                    <p className="text-sm text-muted-foreground">Active now</p>
+                    <p className="text-muted-foreground text-sm">Active now</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1">
@@ -249,7 +249,7 @@ const AdminMessagesPage = () => {
               </div>
             </div>
           ) : (
-            <div className="flex flex-1 items-center justify-center text-muted-foreground">
+            <div className="text-muted-foreground flex flex-1 items-center justify-center">
               Select a conversation to start messaging
             </div>
           )}
@@ -257,6 +257,4 @@ const AdminMessagesPage = () => {
       </TooltipProvider>
     </AdminLayout>
   );
-};
-
-export default AdminMessagesPage;
+}

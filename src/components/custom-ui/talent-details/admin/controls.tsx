@@ -6,13 +6,14 @@ import { TalentFormDialog } from "~/components/dialogs/talent-form-dialog";
 import { Button } from "~/components/ui/button";
 import { useBoolean } from "~/hooks/use-boolean";
 import { deleteTalent } from "~/lib/firebase/client/firestore";
-import { TalentSchema, TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
+import { TalentSchema } from "~/schema/data-client";
 
 interface TalentDetailsAdminControlsProps {
   talent: TalentSchema;
 }
 
-const TalentDetailsAdminControls = (props: TalentDetailsAdminControlsProps) => {
+function TalentDetailsAdminControls(props: TalentDetailsAdminControlsProps) {
   const { talent } = props;
 
   const [loadingState, setLoadingState] = useState<
@@ -68,6 +69,6 @@ const TalentDetailsAdminControls = (props: TalentDetailsAdminControlsProps) => {
       {component}
     </>
   );
-};
+}
 
 export { TalentDetailsAdminControls };

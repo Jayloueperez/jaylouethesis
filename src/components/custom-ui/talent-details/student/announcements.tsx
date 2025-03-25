@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { Loader } from "lucide-react";
 
 import { getAnnouncementsRealtime } from "~/lib/firebase/client/firestore";
-import { AnnouncementSchema, TalentSchema } from "~/schema/data";
+import { AnnouncementSchema, TalentSchema } from "~/schema/data-client";
 import { AnnouncementCard } from "../../announcement-card";
 
 interface TalentDetailsStudentAnnouncementsProps {
   talent: TalentSchema;
 }
 
-const TalentDetailsStudentAnnouncements = (
+function TalentDetailsStudentAnnouncements(
   props: TalentDetailsStudentAnnouncementsProps,
-) => {
+) {
   const { talent } = props;
 
   const [announcements, setAnnouncements] = useState<AnnouncementSchema[]>([]);
@@ -48,6 +48,6 @@ const TalentDetailsStudentAnnouncements = (
       ))}
     </div>
   );
-};
+}
 
 export { TalentDetailsStudentAnnouncements };

@@ -31,7 +31,7 @@ interface HeaderProps {
   dashboard?: boolean;
 }
 
-const Header = (props: HeaderProps) => {
+function Header(props: HeaderProps) {
   const { dashboard } = props;
 
   const router = useRouter();
@@ -177,6 +177,6 @@ const Header = (props: HeaderProps) => {
       {component}
     </>
   );
-};
+}
 
 export { Header };

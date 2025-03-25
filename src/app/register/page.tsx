@@ -30,7 +30,7 @@ import { useAppDispatch, useAppSelector } from "~/store";
 import { register } from "~/store/auth-slice";
 import { getError } from "~/utils/error";
 
-const RegisterPage = () => {
+export default function RegisterPage() {
   const form = useForm<RegisterSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
@@ -326,6 +326,4 @@ const RegisterPage = () => {
       {component}
     </PageLayout>
   );
-};
-
-export default RegisterPage;
+}

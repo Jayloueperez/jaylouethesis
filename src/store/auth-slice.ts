@@ -27,7 +27,7 @@ import {
   LoginSchema,
   RegisterSchema,
 } from "~/schema/auth";
-import { UserRoleSchema } from "~/schema/data";
+import { UserRoleSchema } from "~/schema/data-base";
 import { getError } from "~/utils/error";
 import { generateKeywords } from "~/utils/string";
 

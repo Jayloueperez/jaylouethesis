@@ -6,13 +6,12 @@ import {
   getTalents,
   getUsers,
 } from "~/lib/firebase/client/firestore";
+import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 import {
   ApplicationSchema,
-  ApplicationStatusSchema,
   TalentSchema,
-  TalentTypeSchema,
   UserSchema,
-} from "~/schema/data";
+} from "~/schema/data-client";
 
 export interface UseApplicationsParams {
   status?: ApplicationStatusSchema | ApplicationStatusSchema[];

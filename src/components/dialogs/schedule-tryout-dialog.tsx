@@ -14,7 +14,8 @@ import { ApplicationWithData } from "~/hooks/firestore/use-applications";
 import { useTalentTryouts } from "~/hooks/firestore/use-talent-tryouts";
 import { useAlert } from "~/hooks/use-alert";
 import { updateTalentTryout } from "~/lib/firebase/client/firestore";
-import { TalentTryoutSchema, TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
+import { TalentTryoutSchema } from "~/schema/data-client";
 import { getError } from "~/utils/error";
 import { Button } from "../ui/button";
 import { CreateTalentTryoutDialog } from "./create-talent-tryout-dialog";
@@ -27,7 +28,7 @@ export interface ScheduleTryoutDialogProps {
   student: ApplicationWithData;
 }
 
-const ScheduleTryoutDialog = (props: ScheduleTryoutDialogProps) => {
+function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
   const { talentId, talentType, student, ...rest } = props;
 
   const [open, setOpen] = useState<boolean>(false);
@@ -105,9 +106,7 @@ const ScheduleTryoutDialog = (props: ScheduleTryoutDialogProps) => {
           </DialogHeader>
 
           <div className="flex flex-1 flex-col gap-2">
-            {talentTryoutsLoading && (
-              <Loader className="size-4 animate-spin" />
-            )}
+            {talentTryoutsLoading && <Loader className="size-4 animate-spin" />}
 
             {!talentTryoutsLoading && talentTryouts.length === 0 && (
               <>
@@ -192,6 +191,6 @@ const ScheduleTryoutDialog = (props: ScheduleTryoutDialogProps) => {
       {component}
     </Dialog>
   );
-};
+}
 
 export { ScheduleTryoutDialog };

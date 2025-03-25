@@ -4,13 +4,13 @@ import { ReactNode } from "react";
 import { useParams } from "next/navigation";
 
 import { TalentProvider } from "~/providers/TalentProvider";
-import { TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
 
 interface TalentLayoutProps {
   children?: ReactNode;
 }
 
-const TalentLayout = (props: TalentLayoutProps) => {
+export default function TalentLayout(props: TalentLayoutProps) {
   const { children } = props;
 
   const { talentId, talentType } = useParams<{
@@ -23,6 +23,4 @@ const TalentLayout = (props: TalentLayoutProps) => {
       {children}
     </TalentProvider>
   );
-};
-
-export default TalentLayout;
+}

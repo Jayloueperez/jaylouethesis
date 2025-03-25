@@ -28,12 +28,16 @@ import {
   UpdateTalentTryoutInputSchema,
 } from "~/schema/crud";
 import {
+  AnnouncementTypeSchema,
+  ApplicationStatusSchema,
+  TalentTypeSchema,
+  UserRoleSchema,
+} from "~/schema/data-base";
+import {
   announcementSchema,
   AnnouncementSchema,
-  AnnouncementTypeSchema,
   applicationSchema,
   ApplicationSchema,
-  ApplicationStatusSchema,
   MessageContainerSchema,
   MessageSchema,
   notificationSchema,
@@ -42,11 +46,9 @@ import {
   TalentSchema,
   talentTryoutSchema,
   TalentTryoutSchema,
-  TalentTypeSchema,
-  UserRoleSchema,
   userSchema,
   UserSchema,
-} from "~/schema/data";
+} from "~/schema/data-client";
 import { getError } from "~/utils/error";
 import { generateKeywords } from "~/utils/string";
 import { firestore } from ".";

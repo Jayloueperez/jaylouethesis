@@ -15,7 +15,7 @@ interface UseAlertData {
   description: string;
 }
 
-const useAlert = () => {
+function useAlert() {
   const [data, setData] = useState<UseAlertData | null>(null);
 
   const openAlert = useCallback((d: UseAlertData) => setData(d), []);
@@ -40,6 +40,6 @@ const useAlert = () => {
       </AlertDialog>
     ) : null,
   };
-};
+}
 
 export { useAlert };

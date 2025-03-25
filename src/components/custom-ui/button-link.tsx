@@ -1,4 +1,4 @@
-import { ComponentProps, ComponentRef, forwardRef } from "react";
+import { ComponentProps } from "react";
 import Link, { LinkProps } from "next/link";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps } from "class-variance-authority";
@@ -13,21 +13,17 @@ export interface ButtonLinkProps
   asChild?: boolean;
 }
 
-const ButtonLink = forwardRef<ComponentRef<typeof Link>, ButtonLinkProps>(
-  (props, ref) => {
-    const { asChild, className, variant, size, shape, ...rest } = props;
+function ButtonLink(props: ButtonLinkProps) {
+  const { asChild, className, variant, size, shape, ...rest } = props;
 
-    const Comp = asChild ? Slot : Link;
+  const Comp = asChild ? Slot : Link;
 
-    return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, className, shape }))}
-        ref={ref}
-        {...rest}
-      />
-    );
-  },
-);
-ButtonLink.displayName = "ButtonLink";
+  return (
+    <Comp
+      className={cn(buttonVariants({ variant, size, className, shape }))}
+      {...rest}
+    />
+  );
+}
 
 export { ButtonLink };

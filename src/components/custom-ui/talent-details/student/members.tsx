@@ -16,21 +16,19 @@ import {
   getApplicationByRealtime,
   getUsersRealtime,
 } from "~/lib/firebase/client/firestore";
+import { TalentTypeSchema } from "~/schema/data-base";
 import {
   ApplicationSchema,
   TalentSchema,
-  TalentTypeSchema,
   UserSchema,
-} from "~/schema/data";
+} from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 
 interface TalentDetailsStudentMembersProps {
   talent: TalentSchema;
 }
 
-const TalentDetailsStudentMembers = (
-  props: TalentDetailsStudentMembersProps,
-) => {
+function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
   const { talent } = props;
 
   const [application, setApplication] = useState<ApplicationSchema | null>(
@@ -153,6 +151,6 @@ const TalentDetailsStudentMembers = (
       </Card>
     </div>
   );
-};
+}
 
 export { TalentDetailsStudentMembers };

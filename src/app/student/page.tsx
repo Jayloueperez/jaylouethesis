@@ -12,9 +12,9 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import { getAnnouncementsRealtime } from "~/lib/firebase/client/firestore";
-import { AnnouncementSchema } from "~/schema/data";
+import { AnnouncementSchema } from "~/schema/data-client";
 
-const StudentPage = () => {
+export default function StudentPage() {
   const [announcements, setAnnouncements] = useState<AnnouncementSchema[]>([]);
   const [sort, setSort] = useState<
     "latest" | "oldest" | "latest-by-date" | "oldest-by-date"
@@ -66,6 +66,4 @@ const StudentPage = () => {
       </div>
     </StudentLayout>
   );
-};
-
-export default StudentPage;
+}

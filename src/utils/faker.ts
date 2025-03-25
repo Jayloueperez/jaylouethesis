@@ -2,7 +2,8 @@ import { faker } from "@faker-js/faker";
 import { differenceInYears } from "date-fns";
 
 import { courses } from "~/const/courses";
-import { UserRoleSchema, UserSchema } from "~/schema/data";
+import { UserRoleSchema } from "~/schema/data-base";
+import { UserSchema } from "~/schema/data-client";
 
 export const generateAddress = () =>
   [faker.location.county(), faker.location.city(), faker.location.state()].join(
@@ -57,6 +58,7 @@ export const generateUsers = <
         dateCreated: new Date(),
         dateUpdated: new Date(),
         tokens: [],
+        status: "pending",
         ...extra,
       }) satisfies UserSchema,
   );

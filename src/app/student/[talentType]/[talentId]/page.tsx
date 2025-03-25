@@ -8,10 +8,10 @@ import { TalentDetails } from "~/components/custom-ui/talent-details";
 import { StudentLayout } from "~/components/layout/student-layout";
 import { useTalentTypeParams } from "~/hooks/use-talent-type-params";
 import { useTalentContext } from "~/providers/TalentProvider";
-import { TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
 import { useAppSelector } from "~/store";
 
-const TalentDetailsPage = () => {
+export default function TalentDetailsPage() {
   const router = useRouter();
   const { talentType } = useParams<{
     talentId: string;
@@ -48,6 +48,4 @@ const TalentDetailsPage = () => {
       <TalentDetails talent={talent} />
     </StudentLayout>
   );
-};
-
-export default TalentDetailsPage;
+}

@@ -17,7 +17,8 @@ import {
   CreateTalentInputSchema,
   createTalentInputSchema,
 } from "~/schema/crud";
-import { TalentSchema, TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
+import { TalentSchema } from "~/schema/data-client";
 import { getError } from "~/utils/error";
 import { Button } from "../ui/button";
 import {
@@ -38,7 +39,7 @@ interface TalentFormDialogProps {
   type: TalentTypeSchema;
 }
 
-const TalentFormDialog = (props: TalentFormDialogProps) => {
+function TalentFormDialog(props: TalentFormDialogProps) {
   const { open, onOpenChange, talent, type } = props;
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -158,6 +159,6 @@ const TalentFormDialog = (props: TalentFormDialogProps) => {
       {component}
     </Dialog>
   );
-};
+}
 
 export { TalentFormDialog };

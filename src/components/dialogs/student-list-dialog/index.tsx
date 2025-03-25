@@ -17,14 +17,14 @@ import {
   ApplicationSchema,
   TalentTryoutSchema,
   UserSchema,
-} from "~/schema/data";
+} from "~/schema/data-client";
 import { StudentItem } from "./student-item";
 
 interface StudentListDialogProps extends DialogProps {
   talentTryout: TalentTryoutSchema;
 }
 
-const StudentListDialog = (props: StudentListDialogProps) => {
+function StudentListDialog(props: StudentListDialogProps) {
   const { talentTryout, open, onOpenChange } = props;
 
   const [applications, setApplications] = useState<
@@ -98,6 +98,6 @@ const StudentListDialog = (props: StudentListDialogProps) => {
       </DialogContent>
     </Dialog>
   );
-};
+}
 
 export { StudentListDialog };

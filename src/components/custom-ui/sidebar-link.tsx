@@ -1,4 +1,4 @@
-import { ComponentProps, ComponentRef, forwardRef } from "react";
+import { ComponentProps } from "react";
 import Link, { LinkProps } from "next/link";
 import { Slot } from "@radix-ui/react-slot";
 import { LucideIcon } from "lucide-react";
@@ -13,29 +13,25 @@ export interface SidebarLinkProps
   icon?: LucideIcon;
 }
 
-const SidebarLink = forwardRef<ComponentRef<typeof Link>, SidebarLinkProps>(
-  (props, ref) => {
-    const { asChild, className, active, icon: Icon, children, ...rest } = props;
+function SidebarLink(props: SidebarLinkProps) {
+  const { asChild, className, active, icon: Icon, children, ...rest } = props;
 
-    const Comp = asChild ? Slot : Link;
+  const Comp = asChild ? Slot : Link;
 
-    return (
-      <Comp
-        className={cn(
-          "flex h-16 items-center gap-4 rounded-md bg-violet-950 px-4 py-2 text-white transition-all hover:bg-flush-orange-500",
-          className,
-          active && "bg-flush-orange-500",
-        )}
-        ref={ref}
-        {...rest}
-      >
-        {!!Icon && <Icon className="h-6 w-6" />}
+  return (
+    <Comp
+      className={cn(
+        "hover:bg-flush-orange-500 flex h-16 items-center gap-4 rounded-md bg-violet-950 px-4 py-2 text-white transition-all",
+        className,
+        active && "bg-flush-orange-500",
+      )}
+      {...rest}
+    >
+      {!!Icon && <Icon className="h-6 w-6" />}
 
-        {children}
-      </Comp>
-    );
-  },
-);
-SidebarLink.displayName = "SidebarLink";
+      {children}
+    </Comp>
+  );
+}
 
 export { SidebarLink };

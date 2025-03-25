@@ -23,14 +23,15 @@ import {
 } from "~/components/ui/table";
 import { useApplications } from "~/hooks/firestore/use-applications";
 import { getUsersRealtime } from "~/lib/firebase/client/firestore";
-import { TalentSchema, TalentTypeSchema, UserSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
+import { TalentSchema, UserSchema } from "~/schema/data-client";
 import { ButtonLink } from "../../button-link";
 
 interface TalentDetailsAdminMembersProps {
   talent: TalentSchema;
 }
 
-const TalentDetailsAdminMembers = (props: TalentDetailsAdminMembersProps) => {
+function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
   const { talent } = props;
 
   const [members, setMembers] = useState<UserSchema[]>([]);
@@ -191,6 +192,6 @@ const TalentDetailsAdminMembers = (props: TalentDetailsAdminMembersProps) => {
       </Card>
     </div>
   );
-};
+}
 
 export { TalentDetailsAdminMembers };

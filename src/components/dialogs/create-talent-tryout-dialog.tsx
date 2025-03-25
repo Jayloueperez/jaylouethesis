@@ -17,7 +17,7 @@ import {
   createTalentTryoutInputSchema,
   CreateTalentTryoutInputSchema,
 } from "~/schema/crud";
-import { TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
 import { getError } from "~/utils/error";
 import { Button } from "../ui/button";
 import {
@@ -31,14 +31,14 @@ import {
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
 
-export interface CreateTalentTryoutDialogProps {
+interface CreateTalentTryoutDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   talentId: string;
   talentType: TalentTypeSchema;
 }
 
-const CreateTalentTryoutDialog = (props: CreateTalentTryoutDialogProps) => {
+function CreateTalentTryoutDialog(props: CreateTalentTryoutDialogProps) {
   const { open, onOpenChange, talentId, talentType } = props;
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -203,6 +203,7 @@ const CreateTalentTryoutDialog = (props: CreateTalentTryoutDialogProps) => {
       {component}
     </Dialog>
   );
-};
+}
 
 export { CreateTalentTryoutDialog };
+export type { CreateTalentTryoutDialogProps };

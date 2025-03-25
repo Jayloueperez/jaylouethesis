@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from "~/store";
 import { login } from "~/store/auth-slice";
 import { getError } from "~/utils/error";
 
-const AdminLogin = () => {
+export default function AdminLoginPage() {
   const router = useRouter();
 
   const { openAlert, component } = useAlert();
@@ -114,6 +114,4 @@ const AdminLogin = () => {
       {component}
     </PageLayout>
   );
-};
-
-export default AdminLogin;
+}

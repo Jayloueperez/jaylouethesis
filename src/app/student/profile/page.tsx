@@ -23,7 +23,7 @@ import {
 } from "~/components/ui/select";
 import { useAppSelector } from "~/store";
 
-const StudentProfilePage = () => {
+export default function StudentProfilePage() {
   const { userData } = useAppSelector((state) => state.user);
 
   const form = useForm({
@@ -267,6 +267,4 @@ const StudentProfilePage = () => {
       </div>
     </StudentLayout>
   );
-};
-
-export default StudentProfilePage;
+}

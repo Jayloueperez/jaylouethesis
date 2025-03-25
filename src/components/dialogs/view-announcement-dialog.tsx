@@ -10,7 +10,8 @@ import {
 } from "~/components/ui/dialog";
 import { useBoolean } from "~/hooks/use-boolean";
 import { deleteAnnouncement } from "~/lib/firebase/client/firestore";
-import { AnnouncementSchema, AnnouncementTypeSchema } from "~/schema/data";
+import { AnnouncementTypeSchema } from "~/schema/data-base";
+import { AnnouncementSchema } from "~/schema/data-client";
 import { Button } from "../ui/button";
 import { CreateAnnouncementDialog } from "./create-announcement-dialog";
 
@@ -27,7 +28,7 @@ interface ViewAnnouncementDialogProps {
   onOpenChange?: (open: boolean) => void;
 }
 
-const ViewAnnouncementDialog = (props: ViewAnnouncementDialogProps) => {
+function ViewAnnouncementDialog(props: ViewAnnouncementDialogProps) {
   const { announcement, ...rest } = props;
 
   const [open, setOpen] = useState<boolean>(false);
@@ -92,6 +93,6 @@ const ViewAnnouncementDialog = (props: ViewAnnouncementDialogProps) => {
       {component}
     </Dialog>
   );
-};
+}
 
 export { ViewAnnouncementDialog };

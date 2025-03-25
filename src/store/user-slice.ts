@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { UserSchema } from "~/schema/data";
+import { UserSchema } from "~/schema/data-client";
 
 export interface UserState {
   userData: UserSchema | null;

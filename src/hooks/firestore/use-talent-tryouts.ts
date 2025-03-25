@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { getTalentTryoutsRealtime } from "~/lib/firebase/client/firestore";
-import { TalentTryoutSchema, TalentTypeSchema } from "~/schema/data";
+import { TalentTypeSchema } from "~/schema/data-base";
+import { TalentTryoutSchema } from "~/schema/data-client";
 
 export interface UseTalentTryoutsParams {
   talentId?: string;

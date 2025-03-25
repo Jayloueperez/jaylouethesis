@@ -8,7 +8,7 @@ interface PageLayoutProps {
   className?: string;
 }
 
-const PageLayout = (props: PageLayoutProps) => {
+function PageLayout(props: PageLayoutProps) {
   const { children, className } = props;
 
   return (
@@ -31,6 +31,6 @@ const PageLayout = (props: PageLayoutProps) => {
       </footer>
     </div>
   );
-};
+}
 
 export { PageLayout };

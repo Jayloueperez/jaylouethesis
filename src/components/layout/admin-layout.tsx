@@ -20,7 +20,7 @@ interface AdminLayoutProps {
   className?: string;
 }
 
-const AdminLayout = (props: AdminLayoutProps) => {
+function AdminLayout(props: AdminLayoutProps) {
   const { children, className } = props;
 
   const router = useRouter();
@@ -114,6 +114,6 @@ const AdminLayout = (props: AdminLayoutProps) => {
       </main>
     </div>
   );
-};
+}
 
 export { AdminLayout };
