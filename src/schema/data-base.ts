@@ -12,9 +12,6 @@ export const userRoleSchema = z.enum([
 ]);
 export type UserRoleSchema = z.infer<typeof userRoleSchema>;
 
-export const userGenderSchema = z.enum(["male", "female", "na"]);
-export type UserGenderSchema = z.infer<typeof userGenderSchema>;
-
 export const userStatusSchema = z.enum(["pending", "confirmed", "rejected"]);
 export type UserStatusSchema = z.infer<typeof userStatusSchema>;
 
@@ -26,7 +23,7 @@ export const userBaseSchema = z.object({
     .string()
     .max(1, "Middle initial should only have a maximum of 1 letter."),
   surname: z.string(),
-  gender: userGenderSchema,
+  gender: z.string(),
   contact: z.string(),
   address: z.string(),
   age: z.string(),

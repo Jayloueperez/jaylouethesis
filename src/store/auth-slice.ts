@@ -102,7 +102,7 @@ export const loginWithGoogle = createAsyncThunk(
           firstName: data?.profile.firstName ?? "",
           middleInitial: "",
           surname: data?.profile.surname ?? "",
-          gender: "na",
+          gender: "",
           age: "",
           address: "",
           contact: "",

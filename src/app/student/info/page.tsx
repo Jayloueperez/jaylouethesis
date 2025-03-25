@@ -53,7 +53,7 @@ export default function StudentInfoPage() {
       contact: "",
       course: "",
       firstName: "",
-      gender: "na",
+      gender: "",
       middleInitial: "",
       section: "",
       surname: "",
@@ -72,8 +72,8 @@ export default function StudentInfoPage() {
         ...data,
         keywords: [
           ...generateKeywords(userData.email),
-          ...generateKeywords(userData.firstName),
-          ...generateKeywords(userData.surname),
+          ...generateKeywords(data.firstName),
+          ...generateKeywords(data.surname),
         ],
       });
 
@@ -195,7 +195,7 @@ export default function StudentInfoPage() {
                 />
 
                 <FormField
-                  control={form.control}
+                  control={control}
                   name="gender"
                   render={({ field }) => (
                     <FormItem className="flex flex-col gap-2 space-y-0">
@@ -204,6 +204,7 @@ export default function StudentInfoPage() {
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
+                        {...field}
                       >
                         <FormControl>
                           <SelectTrigger className="w-full">

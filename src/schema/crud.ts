@@ -75,7 +75,7 @@ export const updateUserInfoSchema = userBaseSchema
           path: ["firstName"],
         });
 
-      if (gender === "na")
+      if (!gender || gender === "na")
         ctx.addIssue({
           code: "custom",
           message: "Gender is required.",

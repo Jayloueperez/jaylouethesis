@@ -39,7 +39,7 @@ export default function RegisterPage() {
       firstName: "",
       middleInitial: "",
       surname: "",
-      gender: undefined,
+      gender: "",
       age: "",
       address: "",
       contact: "",
@@ -47,6 +47,8 @@ export default function RegisterPage() {
       section: "",
       year: "",
       status: "pending",
+      keywords: [],
+      tokens: [],
     },
   });
   const { control, handleSubmit } = form;
