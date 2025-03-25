@@ -149,16 +149,16 @@ function Header(props: HeaderProps) {
 
                     <DropdownMenuSeparator />
 
-                    <DropdownMenuItem asChild>
-                      {userData.role !== "unassigned" && (
-                        <>
+                    {userData.role !== "unassigned" && (
+                      <>
+                        <DropdownMenuItem asChild>
                           <Link href={`/${userData.role}`}>
                             <LayoutDashboard className="size-4" />
                             <span>Dashboard</span>
                           </Link>
-                        </>
-                      )}
-                    </DropdownMenuItem>
+                        </DropdownMenuItem>
+                      </>
+                    )}
 
                     <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="size-4" />

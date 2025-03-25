@@ -13,10 +13,11 @@ import { Header } from "./header";
 interface StudentLayoutProps {
   children?: ReactNode;
   className?: string;
+  sidebarHidden?: boolean;
 }
 
 function StudentLayout(props: StudentLayoutProps) {
-  const { children, className } = props;
+  const { children, className, sidebarHidden = false } = props;
 
   const router = useRouter();
   const pathname = usePathname();
@@ -24,6 +25,16 @@ function StudentLayout(props: StudentLayoutProps) {
   const { userData, loading, status } = useAppSelector((state) => state.user);
 
   const isLoaded = loading === false && status === "fetched";
+  const hasData = !!(
+    userData &&
+    userData.gender &&
+    userData.contact &&
+    userData.address &&
+    userData.age &&
+    userData.course &&
+    userData.year &&
+    userData.section
+  );
 
   useEffect(() => {
     if (isLoaded && userData) {
@@ -33,12 +44,19 @@ function StudentLayout(props: StudentLayoutProps) {
     }
   }, [isLoaded, router, userData]);
 
+  useEffect(() => {
+    if (isLoaded && userData && !hasData) {
+      router.replace("/student/info");
+    }
+  }, [isLoaded]);
+
   if (
     loading ||
     !isLoaded ||
     !userData ||
     (userData &&
-      (userData.role !== "student" || userData.status !== "confirmed"))
+      (userData.role !== "student" || userData.status !== "confirmed")) ||
+    (!pathname.startsWith("/student/info") && !hasData)
   )
     return <Loading />;
 
@@ -46,7 +64,12 @@ function StudentLayout(props: StudentLayoutProps) {
     <div className="relative flex min-h-screen flex-col">
       <Header dashboard />
 
-      <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white">
+      <div
+        className={cn(
+          "fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white",
+          sidebarHidden && "hidden",
+        )}
+      >
         <SidebarLink
           href="/student"
           icon={House}
@@ -92,6 +115,7 @@ function StudentLayout(props: StudentLayoutProps) {
         className={cn(
           "min-h mt-[calc(theme('spacing.24')+4px)] ml-64 flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col",
           className,
+          sidebarHidden && "ml-0",
         )}
       >
         {children}

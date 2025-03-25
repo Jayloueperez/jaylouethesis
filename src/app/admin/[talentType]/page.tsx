@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import _ from "lodash";
+import { Loader } from "lucide-react";
 
 import { Loading } from "~/components/custom-ui/loading";
 import { TalentCard } from "~/components/custom-ui/talent-card";
@@ -20,6 +21,7 @@ export default function TalentListPage() {
   const [talents, setTalents] = useState<TalentSchema[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
 
   const { talentType } = useParams<{
     talentType: TalentTypeSchema;
@@ -37,7 +39,10 @@ export default function TalentListPage() {
   useEffect(() => {
     if (talentType !== "club" && talentType !== "sport") return;
 
-    const unsubscribe = getTalentsRealtime({ type: talentType })(setTalents);
+    const unsubscribe = getTalentsRealtime({ type: talentType })((v) => {
+      setTalents(v);
+      setLoading(false);
+    });
 
     return unsubscribe;
   }, [talentType]);
@@ -64,7 +69,21 @@ export default function TalentListPage() {
         </div>
       </div>
 
-      {filteredTalents.length > 0 && (
+      {loading && (
+        <div className="flex flex-1 items-center justify-center gap-2">
+          <Loader className="size-4 animate-spin" />
+
+          <span>Loading announcements...</span>
+        </div>
+      )}
+
+      {!loading && filteredTalents.length === 0 && (
+        <div className="flex flex-1 items-center justify-center">
+          <span className="text-gray-500">No {talentType} records found.</span>
+        </div>
+      )}
+
+      {!loading && filteredTalents.length > 0 && (
         <div className="grid grid-cols-3 gap-4">
           {filteredTalents.map((talent) => (
             <TalentCard
@@ -74,12 +93,6 @@ export default function TalentListPage() {
               type={talentType}
             />
           ))}
-        </div>
-      )}
-
-      {filteredTalents.length === 0 && (
-        <div className="flex flex-1 items-center justify-center">
-          <span className="text-gray-500">No {talentType} records found.</span>
         </div>
       )}
 

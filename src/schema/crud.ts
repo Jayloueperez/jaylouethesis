@@ -7,11 +7,111 @@ import {
   talentBaseSchema,
   talentTeamBaseSchema,
   talentTryoutBaseSchema,
+  userBaseSchema,
 } from "./data-base";
 
 /**
  * USER
  */
+export const updateUserInfoSchema = userBaseSchema
+  .omit({
+    id: true,
+    email: true,
+    keywords: true,
+    profile: true,
+    provider: true,
+    role: true,
+    status: true,
+    tokens: true,
+  })
+  .superRefine(
+    (
+      {
+        address,
+        age,
+        contact,
+        course,
+        firstName,
+        gender,
+        middleInitial,
+        section,
+        surname,
+        year,
+      },
+      ctx,
+    ) => {
+      if (!address)
+        ctx.addIssue({
+          code: "custom",
+          message: "Address is required.",
+          path: ["address"],
+        });
+
+      if (!age)
+        ctx.addIssue({
+          code: "custom",
+          message: "Age is required.",
+          path: ["age"],
+        });
+
+      if (!contact)
+        ctx.addIssue({
+          code: "custom",
+          message: "Contact is required.",
+          path: ["contact"],
+        });
+
+      if (!course)
+        ctx.addIssue({
+          code: "custom",
+          message: "Course is required.",
+          path: ["course"],
+        });
+
+      if (!firstName)
+        ctx.addIssue({
+          code: "custom",
+          message: "First name is required.",
+          path: ["firstName"],
+        });
+
+      if (gender === "na")
+        ctx.addIssue({
+          code: "custom",
+          message: "Gender is required.",
+          path: ["gender"],
+        });
+
+      if (middleInitial && middleInitial.length > 1)
+        ctx.addIssue({
+          code: "custom",
+          message: "Middle initial should only be 1 character long.",
+          path: ["middleInitial"],
+        });
+
+      if (!section)
+        ctx.addIssue({
+          code: "custom",
+          message: "Section is required.",
+          path: ["section"],
+        });
+
+      if (!surname)
+        ctx.addIssue({
+          code: "custom",
+          message: "Surname is required.",
+          path: ["surname"],
+        });
+
+      if (!year)
+        ctx.addIssue({
+          code: "custom",
+          message: "Year is required.",
+          path: ["year"],
+        });
+    },
+  );
+export type UpdateUserInfoSchema = z.infer<typeof updateUserInfoSchema>;
 
 /**
  * TALENT

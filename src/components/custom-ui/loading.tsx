@@ -15,9 +15,9 @@ function Loading() {
       />
 
       <div className="flex items-center gap-2">
-        <span>Loading...</span>
-
         <Loader className="size-4 animate-spin" />
+
+        <span>Loading...</span>
       </div>
     </div>
   );

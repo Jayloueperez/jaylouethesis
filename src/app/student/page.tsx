@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Loader } from "lucide-react";
 
 import { AnnouncementCard } from "~/components/custom-ui/announcement-card";
 import { StudentLayout } from "~/components/layout/student-layout";
@@ -16,14 +17,16 @@ import { AnnouncementSchema } from "~/schema/data-client";
 
 export default function StudentPage() {
   const [announcements, setAnnouncements] = useState<AnnouncementSchema[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [sort, setSort] = useState<
     "latest" | "oldest" | "latest-by-date" | "oldest-by-date"
   >("latest");
 
   useEffect(() => {
-    const unsubscribe = getAnnouncementsRealtime({ type: "all", sort })(
-      setAnnouncements,
-    );
+    const unsubscribe = getAnnouncementsRealtime({ type: "all", sort })((v) => {
+      setAnnouncements(v);
+      setLoading(false);
+    });
 
     return unsubscribe;
   }, [sort]);
@@ -56,14 +59,30 @@ export default function StudentPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        {announcements.map((announcement, i) => (
-          <AnnouncementCard
-            key={`announcement-${i}`}
-            announcement={announcement}
-          />
-        ))}
-      </div>
+      {loading && (
+        <div className="flex flex-1 items-center justify-center gap-2">
+          <Loader className="size-4 animate-spin" />
+
+          <span>Loading announcements...</span>
+        </div>
+      )}
+
+      {!loading && announcements.length === 0 && (
+        <div className="flex flex-1 items-center justify-center gap-2">
+          <span className="text-gray-500">No announcements.</span>
+        </div>
+      )}
+
+      {!loading && announcements.length > 0 && (
+        <div className="grid grid-cols-3 gap-4">
+          {announcements.map((announcement, i) => (
+            <AnnouncementCard
+              key={`announcement-${i}`}
+              announcement={announcement}
+            />
+          ))}
+        </div>
+      )}
     </StudentLayout>
   );
 }
