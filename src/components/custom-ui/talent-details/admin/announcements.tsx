@@ -44,11 +44,7 @@ const TalentDetailsAdminAnnouncements = (
       )}
 
       {announcements.map((announcement) => (
-        <AnnouncementCard
-          key={announcement.id}
-          announcement={announcement}
-          href={`/admin/announcements/${announcement.id}`}
-        />
+        <AnnouncementCard key={announcement.id} announcement={announcement} />
       ))}
     </div>
   );

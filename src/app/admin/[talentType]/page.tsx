@@ -63,16 +63,26 @@ const TalentList = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        {filteredTalents.map((talent) => (
-          <TalentCard
-            key={talent.id}
-            href={`/admin/${talentType}/${talent.id}`}
-            talent={talent}
-            type={talentType}
-          />
-        ))}
-      </div>
+      {filteredTalents.length > 0 && (
+        <div className="grid grid-cols-3 gap-4">
+          {filteredTalents.map((talent) => (
+            <TalentCard
+              key={talent.id}
+              href={`/admin/${talentType}/${talent.id}`}
+              talent={talent}
+              type={talentType}
+            />
+          ))}
+        </div>
+      )}
+
+      {filteredTalents.length === 0 && (
+        <div className="flex flex-1 items-center justify-center">
+          <span className="text-gray-500">
+            No {talentType} records found.
+          </span>
+        </div>
+      )}
 
       <TalentFormDialog type={talentType} open={open} onOpenChange={setOpen} />
     </AdminLayout>

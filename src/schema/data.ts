@@ -11,11 +11,19 @@ export type TimestampDateSchema = z.infer<typeof timestampDateSchema>;
  * USER
  */
 
-export const userRoleSchema = z.enum(["admin", "student"]);
+export const userRoleSchema = z.enum([
+  "admin",
+  "student",
+  "teacher",
+  "unassigned",
+]);
 export type UserRoleSchema = z.infer<typeof userRoleSchema>;
 
 export const userGenderSchema = z.enum(["male", "female", "na"]);
 export type UserGenderSchema = z.infer<typeof userGenderSchema>;
+
+export const userStatusSchema = z.enum(["pending", "confirmed", "rejected"]);
+export type UserStatusSchema = z.infer<typeof userStatusSchema>;
 
 export const userSchema = z.object({
   id: z.string(),
@@ -37,6 +45,7 @@ export const userSchema = z.object({
   keywords: z.string().array(),
   provider: z.enum(["email-password", "google"]),
   tokens: z.string().array(),
+  status: userStatusSchema.default("pending"),
   dateCreated: timestampDateSchema,
   dateUpdated: timestampDateSchema,
 });

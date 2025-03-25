@@ -83,7 +83,7 @@ const TalentDetailsStudentMembers = (
         <div className="flex items-center gap-2"></div>
       </div>
 
-      <Card>
+      <Card className="p-0">
         <Table>
           <TableHeader>
             <TableRow>

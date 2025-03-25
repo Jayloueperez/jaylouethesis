@@ -1,0 +1,201 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Eye, Loader, Trash } from "lucide-react";
+
+import { AdminLayout } from "~/components/layout/admin-layout";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
+import { Input } from "~/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
+import { getUsersRealtime } from "~/lib/firebase/client/firestore";
+import { UserSchema } from "~/schema/data";
+
+const AdminUsersPage = () => {
+  const [users, setUsers] = useState<UserSchema[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [all, setAll] = useState<boolean>(false);
+  const [selected, setSelected] = useState<string[]>([]);
+
+  const filteredUsers = users;
+
+  const handleToggleUser = (id: string) => {
+    const exist = selected.indexOf(id) !== -1;
+
+    if (exist) return setSelected((v) => v.filter((v1) => v1 !== id));
+
+    setSelected((v) => [...v, id]);
+  };
+
+  useEffect(() => {
+    if (all) {
+      setSelected(users.map((d) => d.id));
+    } else {
+      setSelected([]);
+    }
+  }, [all, users]);
+
+  useEffect(() => {
+    const unsubscribe = getUsersRealtime({
+      roles: ["student", "teacher", "unassigned"],
+    })((v) => {
+      setUsers(v);
+      setLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  return (
+    <AdminLayout className="gap-4 p-4">
+      <div className="flex h-16 items-center justify-between">
+        <span className="text-xl font-medium">Users</span>
+
+        <div className="flex items-center gap-2">
+          <Input placeholder="Search..." />
+        </div>
+      </div>
+
+      <Card className="p-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-12">
+                <Checkbox checked={all} onCheckedChange={(v) => setAll(!!v)} />
+              </TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Course</TableHead>
+              <TableHead>Year</TableHead>
+              <TableHead>Section</TableHead>
+              <TableHead className="w-36">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+
+          <TableBody>
+            {loading && (
+              <TableRow>
+                <TableCell colSpan={6}>
+                  <div className="flex items-center justify-center gap-2">
+                    <Loader className="size-4 animate-spin" />
+
+                    <span>Loading...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
+
+            {!loading && filteredUsers.length === 0 && (
+              <TableRow>
+                <TableCell className="text-center text-gray-500" colSpan={6}>
+                  No student records found.
+                </TableCell>
+              </TableRow>
+            )}
+
+            {!loading &&
+              filteredUsers.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selected.includes(user.id)}
+                      onCheckedChange={() => handleToggleUser(user.id)}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-4">
+                      <Avatar className="size-12">
+                        <AvatarImage
+                          src="https://placehold.co/400x400"
+                          alt="Example Club 1"
+                        />
+                        <AvatarFallback>{user.firstName}</AvatarFallback>
+                      </Avatar>
+
+                      <span>
+                        {user.firstName} {user.middleInitial}.{" "}
+                        {user.surname}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell>{user.course}</TableCell>
+                  <TableCell>{user.year}</TableCell>
+                  <TableCell>{user.section}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="blue"
+                        size="icon"
+                        shape="pill"
+                      >
+                        <Eye className="size-4" />
+                      </Button>
+
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            shape="pill"
+                          >
+                            <Trash className="size-4" />
+                          </Button>
+                        </AlertDialogTrigger>
+
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>
+                              Confirm Deletion
+                            </AlertDialogTitle>
+
+                            <AlertDialogDescription>
+                              Are you sure you want to delete{" "}
+                              <span className="text-destructive font-bold">
+                                {user.firstName} {user.middleInitial}.{" "}
+                                {user.surname}
+                              </span>
+                              ?
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction variant="destructive">
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </Card>
+    </AdminLayout>
+  );
+};
+
+export default AdminUsersPage;

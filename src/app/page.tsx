@@ -12,7 +12,8 @@ const HomePage = () => {
           <div className="relative flex flex-col gap-16">
             <div className="flex flex-col gap-2">
               <h1 className="text-6xl font-medium italic">
-                WELCOME TO BISU <br /> SPORTS REGISTRATION <br /> SYSTEM
+                Wecome to BISU Sports, <br /> Culture & Arts
+                <br /> Registration System
               </h1>
               <span>(2024 - 2025)</span>
             </div>
@@ -24,7 +25,7 @@ const HomePage = () => {
             </div>
 
             <Image
-              className="absolute bottom-0 right-0 aspect-[464/309] w-[40%]"
+              className="absolute right-0 bottom-0 aspect-[464/309] w-[40%]"
               src="/images/sports.png"
               alt="sports"
               width={464}

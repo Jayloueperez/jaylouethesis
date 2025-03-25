@@ -183,7 +183,7 @@ const TalentApplicantsPage = () => {
           </span>
         </div>
 
-        <Card>
+        <Card className="p-0">
           <Table>
             <TableHeader>
               <TableRow>
@@ -243,7 +243,7 @@ const TalentApplicantsPage = () => {
                       <TableCell>{student.course}</TableCell>
                       <TableCell>{student.year}</TableCell>
                       <TableCell>{student.section}</TableCell>
-                      <TableCell className="uppercase text-gray-500">
+                      <TableCell className="text-gray-500 uppercase">
                         {status}
                       </TableCell>
                       <TableCell>

@@ -166,7 +166,7 @@ const TalentSchedulesPage = () => {
           </Button>
         </div>
 
-        <Card>
+        <Card className="p-0">
           <Table>
             <TableHeader>
               <TableRow>

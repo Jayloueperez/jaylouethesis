@@ -23,7 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "~/components/ui/tooltip";
-import { cn } from "~/utils/style";
+import { cn } from "~/lib/utils";
 
 const chats = [
   {

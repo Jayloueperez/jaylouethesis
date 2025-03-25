@@ -230,14 +230,19 @@ export const getUsers = async (params?: {
 };
 
 export const getUsersRealtime =
-  (params?: { ids?: string[]; role?: UserRoleSchema }) =>
+  (params?: {
+    ids?: string[];
+    role?: UserRoleSchema;
+    roles?: UserRoleSchema[];
+  }) =>
   (callback: (users: UserSchema[]) => void) => {
-    const { ids, role } = params ?? {};
+    const { ids, role, roles } = params ?? {};
 
     let q = query(USERS_COLLECTION);
 
     if (ids && ids.length > 0) q = query(q, where("id", "in", ids));
     if (role) q = query(q, where("role", "==", role));
+    if (roles && roles.length > 0) q = query(q, where("role", "in", roles));
 
     return onSnapshot(q, (snapshot) => {
       if (snapshot.size === 0) return callback([]);

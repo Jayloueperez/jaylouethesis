@@ -3,7 +3,7 @@ import Link, { LinkProps } from "next/link";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps } from "class-variance-authority";
 
-import { cn } from "~/utils/style";
+import { cn } from "~/lib/utils";
 import { buttonVariants } from "../ui/button";
 
 export interface ButtonLinkProps

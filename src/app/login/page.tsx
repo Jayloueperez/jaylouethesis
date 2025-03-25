@@ -23,6 +23,8 @@ const LoginPage = () => {
       const { uid } = await dispatch(loginWithGoogle()).unwrap();
       const udata = await getUser(uid);
 
+      if (udata.role === "unassigned") return router.replace("/pending");
+
       router.replace(`/${udata.role}`);
     } catch (error) {
       const err = getError(error, "Failed to log in with google.");

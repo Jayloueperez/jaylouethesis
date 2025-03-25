@@ -61,7 +61,6 @@ const StudentPage = () => {
           <AnnouncementCard
             key={`announcement-${i}`}
             announcement={announcement}
-            href=""
           />
         ))}
       </div>

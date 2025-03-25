@@ -20,10 +20,10 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { useAlert } from "~/hooks/use-alert";
 import { useNotifications } from "~/hooks/use-notifications";
+import { cn } from "~/lib/utils";
 import { useAppDispatch, useAppSelector } from "~/store";
 import { logout } from "~/store/auth-slice";
 import { getError } from "~/utils/error";
-import { cn } from "~/utils/style";
 import { ButtonLink } from "../custom-ui/button-link";
 import { Skeleton } from "../ui/skeleton";
 
@@ -64,7 +64,7 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 border-b-4 border-b-flush-orange-500 bg-violet-950 text-white">
+      <header className="border-b-flush-orange-500 fixed top-0 right-0 left-0 z-50 border-b-4 bg-violet-950 text-white">
         <div
           className={cn(
             "flex h-24 items-center justify-between gap-4",
@@ -125,7 +125,7 @@ const Header = (props: HeaderProps) => {
                 </DropdownMenu>
 
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center gap-2 rounded-md bg-flush-orange-500 p-2 outline-none">
+                  <DropdownMenuTrigger className="bg-flush-orange-500 flex items-center gap-2 rounded-md p-2 outline-none">
                     <Avatar>
                       <AvatarImage
                         src={userData.profile}
@@ -148,10 +148,14 @@ const Header = (props: HeaderProps) => {
                     <DropdownMenuSeparator />
 
                     <DropdownMenuItem asChild>
-                      <Link href={`/${userData.role}`}>
-                        <LayoutDashboard className="size-4" />
-                        <span>Dashboard</span>
-                      </Link>
+                      {userData.role !== "unassigned" && (
+                        <>
+                          <Link href={`/${userData.role}`}>
+                            <LayoutDashboard className="size-4" />
+                            <span>Dashboard</span>
+                          </Link>
+                        </>
+                      )}
                     </DropdownMenuItem>
 
                     <DropdownMenuItem onClick={handleLogout}>

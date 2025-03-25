@@ -83,7 +83,7 @@ const AdminRegistrationsPage = () => {
         </div>
       </div>
 
-      <Card>
+      <Card className="p-0">
         <Table ref={targetRef}>
           <TableHeader>
             <TableRow>
@@ -172,7 +172,7 @@ const AdminRegistrationsPage = () => {
                     <TableCell>{user.course}</TableCell>
                     <TableCell>{user.year}</TableCell>
                     <TableCell>{user.section}</TableCell>
-                    <TableCell className="uppercase text-gray-500">
+                    <TableCell className="text-gray-500 uppercase">
                       {status}
                     </TableCell>
                     <TableCell>

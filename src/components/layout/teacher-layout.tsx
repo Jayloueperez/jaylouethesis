@@ -1,6 +1,13 @@
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Club, House, User2, Volleyball } from "lucide-react";
+import {
+  Club,
+  Home,
+  ListTodo,
+  Megaphone,
+  Users2,
+  Volleyball,
+} from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { useAppSelector } from "~/store";
@@ -8,12 +15,12 @@ import { Loading } from "../custom-ui/loading";
 import { SidebarLink } from "../custom-ui/sidebar-link";
 import { Header } from "./header";
 
-interface StudentLayoutProps {
+interface TeacherLayoutProps {
   children?: ReactNode;
   className?: string;
 }
 
-const StudentLayout = (props: StudentLayoutProps) => {
+const TeacherLayout = (props: TeacherLayoutProps) => {
   const { children, className } = props;
 
   const router = useRouter();
@@ -27,7 +34,7 @@ const StudentLayout = (props: StudentLayoutProps) => {
     if (isLoaded && userData) {
       if (userData.role === "unassigned" || userData.status === "pending")
         return router.replace("/pending");
-      if (userData.role !== "student") router.replace(`/${userData.role}`);
+      if (userData.role !== "teacher") router.replace(`/${userData.role}`);
     }
   }, [isLoaded, router, userData]);
 
@@ -36,7 +43,7 @@ const StudentLayout = (props: StudentLayoutProps) => {
     !isLoaded ||
     !userData ||
     (userData &&
-      (userData.role !== "student" || userData.status !== "confirmed"))
+      (userData.role !== "teacher" || userData.status !== "confirmed"))
   )
     return <Loading />;
 
@@ -45,45 +52,49 @@ const StudentLayout = (props: StudentLayoutProps) => {
       <Header dashboard />
 
       <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white">
-        <SidebarLink
-          href="/student"
-          icon={House}
-          active={pathname === "/student"}
-        >
+        <SidebarLink href="/admin" icon={Home} active={pathname === "/admin"}>
           Home
         </SidebarLink>
 
         <SidebarLink
-          href="/student/club"
+          href="/admin/announcements"
+          icon={Megaphone}
+          active={pathname.startsWith("/admin/announcements")}
+        >
+          Announcements
+        </SidebarLink>
+
+        <SidebarLink
+          href="/admin/club"
           icon={Club}
-          active={pathname.startsWith("/student/club")}
+          active={pathname.startsWith("/admin/club")}
         >
           Clubs
         </SidebarLink>
 
         <SidebarLink
-          href="/student/sport"
+          href="/admin/sport"
           icon={Volleyball}
-          active={pathname.startsWith("/student/sport")}
+          active={pathname.startsWith("/admin/sport")}
         >
           Sports
         </SidebarLink>
 
+        <SidebarLink
+          href="/admin/applications"
+          icon={ListTodo}
+          active={pathname.startsWith("/admin/applications")}
+        >
+          Applications
+        </SidebarLink>
+
         {/* <SidebarLink
-          href="/student/messages"
+          href="/admin/messages"
           icon={MessageCircle}
-          active={pathname.startsWith("/student/messages")}
+          active={pathname.startsWith("/admin/messages")}
         >
           Messages
         </SidebarLink> */}
-
-        <SidebarLink
-          href="/student/profile"
-          icon={User2}
-          active={pathname.startsWith("/student/profile")}
-        >
-          Profile
-        </SidebarLink>
       </div>
 
       <main
@@ -98,4 +109,4 @@ const StudentLayout = (props: StudentLayoutProps) => {
   );
 };
 
-export { StudentLayout };
+export { TeacherLayout };

@@ -7,7 +7,7 @@ import { Montserrat, Open_Sans } from "next/font/google";
 
 import { Providers } from "~/components/providers";
 import { Wrapper } from "~/components/wrapper";
-import { cn } from "~/utils/style";
+import { cn } from "~/lib/utils";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",

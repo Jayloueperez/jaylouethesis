@@ -9,8 +9,8 @@ import {
   Volleyball,
 } from "lucide-react";
 
+import { cn } from "~/lib/utils";
 import { useAppSelector } from "~/store";
-import { cn } from "~/utils/style";
 import { Loading } from "../custom-ui/loading";
 import { SidebarLink } from "../custom-ui/sidebar-link";
 import { Header } from "./header";
@@ -31,15 +31,18 @@ const AdminLayout = (props: AdminLayoutProps) => {
   const isLoaded = loading === false && status === "fetched";
 
   useEffect(() => {
-    if (isLoaded && userData && userData.role !== "admin")
-      router.replace(`/${userData.role}`);
+    if (isLoaded && userData) {
+      if (userData.role === "unassigned" || userData.status === "pending")
+        return router.replace("/pending");
+      if (userData.role !== "admin") router.replace(`/${userData.role}`);
+    }
   }, [isLoaded, router, userData]);
 
   if (
     loading ||
     !isLoaded ||
     !userData ||
-    (userData && userData.role !== "admin")
+    (userData && (userData.role !== "admin" || userData.status !== "confirmed"))
   )
     return <Loading />;
 
@@ -47,7 +50,7 @@ const AdminLayout = (props: AdminLayoutProps) => {
     <div className="relative flex min-h-screen flex-col">
       <Header dashboard />
 
-      <div className="fixed bottom-0 left-0 top-[calc(theme('spacing.24')+4px)] z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white">
+      <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white">
         <SidebarLink href="/admin" icon={Home} active={pathname === "/admin"}>
           Home
         </SidebarLink>
@@ -77,11 +80,11 @@ const AdminLayout = (props: AdminLayoutProps) => {
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/students"
+          href="/admin/users"
           icon={Users2}
-          active={pathname.startsWith("/admin/students")}
+          active={pathname.startsWith("/admin/users")}
         >
-          Students
+          Users
         </SidebarLink>
 
         <SidebarLink
@@ -103,7 +106,7 @@ const AdminLayout = (props: AdminLayoutProps) => {
 
       <main
         className={cn(
-          "min-h ml-64 mt-[calc(theme('spacing.24')+4px)] flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col",
+          "min-h mt-[calc(theme('spacing.24')+4px)] ml-64 flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col",
           className,
         )}
       >

@@ -109,7 +109,7 @@ export const loginWithGoogle = createAsyncThunk(
           course: "",
           section: "",
           year: "",
-          role: "student",
+          role: "unassigned",
           profile: user.photoURL ?? "",
           keywords: [
             ...generateKeywords(user.email),
@@ -122,6 +122,7 @@ export const loginWithGoogle = createAsyncThunk(
           ],
           provider: "google",
           tokens: [],
+          status: "pending",
         });
       }
 
@@ -156,7 +157,7 @@ export const register = createAsyncThunk(
       await createUser(user.uid, {
         email,
         ...rest,
-        role: "student",
+        role: "unassigned",
         profile: "",
         provider: "email-password",
       });

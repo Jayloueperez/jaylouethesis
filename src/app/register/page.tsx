@@ -46,6 +46,7 @@ const RegisterPage = () => {
       course: "",
       section: "",
       year: "",
+      status: "pending",
     },
   });
   const { control, handleSubmit } = form;

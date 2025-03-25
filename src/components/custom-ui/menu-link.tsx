@@ -2,7 +2,7 @@ import { ComponentProps, ComponentRef, forwardRef } from "react";
 import Link, { LinkProps } from "next/link";
 import { Slot } from "@radix-ui/react-slot";
 
-import { cn } from "~/utils/style";
+import { cn } from "~/lib/utils";
 
 export interface MenuLinkProps
   extends LinkProps,

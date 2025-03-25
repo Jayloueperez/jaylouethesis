@@ -99,7 +99,7 @@ const TalentDetailsAdminMembers = (props: TalentDetailsAdminMembersProps) => {
         </div>
       </div>
 
-      <Card>
+      <Card className="p-0">
         <Table>
           <TableHeader>
             <TableRow>
