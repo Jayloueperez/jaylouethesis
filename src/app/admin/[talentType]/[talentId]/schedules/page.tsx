@@ -162,9 +162,7 @@ export default function TalentSchedulesPage() {
       {/* LIST */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <span className="text-lg">
-            {talent.name} {_.upperFirst(talentType)} Schedules
-          </span>
+          <span className="text-lg">{talent.name} Schedules</span>
 
           <Button variant="yellow" onClick={() => setOpen(true)}>
             <Calendar />

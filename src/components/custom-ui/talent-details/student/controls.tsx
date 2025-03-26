@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import _ from "lodash";
-import { ArrowLeft, CheckCheck, Plus, X } from "lucide-react";
+import { ArrowLeft, Calendar, CheckCheck, Plus, X } from "lucide-react";
 
 import { JoinTalentDialog } from "~/components/dialogs/join-talent-dialog";
 import { TryoutScheduleDialog } from "~/components/dialogs/tryout-schedule-dialog";
@@ -218,17 +218,21 @@ function TalentDetailsStudentControls(
     }
   }, [application]);
 
+  useEffect(() => {
+    if (isMember && openState === "tryout-schedule") setOpenState("none");
+  }, [isMember, openState]);
+
   if (!userData || loading) return <Loading />;
 
   return (
     <>
       {isMember && (
         <>
-          <Button variant="ghost" disabled>
+          <div className="flex h-10 items-center gap-2 px-3">
             <CheckCheck className="size-4 text-green-600" />
 
-            <span>Member</span>
-          </Button>
+            <span className="text-sm">Member</span>
+          </div>
 
           <AlertDialog
             open={openState === "leave-talent"}
@@ -289,6 +293,8 @@ function TalentDetailsStudentControls(
           variant="outline"
           onClick={() => setOpenState("tryout-schedule")}
         >
+          <Calendar className="size-4" />
+
           <span>View Tryout Schedule</span>
         </Button>
       )}

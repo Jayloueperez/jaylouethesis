@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
-import { usePDF } from "react-to-pdf";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
 import { AdminLayout } from "~/components/layout/admin-layout";
@@ -26,6 +25,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { useApplications } from "~/hooks/firestore/use-applications";
+import { usePdf } from "~/hooks/use-pdf";
 
 export default function AdminRegistrationsPage() {
   // const [all, setAll] = useState<boolean>(false);
@@ -33,7 +33,7 @@ export default function AdminRegistrationsPage() {
   const [filterBy, setFilterBy] = useState<string>("all");
 
   const { data: applications, loading } = useApplications();
-  const { toPDF, targetRef } = usePDF({
+  const { toPDF, targetRef } = usePdf({
     filename: `${new Date().getTime()}.pdf`,
   });
 

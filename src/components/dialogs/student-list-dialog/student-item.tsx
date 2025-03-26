@@ -7,16 +7,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { useAlert } from "~/hooks/use-alert";
 import {
+  createNotification,
+  deleteApplication,
+  deleteTalentTryout,
   updateApplication,
   updateTalent,
   updateTalentTryout,
 } from "~/lib/firebase/client/firestore";
+import { sendNotification } from "~/lib/firebase/client/messaging";
 import { useTalentContext } from "~/providers/TalentProvider";
 import {
   ApplicationSchema,
   TalentTryoutSchema,
   UserSchema,
 } from "~/schema/data-client";
+import { useAppSelector } from "~/store";
 import { getError } from "~/utils/error";
 import { BooleanDialog } from "../boolean-dialog";
 
@@ -38,20 +43,36 @@ function StudentItem(props: StudentItemProps) {
 
   const { component, openAlert } = useAlert();
   const { talent, loading } = useTalentContext();
+  const { userData } = useAppSelector((state) => state.user);
 
   const handleAcceptApplication = async () => {
-    if (!talent) return;
+    if (!talent || !userData) return;
+
     setLoadingState("accepting");
 
     try {
-      await updateApplication(application.id, {
-        status: "accepted",
-      });
       await updateTalent(talent.id, {
         members: [...talent.members, application.userId],
       });
+      await deleteApplication(application.id);
       await updateTalentTryout(talentTryout.id, {
         students: talentTryout.students.filter((s) => s !== application.id),
+      });
+
+      await sendNotification({
+        title: `Request Accepted`,
+        body: `You passed your tryout, you are now a member of ${talent.name} ${talent.type}.`,
+        // isRead: [],
+        receiver: application.userId,
+        sender: userData.id,
+      });
+
+      await createNotification({
+        title: `Request Accepted`,
+        body: `You passed your tryout, you are now a member of ${talent.name} ${talent.type}.`,
+        // isRead: [],
+        receiver: application.userId,
+        sender: userData.id,
       });
 
       openAlert({

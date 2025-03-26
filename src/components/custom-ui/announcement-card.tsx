@@ -20,10 +20,11 @@ const typeText: Record<AnnouncementTypeSchema, string> = {
 
 export interface AnnouncementCardProps {
   announcement: AnnouncementSchema;
+  viewOnly?: boolean;
 }
 
 function AnnouncementCard(props: AnnouncementCardProps) {
-  const { announcement } = props;
+  const { announcement, viewOnly } = props;
 
   const [open, setOpen] = useState<boolean>(false);
 
@@ -64,6 +65,7 @@ function AnnouncementCard(props: AnnouncementCardProps) {
         open={open}
         onOpenChange={setOpen}
         announcement={announcement}
+        viewOnly={viewOnly}
       />
     </Card>
   );

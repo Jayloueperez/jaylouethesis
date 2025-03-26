@@ -45,7 +45,9 @@ function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
   }>();
   const { userData } = useAppSelector((state) => state.user);
 
-  const canShowMembers = !!(application && application.status === "accepted");
+  const canShowMembers = userData
+    ? talent.members.includes(userData.id)
+    : false;
 
   useEffect(() => {
     const memberIds = talent.members ?? [];
@@ -103,7 +105,7 @@ function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
               </TableRow>
             )}
 
-            {canShowMembers && loading && (
+            {loading && canShowMembers && (
               <TableRow>
                 <TableCell className="text-center text-gray-500" colSpan={5}>
                   <div className="flex items-center justify-center gap-2">
@@ -115,7 +117,7 @@ function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
               </TableRow>
             )}
 
-            {canShowMembers && !loading && members.length === 0 && (
+            {!loading && canShowMembers && members.length === 0 && (
               <TableRow>
                 <TableCell className="text-center text-gray-500" colSpan={5}>
                   No members yet.

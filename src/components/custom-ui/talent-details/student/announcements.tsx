@@ -46,7 +46,11 @@ function TalentDetailsStudentAnnouncements(
       )}
 
       {announcements.map((announcement) => (
-        <AnnouncementCard key={announcement.id} announcement={announcement} />
+        <AnnouncementCard
+          key={announcement.id}
+          announcement={announcement}
+          viewOnly
+        />
       ))}
     </div>
   );

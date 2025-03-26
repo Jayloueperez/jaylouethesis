@@ -28,10 +28,11 @@ interface ViewAnnouncementDialogProps {
   announcement: AnnouncementSchema;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
+  viewOnly?: boolean;
 }
 
 function ViewAnnouncementDialog(props: ViewAnnouncementDialogProps) {
-  const { announcement, ...rest } = props;
+  const { announcement, viewOnly, ...rest } = props;
 
   const [open, setOpen] = useState<boolean>(false);
 
@@ -59,31 +60,33 @@ function ViewAnnouncementDialog(props: ViewAnnouncementDialogProps) {
           </div>
         </DialogHeader>
 
-        <div>
-          <p>{announcement.description}</p>
+        <div className="flex flex-col gap-2">
+          <span className="break-words">{announcement.description}</span>
+
+          <span className="text-gray-500">
+            {format(announcement.date, "MMM dd, yyyy @ hh:mma")}
+          </span>
         </div>
 
-        <span className="text-sm font-light uppercase">
-          {format(announcement.date, "MMM dd, yyyy @ hh:mma")}
-        </span>
-
-        <DialogFooter>
-          <Button variant="yellow" onClick={() => setOpen(true)}>
-            Edit
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={() =>
-              openBoolean({
-                title: "Confirm Delete",
-                description:
-                  "Are you sure you want to delete this announcement?",
-              })
-            }
-          >
-            Delete
-          </Button>
-        </DialogFooter>
+        {!viewOnly && (
+          <DialogFooter>
+            <Button variant="yellow" onClick={() => setOpen(true)}>
+              Edit
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() =>
+                openBoolean({
+                  title: "Confirm Delete",
+                  description:
+                    "Are you sure you want to delete this announcement?",
+                })
+              }
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        )}
       </DialogContent>
 
       <CreateAnnouncementDialog

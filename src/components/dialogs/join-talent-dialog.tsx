@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -77,6 +77,12 @@ function JoinTalentDialog(props: JoinTalentDialogProps) {
 
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (!open) {
+      reset();
+    }
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

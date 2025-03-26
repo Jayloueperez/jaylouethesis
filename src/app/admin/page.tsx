@@ -36,7 +36,7 @@ export default function AdminPage() {
 
   return (
     <AdminLayout className="gap-4 p-4">
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 gap-4">
         <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 bg-violet-950 p-4 text-white">
           <span>Approved Applications</span>
 
@@ -62,14 +62,6 @@ export default function AdminPage() {
                 {pendingApplicationsCount}
               </span>
             )}
-          </div>
-        </Card>
-
-        <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 bg-violet-950 p-4 text-white">
-          <span>Messages</span>
-
-          <div className="flex h-16 items-center">
-            <span className="text-6xl font-bold">0</span>
           </div>
         </Card>
       </div>

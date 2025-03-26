@@ -79,6 +79,7 @@ export default function StudentPage() {
             <AnnouncementCard
               key={`announcement-${i}`}
               announcement={announcement}
+              viewOnly
             />
           ))}
         </div>
