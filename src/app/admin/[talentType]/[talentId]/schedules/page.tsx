@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import _ from "lodash";
 import { Calendar, ChevronLeft, List, Loader, Trash } from "lucide-react";
@@ -62,6 +62,8 @@ export default function TalentSchedulesPage() {
     talentId: string;
     talentType: TalentTypeSchema;
   }>();
+  const searchParams = useSearchParams();
+  const scheduleId = searchParams.get("scheduleId");
 
   const { talent, loading } = useTalentContext();
   const { data: talentTryouts, loading: talentTryoutsLoading } =
@@ -100,6 +102,10 @@ export default function TalentSchedulesPage() {
 
     setLoadingState("none");
   };
+
+  useEffect(() => {
+    if (scheduleId) setSelectedTalentTryoutId(scheduleId);
+  }, [scheduleId]);
 
   if (!talent || talentTypeLoading || loading) return <Loading />;
 
@@ -277,6 +283,7 @@ export default function TalentSchedulesPage() {
           talentId={talentId}
           talentType={talentType}
           student={studentTryout}
+          talent={talent}
         />
       )}
 

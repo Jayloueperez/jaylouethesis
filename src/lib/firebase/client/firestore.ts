@@ -533,6 +533,33 @@ export const getTalentTryoutsRealtime =
     });
   };
 
+export const getTalentTryoutByRealtime =
+  (params?: { talentId: string; applicationId: string }) =>
+  (callback: (talentTryouts: TalentTryoutSchema | null) => void) => {
+    const { talentId, applicationId } = params ?? {};
+    console.log(talentId, applicationId);
+
+    let q = query(TALENT_TRYOUT_COLLECTION);
+
+    if (talentId) q = query(q, where("talentId", "==", talentId));
+    if (applicationId)
+      q = query(q, where("students", "array-contains", applicationId));
+
+    q = query(q, limit(1));
+
+    return onSnapshot(q, (snapshot) => {
+      const snapshotDoc = snapshot.docs[0];
+
+      if (!snapshotDoc || !snapshotDoc.exists) return callback(null);
+
+      const { data, error } = talentTryoutSchema.safeParse(snapshotDoc.data());
+
+      if (error) console.log("getTalentTryoutsRealtime error:", error);
+
+      callback(data ?? null);
+    });
+  };
+
 /**
  * ANNOUNCEMENT
  */
@@ -812,6 +839,19 @@ export const updateApplication = async (
   } catch (error) {
     console.log("updateApplication error:", error);
     const err = getError(error, "Failed updating application.");
+
+    throw err;
+  }
+};
+
+export const deleteApplication = async (id: string) => {
+  try {
+    const ref = doc(APPLICATION_COLLECTION, id);
+
+    return deleteDoc(ref);
+  } catch (error) {
+    console.log("deleteApplication error:", error);
+    const err = getError(error, "Failed deleting application.");
 
     throw err;
   }

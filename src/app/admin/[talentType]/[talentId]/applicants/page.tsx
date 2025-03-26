@@ -35,9 +35,14 @@ import {
 } from "~/hooks/firestore/use-applications";
 import { useAlert } from "~/hooks/use-alert";
 import { useTalentTypeParams } from "~/hooks/use-talent-type-params";
-import { updateApplication } from "~/lib/firebase/client/firestore";
+import {
+  createNotification,
+  updateApplication,
+} from "~/lib/firebase/client/firestore";
+import { sendNotification } from "~/lib/firebase/client/messaging";
 import { useTalentContext } from "~/providers/TalentProvider";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
+import { useAppSelector } from "~/store";
 import { getError } from "~/utils/error";
 
 export default function Page() {
@@ -67,6 +72,7 @@ export default function Page() {
   });
   const { loading: talentTypeLoading } = useTalentTypeParams();
   const { openAlert, component } = useAlert();
+  const { userData } = useAppSelector((state) => state.user);
 
   const filteredApplications = applications.filter((a) => {
     const filterSearch =
@@ -84,13 +90,29 @@ export default function Page() {
   });
 
   const handleAccept = async () => {
-    if (!acceptApplication) return;
+    if (!acceptApplication || !userData || !talent) return;
 
     setLoadingState("accepting");
 
     try {
       await updateApplication(acceptApplication.id, {
         status: "tryout",
+      });
+
+      await sendNotification({
+        title: `Application Accepted`,
+        body: `${userData.firstName} accepted your application for ${talent.name}. Please wait while we schedule your tryout.`,
+        // isRead: [],
+        receiver: acceptApplication.userId,
+        sender: userData.id,
+      });
+
+      await createNotification({
+        title: `Application Accepted`,
+        body: `${userData.firstName} accepted your application for ${talent.name}. Please wait while we schedule your tryout.`,
+        // isRead: [],
+        receiver: acceptApplication.userId,
+        sender: userData.id,
       });
     } catch (error) {
       console.log("handleAccept error:", error);
@@ -344,6 +366,7 @@ export default function Page() {
           talentId={talentId}
           talentType={talentType}
           student={studentTryout}
+          talent={talent}
         />
       )}
 

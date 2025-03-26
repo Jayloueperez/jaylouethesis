@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { format } from "date-fns";
-import { Loader, Plus, X } from "lucide-react";
+import { ArrowRight, Loader, Plus, X } from "lucide-react";
 
 import {
   Dialog,
@@ -15,10 +15,16 @@ import {
 import { ApplicationWithData } from "~/hooks/firestore/use-applications";
 import { useTalentTryouts } from "~/hooks/firestore/use-talent-tryouts";
 import { useAlert } from "~/hooks/use-alert";
-import { updateTalentTryout } from "~/lib/firebase/client/firestore";
+import {
+  createNotification,
+  updateTalentTryout,
+} from "~/lib/firebase/client/firestore";
+import { sendNotification } from "~/lib/firebase/client/messaging";
 import { TalentTypeSchema } from "~/schema/data-base";
-import { TalentTryoutSchema } from "~/schema/data-client";
+import { TalentSchema, TalentTryoutSchema } from "~/schema/data-client";
+import { useAppSelector } from "~/store";
 import { getError } from "~/utils/error";
+import { ButtonLink } from "../custom-ui/button-link";
 import { Button } from "../ui/button";
 import { CreateTalentTryoutDialog } from "./create-talent-tryout-dialog";
 
@@ -28,21 +34,25 @@ export interface ScheduleTryoutDialogProps {
   talentId: string;
   talentType: TalentTypeSchema;
   student: ApplicationWithData;
+  talent: TalentSchema;
 }
 
 function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
-  const { talentId, talentType, student, ...rest } = props;
+  const { talentId, talentType, student, talent, ...rest } = props;
 
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<string | null>(null);
 
   const currentDate = useMemo(() => new Date().getTime(), []);
 
+  const { userData } = useAppSelector((state) => state.user);
   const { data: talentTryouts, loading: talentTryoutsLoading } =
     useTalentTryouts({ talentId, talentType, dateAfter: currentDate });
   const { openAlert, component } = useAlert();
 
   const handleAssignStudent = async (talentTryout: TalentTryoutSchema) => {
+    if (!userData) return;
+
     setLoading(talentTryout.id);
 
     if (talentTryout.students.includes(student.id)) {
@@ -57,6 +67,22 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
     try {
       await updateTalentTryout(talentTryout.id, {
         students: [...talentTryout.students, student.id],
+      });
+
+      await sendNotification({
+        title: `Tryout Schedule`,
+        body: `${userData.firstName} assigned you to ${talent.name}'s ${talentTryout.title} schedule. Please check your schedule for the date.`,
+        // isRead: [],
+        receiver: student.id,
+        sender: userData.id,
+      });
+
+      await createNotification({
+        title: `Tryout Schedule`,
+        body: `${userData.firstName} assigned you to ${talent.name}'s ${talentTryout.title} schedule. Please check your schedule for the date.`,
+        // isRead: [],
+        receiver: student.id,
+        sender: userData.id,
       });
     } catch (error) {
       console.log("handleAddStudent error:", error);
@@ -75,11 +101,29 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
   };
 
   const handleRemoveStudent = async (talentTryout: TalentTryoutSchema) => {
+    if (!userData) return;
+
     setLoading(talentTryout.id);
 
     try {
       await updateTalentTryout(talentTryout.id, {
         students: talentTryout.students.filter((sid) => sid !== student.id),
+      });
+
+      await sendNotification({
+        title: `Tryout Schedule Removed`,
+        body: `${userData.firstName} removed you from ${talent.name}'s ${talentTryout.title} schedule. Please wait for the next tryout schedule.`,
+        // isRead: [],
+        receiver: student.id,
+        sender: userData.id,
+      });
+
+      await createNotification({
+        title: `Tryout Schedule Removed`,
+        body: `${userData.firstName} removed you from ${talent.name}'s ${talentTryout.title} schedule. Please wait for the next tryout schedule.`,
+        // isRead: [],
+        receiver: student.id,
+        sender: userData.id,
       });
     } catch (error) {
       console.log("handleAddStudent error:", error);
@@ -143,35 +187,46 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
                     </span>
                   </div>
 
-                  {!loading && studentExist ? (
-                    <Button
-                      variant="destructive"
+                  <div className="flex items-center gap-2">
+                    {!loading && studentExist ? (
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        shape="pill"
+                        loading={loading === talentTryout.id}
+                        onClick={() => handleRemoveStudent(talentTryout)}
+                        disabled={
+                          typeof loading === "string" &&
+                          loading !== talentTryout.id
+                        }
+                      >
+                        <X className="size-4" />
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="yellow"
+                        size="icon"
+                        shape="pill"
+                        loading={loading === talentTryout.id}
+                        onClick={() => handleAssignStudent(talentTryout)}
+                        disabled={
+                          typeof loading === "string" &&
+                          loading !== talentTryout.id
+                        }
+                      >
+                        <Plus className="size-4" />
+                      </Button>
+                    )}
+
+                    <ButtonLink
+                      variant="outline"
                       size="icon"
                       shape="pill"
-                      loading={loading === talentTryout.id}
-                      onClick={() => handleRemoveStudent(talentTryout)}
-                      disabled={
-                        typeof loading === "string" &&
-                        loading !== talentTryout.id
-                      }
+                      href={`/admin/${talentType}/${talentId}/schedules?scheduleId=${talentTryout.id}`}
                     >
-                      <X className="size-4" />
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="yellow"
-                      size="icon"
-                      shape="pill"
-                      loading={loading === talentTryout.id}
-                      onClick={() => handleAssignStudent(talentTryout)}
-                      disabled={
-                        typeof loading === "string" &&
-                        loading !== talentTryout.id
-                      }
-                    >
-                      <Plus className="size-4" />
-                    </Button>
-                  )}
+                      <ArrowRight className="size-4" />
+                    </ButtonLink>
+                  </div>
                 </div>
               );
             })}

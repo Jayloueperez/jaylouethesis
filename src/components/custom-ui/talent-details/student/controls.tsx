@@ -6,6 +6,7 @@ import _ from "lodash";
 import { ArrowLeft, CheckCheck, Plus, X } from "lucide-react";
 
 import { JoinTalentDialog } from "~/components/dialogs/join-talent-dialog";
+import { TryoutScheduleDialog } from "~/components/dialogs/tryout-schedule-dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -21,26 +22,25 @@ import { Button } from "~/components/ui/button";
 import { useAlert } from "~/hooks/use-alert";
 import {
   createApplication,
+  createNotification,
+  deleteApplication,
   getApplicationByRealtime,
+  getTalentTryoutByRealtime,
   updateApplication,
   updateTalent,
+  updateTalentTryout,
 } from "~/lib/firebase/client/firestore";
+import { sendNotification } from "~/lib/firebase/client/messaging";
 import { CreateApplicationInputSchema } from "~/schema/crud";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
-import { ApplicationSchema, TalentSchema } from "~/schema/data-client";
+import {
+  ApplicationSchema,
+  TalentSchema,
+  TalentTryoutSchema,
+} from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 import { getError } from "~/utils/error";
 import { Loading } from "../../loading";
-
-const buttonText: Record<ApplicationStatusSchema, string> = {
-  pending: "Pending",
-  tryout: "Tryout",
-  accepted: "Member",
-  rejected: "Join",
-  cancelled: "Cancelled",
-  removed: "Removed",
-  left: "Left",
-};
 
 interface TalentDetailsStudentControlsProps {
   talent: TalentSchema;
@@ -54,11 +54,18 @@ function TalentDetailsStudentControls(
   const [application, setApplication] = useState<ApplicationSchema | null>(
     null,
   );
+  const [talentTryout, setTalentTryout] = useState<TalentTryoutSchema | null>(
+    null,
+  );
   const [loadingState, setLoadingState] = useState<
     "none" | "joining" | "cancelling" | "leaving"
   >("none");
   const [openState, setOpenState] = useState<
-    "none" | "join-talent" | "cancel-application" | "leave-talent"
+    | "none"
+    | "join-talent"
+    | "cancel-application"
+    | "leave-talent"
+    | "tryout-schedule"
   >("none");
 
   const { talentId, talentType } = useParams<{
@@ -70,6 +77,7 @@ function TalentDetailsStudentControls(
   const { component, openAlert } = useAlert();
 
   const canJoin = !!(userData && loadingState === "none");
+  const isMember = talent.members.find((m) => m === userData?.id);
 
   const handleJoin = async (data: CreateApplicationInputSchema) => {
     if (canJoin) {
@@ -97,12 +105,34 @@ function TalentDetailsStudentControls(
   };
 
   const handleCancelApplication = async (applicationId: string) => {
-    if (!userData || !application) return;
+    if (!userData) return;
 
     setLoadingState("cancelling");
 
     try {
-      await updateApplication(applicationId, { status: "cancelled" });
+      await deleteApplication(applicationId);
+
+      if (talentTryout) {
+        await updateTalentTryout(talentTryout.id, {
+          students: talentTryout.students.filter((s) => s !== applicationId),
+        });
+      }
+
+      await sendNotification({
+        title: `Cancel Application`,
+        body: `${userData.firstName} cancelled application for ${talent.name}.`,
+        // isRead: [],
+        receiver: talentId,
+        sender: userData.id,
+      });
+
+      await createNotification({
+        title: `Cancel Application`,
+        body: `${userData.firstName} cancelled application for ${talent.name}.`,
+        // isRead: [],
+        receiver: talentId,
+        sender: userData.id,
+      });
 
       openAlert({
         title: "Success",
@@ -120,15 +150,30 @@ function TalentDetailsStudentControls(
     setLoadingState("none");
   };
 
-  const handleLeaveTalent = async (applicationId: string) => {
-    if (!userData || !application) return;
+  const handleLeaveTalent = async () => {
+    if (!userData) return;
 
     setLoadingState("leaving");
 
     try {
-      await updateApplication(applicationId, { status: "left" });
       await updateTalent(talent.id, {
         members: talent.members.filter((m) => m !== userData.id),
+      });
+
+      await sendNotification({
+        title: `Left ${_.upperFirst(talentType)}`,
+        body: `${userData.firstName} left ${talent.name}.`,
+        // isRead: [],
+        receiver: talentId,
+        sender: userData.id,
+      });
+
+      await createNotification({
+        title: `Left ${_.upperFirst(talentType)}`,
+        body: `${userData.firstName} left ${talent.name}.`,
+        // isRead: [],
+        receiver: talentId,
+        sender: userData.id,
       });
 
       openAlert({
@@ -160,121 +205,149 @@ function TalentDetailsStudentControls(
     }
   }, [talentId, talentType, userData]);
 
+  useEffect(() => {
+    if (application?.status === "tryout") {
+      const unsubscribe = getTalentTryoutByRealtime({
+        talentId,
+        applicationId: application.id,
+      })(setTalentTryout);
+
+      return unsubscribe;
+    } else {
+      setTalentTryout(null);
+    }
+  }, [application]);
+
   if (!userData || loading) return <Loading />;
 
   return (
     <>
-      <Button
-        variant="yellow"
-        size="lg"
-        disabled={!!(application && application.status !== "rejected")}
-        loading={loadingState === "joining"}
-        onClick={() => setOpenState("join-talent")}
-      >
-        {application ? (
-          <CheckCheck className="size-4" />
-        ) : (
+      {isMember && (
+        <>
+          <Button variant="ghost" disabled>
+            <CheckCheck className="size-4 text-green-600" />
+
+            <span>Member</span>
+          </Button>
+
+          <AlertDialog
+            open={openState === "leave-talent"}
+            onOpenChange={(b) => setOpenState((v) => (b ? v : "none"))}
+          >
+            <AlertDialogTrigger
+              asChild
+              onClick={() => setOpenState("leave-talent")}
+            >
+              <Button variant="destructive">
+                <ArrowLeft className="size-4" />
+
+                <span>Leave {_.capitalize(talentType)}</span>
+              </Button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+
+                <AlertDialogDescription>
+                  Are you sure you want to leave this {talentType}?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={handleLeaveTalent}
+                  loading={loadingState === "leaving"}
+                >
+                  Leave {_.capitalize(talentType)}
+                </AlertDialogAction>
+
+                <AlertDialogCancel disabled={loadingState === "leaving"}>
+                  Cancel
+                </AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
+      )}
+
+      {!isMember && !application && (
+        <Button
+          variant="yellow"
+          loading={loadingState === "joining"}
+          onClick={() => setOpenState("join-talent")}
+        >
           <Plus className="size-4" />
-        )}
 
-        <span>{application ? buttonText[application.status] : "Join"}</span>
-      </Button>
-
-      {application?.status === "pending" && (
-        <AlertDialog
-          open={openState === "cancel-application"}
-          onOpenChange={(b) => setOpenState((v) => (b ? v : "none"))}
-        >
-          <AlertDialogTrigger
-            asChild
-            onClick={() => setOpenState("cancel-application")}
-          >
-            <Button variant="destructive">
-              <X className="size-4" />
-
-              <span>Cancel Application</span>
-            </Button>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Confirm Action</AlertDialogTitle>
-
-              <AlertDialogDescription>
-                Are you sure you want to cancel your application?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-
-            <AlertDialogFooter>
-              <AlertDialogAction
-                variant="destructive"
-                onClick={() => handleCancelApplication(application.id)}
-                loading={loadingState === "cancelling"}
-              >
-                Cancel Application
-              </AlertDialogAction>
-
-              <AlertDialogCancel disabled={loadingState === "cancelling"}>
-                Cancel
-              </AlertDialogCancel>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+          <span>Join</span>
+        </Button>
       )}
 
-      {application?.status === "accepted" && (
-        <AlertDialog
-          open={openState === "leave-talent"}
-          onOpenChange={(b) => setOpenState((v) => (b ? v : "none"))}
+      {!isMember && application?.status === "tryout" && (
+        <Button
+          variant="outline"
+          onClick={() => setOpenState("tryout-schedule")}
         >
-          <AlertDialogTrigger
-            asChild
-            onClick={() => setOpenState("leave-talent")}
-          >
-            <Button variant="destructive">
-              <ArrowLeft className="size-4" />
-
-              <span>Leave {_.capitalize(talentType)}</span>
-            </Button>
-          </AlertDialogTrigger>
-
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Confirm Action</AlertDialogTitle>
-
-              <AlertDialogDescription>
-                Are you sure you want to leave this {talentType}?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-
-            <AlertDialogFooter>
-              <AlertDialogAction
-                variant="destructive"
-                onClick={() => handleLeaveTalent(application.id)}
-                loading={loadingState === "leaving"}
-              >
-                Leave {_.capitalize(talentType)}
-              </AlertDialogAction>
-
-              <AlertDialogCancel disabled={loadingState === "leaving"}>
-                Cancel
-              </AlertDialogCancel>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
-
-      {application?.status === "tryout" && (
-        <Button variant="outline">
           <span>View Tryout Schedule</span>
         </Button>
       )}
+
+      {!isMember &&
+        (application?.status === "pending" ||
+          application?.status === "tryout") && (
+          <AlertDialog
+            open={openState === "cancel-application"}
+            onOpenChange={(b) => setOpenState((v) => (b ? v : "none"))}
+          >
+            <AlertDialogTrigger
+              asChild
+              onClick={() => setOpenState("cancel-application")}
+            >
+              <Button variant="destructive">
+                <X className="size-4" />
+
+                <span>Cancel Application</span>
+              </Button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+
+                <AlertDialogDescription>
+                  Are you sure you want to cancel your application?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <AlertDialogAction
+                  variant="destructive"
+                  onClick={() => handleCancelApplication(application.id)}
+                  loading={loadingState === "cancelling"}
+                >
+                  Cancel Application
+                </AlertDialogAction>
+
+                <AlertDialogCancel disabled={loadingState === "cancelling"}>
+                  Cancel
+                </AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
 
       <JoinTalentDialog
         open={openState === "join-talent"}
         onOpenChange={(v) => setOpenState(v ? "join-talent" : "none")}
         talent={talent}
         onSubmit={handleJoin}
+      />
+
+      <TryoutScheduleDialog
+        open={openState === "tryout-schedule"}
+        onOpenChange={(v) => setOpenState(v ? "tryout-schedule" : "none")}
+        talentTryout={talentTryout}
       />
 
       {component}
