@@ -10,8 +10,20 @@ import {
   Loader,
   MessageCircle,
   Trash,
+  X,
 } from "lucide-react";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -24,7 +36,11 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { useApplications } from "~/hooks/firestore/use-applications";
-import { getUsersRealtime } from "~/lib/firebase/client/firestore";
+import { useAlert } from "~/hooks/use-alert";
+import {
+  getUsersRealtime,
+  updateTalent,
+} from "~/lib/firebase/client/firestore";
 import { TalentTypeSchema } from "~/schema/data-base";
 import { TalentSchema, UserSchema } from "~/schema/data-client";
 import { ButtonLink } from "../../button-link";
@@ -38,6 +54,8 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
 
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [loadingState, setLoadingState] = useState<"none" | "removing">("none");
+  const [openState, setOpenState] = useState<"none" | "remove-member">("none");
 
   const { talentId, talentType } = useParams<{
     talentId: string;
@@ -48,6 +66,31 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
     talentType,
     status: ["pending", "tryout"],
   });
+  const { component, openAlert } = useAlert();
+
+  const handleRemoveMember = async (memberId: string) => {
+    setLoadingState("removing");
+
+    try {
+      await updateTalent(talentId, {
+        members: talent.members.filter((m) => m !== memberId),
+      });
+
+      openAlert({
+        title: "Success",
+        description: "Successfully removed student.",
+      });
+    } catch (error) {
+      console.log("handleRemoveMember error:", error);
+
+      openAlert({
+        title: "Failed",
+        description: "Failed removing member.",
+      });
+    }
+
+    setLoadingState("none");
+  };
 
   useEffect(() => {
     const memberIds = talent.members ?? [];
@@ -169,23 +212,47 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
                       <Eye className="size-4" />
                     </Button>
 
-                    <Button
-                      type="button"
-                      variant="yellow"
-                      size="icon"
-                      shape="pill"
+                    <AlertDialog
+                      open={openState === "remove-member"}
+                      onOpenChange={(b) =>
+                        setOpenState((v) => (b ? v : "none"))
+                      }
                     >
-                      <MessageCircle className="size-4" />
-                    </Button>
+                      <AlertDialogTrigger
+                        asChild
+                        onClick={() => setOpenState("remove-member")}
+                      >
+                        <Button variant="destructive" size="icon" shape="pill">
+                          <X className="size-4" />
+                        </Button>
+                      </AlertDialogTrigger>
 
-                    <Button
-                      type="button"
-                      variant="destructive"
-                      size="icon"
-                      shape="pill"
-                    >
-                      <Trash className="size-4" />
-                    </Button>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+
+                          <AlertDialogDescription>
+                            Are you sure you want to remove this student?
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+
+                        <AlertDialogFooter>
+                          <AlertDialogAction
+                            variant="destructive"
+                            onClick={() => handleRemoveMember(member.id)}
+                            loading={loadingState === "removing"}
+                          >
+                            Remove Student
+                          </AlertDialogAction>
+
+                          <AlertDialogCancel
+                            disabled={loadingState === "removing"}
+                          >
+                            Cancel
+                          </AlertDialogCancel>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
                   </div>
                 </TableCell>
               </TableRow>
@@ -193,6 +260,8 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
           </TableBody>
         </Table>
       </Card>
+
+      {component}
     </div>
   );
 }

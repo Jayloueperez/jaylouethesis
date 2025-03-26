@@ -75,7 +75,6 @@ export default function TalentSchedulesPage() {
 
   const selectedTalentTryout =
     talentTryouts.find((tt) => tt.id === selectedTalentTryoutId) ?? null;
-    console.log(selectedTalentTryout)
 
   const handleDelete = async () => {
     if (!deleteTryoutSchedule) return;
