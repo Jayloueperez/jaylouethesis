@@ -182,46 +182,6 @@ export default function AdminUsersPage() {
                           Assign Role
                         </Button>
                       )}
-
-                      {/* <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            shape="pill"
-                          >
-                            <Trash className="size-4" />
-                          </Button>
-                        </AlertDialogTrigger>
-
-                        <AlertDialogContent>
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>
-                              Confirm Deletion
-                            </AlertDialogTitle>
-
-                            <AlertDialogDescription>
-                              Are you sure you want to delete{" "}
-                              <span className="text-destructive font-bold">
-                                {user.firstName}{" "}
-                                {user.middleInitial
-                                  ? `${user.middleInitial}.`
-                                  : ""}{" "}
-                                {user.surname}
-                              </span>
-                              ?
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-
-                          <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction variant="destructive">
-                              Delete
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
-                        </AlertDialogContent>
-                      </AlertDialog> */}
                     </div>
                   </TableCell>
                 </TableRow>

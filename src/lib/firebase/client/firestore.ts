@@ -173,6 +173,8 @@ export const getUser = async (id: string) => {
   try {
     const snapshot = await getDoc(doc(USERS_COLLECTION, id));
 
+    if (!snapshot.exists) throw new Error("User does not exist.");
+
     const { data, error } = userSchema.safeParse(snapshot.data());
 
     if (error) {
@@ -750,10 +752,12 @@ export const createApplication = async (
     const exists = await getDocs(
       query(
         APPLICATION_COLLECTION,
-        where("talentType", "==", data.talentType),
-        where("talentId", "==", data.talentId),
-        where("userId", "==", data.userId),
-        where("status", "not-in", ["rejected", "accepted"]),
+        and(
+          where("talentType", "==", data.talentType),
+          where("talentId", "==", data.talentId),
+          where("userId", "==", data.userId),
+          where("status", "in", ["pending", "tryout", "accepted"]),
+        ),
         limit(1),
       ),
     );

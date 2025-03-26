@@ -63,37 +63,27 @@ export const onFCMMessage = (
 
 export const sendNotification = async (data: CreateNotificationInputSchema) => {
   try {
-    const user = await getUser(data.receiver);
+    // const result = await fetch("/api/send-notification", {
+    //   method: "POST",
+    //   body: JSON.stringify(data),
+    // }).then((r) => r.json());
 
-    if (!user) throw new Error("Unable to get fcm token.");
-    if (user.tokens.length === 0) {
-      return false;
-    }
+    // const {
+    //   success,
+    //   data: responseData,
+    //   error,
+    // } = sendNotificationResponseSchema.safeParse(result);
 
-    const result = await fetch("/api/send-notification", {
-      method: "POST",
-      body: JSON.stringify({
-        ...data,
-        tokens: user.tokens,
-      }),
-    }).then((r) => r.json());
+    // if (!success) {
+    //   console.log("sendNotification error:", error);
+    //   throw new Error("Invalid response data.");
+    // }
 
-    const {
-      success,
-      data: responseData,
-      error,
-    } = sendNotificationResponseSchema.safeParse(result);
+    // if (responseData.type === "error") {
+    //   throw new Error(responseData.message);
+    // }
 
-    if (!success) {
-      console.log("sendNotification error:", error);
-      throw new Error("Invalid response data.");
-    }
-
-    if (responseData.type === "error") {
-      throw new Error(responseData.message);
-    }
-
-    return responseData.data;
+    // return responseData.data;
   } catch (error) {
     console.log("sendNotification error:", error);
     const err = getError(error, "Failed sending notification.");

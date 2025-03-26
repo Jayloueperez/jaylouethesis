@@ -59,6 +59,7 @@ function StudentListDialog(props: StudentListDialogProps) {
 
       return unsubscribe;
     } else {
+      setApplications([]);
       setLoading(false);
     }
   }, [talentTryout]);
@@ -87,7 +88,13 @@ function StudentListDialog(props: StudentListDialogProps) {
               applications.map((application) => {
                 const { id } = application;
 
-                return <StudentItem key={id} application={application} />;
+                return (
+                  <StudentItem
+                    key={id}
+                    application={application}
+                    talentTryout={talentTryout}
+                  />
+                );
               })}
           </div>
 

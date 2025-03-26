@@ -50,8 +50,9 @@ export default function TalentSchedulesPage() {
     useState<TalentTryoutSchema | null>(null);
   const [studentTryout, setStudentTryout] =
     useState<ApplicationWithData | null>(null);
-  const [selectedTalentTryout, setSelectedTalentTryout] =
-    useState<TalentTryoutSchema | null>(null);
+  const [selectedTalentTryoutId, setSelectedTalentTryoutId] = useState<
+    string | null
+  >(null);
   const [search, setSearch] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
 
@@ -71,6 +72,10 @@ export default function TalentSchedulesPage() {
     });
   const { loading: talentTypeLoading } = useTalentTypeParams();
   const { openAlert, component } = useAlert();
+
+  const selectedTalentTryout =
+    talentTryouts.find((tt) => tt.id === selectedTalentTryoutId) ?? null;
+    console.log(selectedTalentTryout)
 
   const handleDelete = async () => {
     if (!deleteTryoutSchedule) return;
@@ -221,7 +226,7 @@ export default function TalentSchedulesPage() {
                             size="icon"
                             shape="pill"
                             onClick={() =>
-                              setSelectedTalentTryout(talentTryout)
+                              setSelectedTalentTryoutId(talentTryout.id)
                             }
                           >
                             <List className="size-4" />
@@ -279,7 +284,9 @@ export default function TalentSchedulesPage() {
       {!!selectedTalentTryout && (
         <StudentListDialog
           open={!!selectedTalentTryout}
-          onOpenChange={(v) => setSelectedTalentTryout((tt) => (v ? tt : null))}
+          onOpenChange={(v) =>
+            setSelectedTalentTryoutId((tt) => (v ? tt : null))
+          }
           talentTryout={selectedTalentTryout}
         />
       )}

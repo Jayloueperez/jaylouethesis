@@ -136,7 +136,7 @@ export const applicationStatusSchema = z.enum([
   "accepted",
   "rejected",
   "cancelled",
-  "kicked",
+  "removed",
   "left",
 ]);
 export type ApplicationStatusSchema = z.infer<typeof applicationStatusSchema>;

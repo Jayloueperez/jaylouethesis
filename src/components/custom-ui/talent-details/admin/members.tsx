@@ -62,6 +62,7 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
 
       return unsubscribe;
     } else {
+      setMembers([]);
       setLoading(false);
     }
   }, [talent]);

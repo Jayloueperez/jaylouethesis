@@ -42,8 +42,8 @@ import { getError } from "~/utils/error";
 
 export default function Page() {
   const [filter, setFilter] = useState<{
-    status: ApplicationStatusSchema | "all";
-  }>({ status: "all" });
+    status: ApplicationStatusSchema | "all" | "active";
+  }>({ status: "active" });
   const [loadingState, setLoadingState] = useState<
     "none" | "accepting" | "rejecting"
   >("none");
@@ -74,7 +74,11 @@ export default function Page() {
         ? a.user.keywords.includes(search.toLowerCase())
         : true;
     const filterStatus =
-      filter.status !== "all" ? a.status === filter.status : true;
+      filter.status !== "all"
+        ? filter.status === "active"
+          ? a.status === "pending" || a.status === "tryout"
+          : a.status === filter.status
+        : true;
 
     return filterSearch && filterStatus;
   });
@@ -157,10 +161,12 @@ export default function Page() {
 
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
+                <SelectItem value="active">Active</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
                 <SelectItem value="tryout">Tryout</SelectItem>
                 <SelectItem value="accepted">Accepted</SelectItem>
                 <SelectItem value="rejected">Rejected</SelectItem>
+                <SelectItem value="cancelled">Cancelled</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -219,10 +225,10 @@ export default function Page() {
 
               {!applicationsLoading &&
                 filteredApplications.map((application) => {
-                  const { user: student, status } = application;
+                  const { id, user: student, status } = application;
 
                   return (
-                    <TableRow key={student.id}>
+                    <TableRow key={id}>
                       <TableCell>
                         <div className="flex items-center gap-4">
                           <Avatar className="size-12">

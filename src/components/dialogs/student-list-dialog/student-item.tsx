@@ -9,18 +9,24 @@ import { useAlert } from "~/hooks/use-alert";
 import {
   updateApplication,
   updateTalent,
+  updateTalentTryout,
 } from "~/lib/firebase/client/firestore";
 import { useTalentContext } from "~/providers/TalentProvider";
-import { ApplicationSchema, UserSchema } from "~/schema/data-client";
+import {
+  ApplicationSchema,
+  TalentTryoutSchema,
+  UserSchema,
+} from "~/schema/data-client";
 import { getError } from "~/utils/error";
 import { BooleanDialog } from "../boolean-dialog";
 
 interface StudentItemProps {
   application: ApplicationSchema & { student: UserSchema };
+  talentTryout: TalentTryoutSchema;
 }
 
 function StudentItem(props: StudentItemProps) {
-  const { application } = props;
+  const { application, talentTryout } = props;
   const { student, status } = application;
 
   const [loadingState, setLoadingState] = useState<
@@ -43,6 +49,9 @@ function StudentItem(props: StudentItemProps) {
       });
       await updateTalent(talent.id, {
         members: [...talent.members, application.userId],
+      });
+      await updateTalentTryout(talentTryout.id, {
+        students: talentTryout.students.filter((s) => s !== application.id),
       });
 
       openAlert({
@@ -177,7 +186,10 @@ function StudentItem(props: StudentItemProps) {
         negativeText="Cancel"
         onPositive={handleAcceptApplication}
         positiveLoading={loadingState === "accepting"}
-        negativeProps={{ disabled: loadingState === "accepting" }}
+        negativeProps={{
+          variant: "outline",
+          disabled: loadingState === "accepting",
+        }}
       />
 
       <BooleanDialog
@@ -190,7 +202,10 @@ function StudentItem(props: StudentItemProps) {
         negativeText="Cancel"
         onPositive={handleRejectApplication}
         positiveLoading={loadingState === "rejecting"}
-        negativeProps={{ disabled: loadingState === "rejecting" }}
+        negativeProps={{
+          variant: "outline",
+          disabled: loadingState === "rejecting",
+        }}
       />
     </>
   );

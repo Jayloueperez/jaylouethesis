@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { format } from "date-fns";
 import { Loader, Plus, X } from "lucide-react";
 
@@ -36,8 +36,10 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
   const [open, setOpen] = useState<boolean>(false);
   const [loading, setLoading] = useState<string | null>(null);
 
+  const currentDate = useMemo(() => new Date().getTime(), []);
+
   const { data: talentTryouts, loading: talentTryoutsLoading } =
-    useTalentTryouts({ talentId, talentType });
+    useTalentTryouts({ talentId, talentType, dateAfter: currentDate });
   const { openAlert, component } = useAlert();
 
   const handleAssignStudent = async (talentTryout: TalentTryoutSchema) => {

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Message } from "firebase-admin/messaging";
 
 import { messaging } from "~/lib/firebase/server";
-import { sendNotificationInpuSchema } from "~/schema/crud";
+import { createNotificationInputSchema } from "~/schema/crud";
 import { getError } from "~/utils/error";
 
 const HANDLER = async (request: NextRequest) => {
@@ -10,7 +10,7 @@ const HANDLER = async (request: NextRequest) => {
     const dataRaw = await request.json();
 
     const { success, data, error } =
-      sendNotificationInpuSchema.safeParse(dataRaw);
+      createNotificationInputSchema.safeParse(dataRaw);
 
     if (!success) {
       console.log("/api/send-notifcation error:", error);
@@ -21,17 +21,17 @@ const HANDLER = async (request: NextRequest) => {
       });
     }
 
-    const { tokens, ...restData } = data;
+    // const { tokens, ...restData } = data;
 
-    const messages = tokens.map(
-      (t) =>
-        ({
-          token: t,
-          data: restData,
-        }) satisfies Message,
-    );
+    // const messages = tokens.map(
+    //   (t) =>
+    //     ({
+    //       token: t,
+    //       data: restData,
+    //     }) satisfies Message,
+    // );
 
-    await messaging.sendEach(messages);
+    // await messaging.sendEach(messages);
 
     return NextResponse.json({
       type: "success",
