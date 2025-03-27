@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
-import _ from "lodash";
 import { Calendar, ChevronLeft, List, Loader, Trash } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
@@ -12,7 +11,7 @@ import { BooleanDialog } from "~/components/dialogs/boolean-dialog";
 import { CreateTalentTryoutDialog } from "~/components/dialogs/create-talent-tryout-dialog";
 import { ScheduleTryoutDialog } from "~/components/dialogs/schedule-tryout-dialog";
 import { StudentListDialog } from "~/components/dialogs/student-list-dialog";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { TeacherLayout } from "~/components/layout/teacher-layout";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
@@ -110,7 +109,7 @@ export default function TalentSchedulesPage() {
   if (!talent || talentTypeLoading || loading) return <Loading />;
 
   return (
-    <AdminLayout className="gap-8 p-4">
+    <TeacherLayout className="gap-8 p-4">
       {/* HEADER */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
@@ -304,6 +303,6 @@ export default function TalentSchedulesPage() {
 
       {component}
       {/* MODALS */}
-    </AdminLayout>
+    </TeacherLayout>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { TeacherLayout } from "~/components/layout/teacher-layout";
 
 export default function TalentScheduleDetailsPage() {
-  return <AdminLayout></AdminLayout>;
+  return <TeacherLayout></TeacherLayout>;
 }

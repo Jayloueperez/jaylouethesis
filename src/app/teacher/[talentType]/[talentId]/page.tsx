@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { Loading } from "~/components/custom-ui/loading";
 import { TalentDetails } from "~/components/custom-ui/talent-details";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { TeacherLayout } from "~/components/layout/teacher-layout";
 import { useTalentTypeParams } from "~/hooks/use-talent-type-params";
 import { useTalentContext } from "~/providers/TalentProvider";
 import { TalentTypeSchema } from "~/schema/data-base";
@@ -44,8 +44,8 @@ export default function TalentDetailsPage() {
     return <Loading />;
 
   return (
-    <AdminLayout className="gap-8 p-4">
+    <TeacherLayout className="gap-8 p-4">
       <TalentDetails talent={talent} />
-    </AdminLayout>
+    </TeacherLayout>
   );
 }

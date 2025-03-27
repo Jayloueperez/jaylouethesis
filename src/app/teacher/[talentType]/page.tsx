@@ -8,7 +8,7 @@ import { Loader } from "lucide-react";
 import { Loading } from "~/components/custom-ui/loading";
 import { TalentCard } from "~/components/custom-ui/talent-card";
 import { TalentFormDialog } from "~/components/dialogs/talent-form-dialog";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { TeacherLayout } from "~/components/layout/teacher-layout";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { talentTypePlurals } from "~/const/text";
@@ -50,7 +50,7 @@ export default function TalentListPage() {
   if (talentTypeLoading) return <Loading />;
 
   return (
-    <AdminLayout className="gap-4 p-4">
+    <TeacherLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">
           {talentTypePlurals[talentType]}
@@ -97,6 +97,6 @@ export default function TalentListPage() {
       )}
 
       <TalentFormDialog type={talentType} open={open} onOpenChange={setOpen} />
-    </AdminLayout>
+    </TeacherLayout>
   );
 }

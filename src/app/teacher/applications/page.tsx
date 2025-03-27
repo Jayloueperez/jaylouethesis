@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { TeacherLayout } from "~/components/layout/teacher-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -56,7 +56,7 @@ export default function AdminRegistrationsPage() {
   }
 
   return (
-    <AdminLayout className="gap-4 p-4">
+    <TeacherLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">
           Sport/Club Student Applications
@@ -200,6 +200,6 @@ export default function AdminRegistrationsPage() {
       </Card>
 
       {component}
-    </AdminLayout>
+    </TeacherLayout>
   );
 }

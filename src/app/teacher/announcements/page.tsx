@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 import { AnnouncementCard } from "~/components/custom-ui/announcement-card";
 import { CreateAnnouncementDialog } from "~/components/dialogs/create-announcement-dialog";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { TeacherLayout } from "~/components/layout/teacher-layout";
 import { Button } from "~/components/ui/button";
 import {
   Select,
@@ -30,7 +30,7 @@ export default function AdminAnnouncementsPage() {
   }, [sort]);
 
   return (
-    <AdminLayout className="gap-4 p-4">
+    <TeacherLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">Announcements</span>
 
@@ -79,6 +79,6 @@ export default function AdminAnnouncementsPage() {
       )}
 
       {open && <CreateAnnouncementDialog open={open} onOpenChange={setOpen} />}
-    </AdminLayout>
+    </TeacherLayout>
   );
 }

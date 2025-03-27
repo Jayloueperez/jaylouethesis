@@ -12,7 +12,7 @@ import {
   Video,
 } from "lucide-react";
 
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { TeacherLayout } from "~/components/layout/teacher-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -87,7 +87,7 @@ export default function AdminMessagesPage() {
   const [selectedChat, setSelectedChat] = useState<string | null>("1");
 
   return (
-    <AdminLayout className="flex-row items-start gap-4">
+    <TeacherLayout className="flex-row items-start gap-4">
       <TooltipProvider>
         <div className="bg-background flex h-screen flex-1">
           <div className="flex w-80 flex-col border-r">
@@ -255,6 +255,6 @@ export default function AdminMessagesPage() {
           )}
         </div>
       </TooltipProvider>
-    </AdminLayout>
+    </TeacherLayout>
   );
 }

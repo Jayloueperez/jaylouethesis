@@ -3,7 +3,7 @@
 import { ArrowRight, Loader } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { TeacherLayout } from "~/components/layout/teacher-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Card } from "~/components/ui/card";
 import {
@@ -35,7 +35,7 @@ export default function AdminPage() {
   });
 
   return (
-    <AdminLayout className="gap-4 p-4">
+    <TeacherLayout className="gap-4 p-4">
       <div className="grid grid-cols-2 gap-4">
         <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 bg-violet-950 p-4 text-white">
           <span>Approved Applications</span>
@@ -251,6 +251,6 @@ export default function AdminPage() {
           </Table>
         </Card>
       </div>
-    </AdminLayout>
+    </TeacherLayout>
   );
 }
