@@ -19,13 +19,13 @@ import { useApplications } from "~/hooks/firestore/use-applications";
 export default function TeacherPage() {
   // const [] = useState<ApplicationSchema[]>([])
 
-  const {
-    data: approvedApplications,
-    count: approvedApplicationsCount,
-    loading: approvedApplicationsLoading,
-  } = useApplications({
-    status: "accepted",
-  });
+  // const {
+  //   data: approvedApplications,
+  //   count: approvedApplicationsCount,
+  //   loading: approvedApplicationsLoading,
+  // } = useApplications({
+  //   status: "accepted",
+  // });
   const {
     data: pendingApplications,
     count: pendingApplicationsCount,
@@ -36,8 +36,8 @@ export default function TeacherPage() {
 
   return (
     <TeacherLayout className="gap-4 p-4">
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 bg-violet-950 p-4 text-white">
+      <div className="grid grid-cols-1 gap-4">
+        {/* <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 bg-violet-950 p-4 text-white">
           <span>Approved Applications</span>
 
           <div className="flex h-16 items-center">
@@ -49,7 +49,7 @@ export default function TeacherPage() {
               </span>
             )}
           </div>
-        </Card>
+        </Card> */}
 
         <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 bg-violet-950 p-4 text-white">
           <span>Pending Applications</span>
@@ -66,7 +66,7 @@ export default function TeacherPage() {
         </Card>
       </div>
 
-      <div className="flex flex-col gap-2">
+      {/* <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-4">
           <span className="text-xl font-medium">Approved Applications</span>
 
@@ -157,7 +157,7 @@ export default function TeacherPage() {
             </TableBody>
           </Table>
         </Card>
-      </div>
+      </div> */}
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-4">

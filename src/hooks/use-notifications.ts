@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   getNotificationsRealtime,
   getUser,
+  getUsers,
 } from "~/lib/firebase/client/firestore";
 import { NotificationSchema, UserSchema } from "~/schema/data-client";
 
@@ -26,14 +27,26 @@ function useNotifications(params: UseNotificationsParams) {
     const unsubscribe = getNotificationsRealtime({ receiver, sender })(async (
       notificationsArr,
     ) => {
-      const promises = await notificationsArr.map(async (n) => {
-        const user = await getUser(n.sender);
+      if (notifications.length === 0) return setNotifications([]);
 
-        return { ...n, user };
+      const userIds = notifications.map((n) => n.sender);
+      const users = await getUsers({ ids: userIds });
+
+      const notificationsWithUserMaybe = notificationsArr.map((n) => {
+        const user = users.find((u) => u.id === n.sender);
+
+        if (!user) return null;
+
+        return {
+          ...n,
+          user,
+        };
       });
+      const notificationsWithUser = notificationsWithUserMaybe.filter(
+        (n) => !!n,
+      );
 
-      const result = await Promise.all(promises);
-      setNotifications(result);
+      setNotifications(notificationsWithUser);
       setLoading(false);
     });
 
