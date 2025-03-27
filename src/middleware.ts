@@ -41,12 +41,6 @@ const middleware = (request: NextRequest) => {
     handleInvalidToken: async (reason) => {
       console.log("Missing or malformed credentials", { reason });
 
-      // if (request.nextUrl.pathname.startsWith("/admin"))
-      //   return redirectToLogin(request, {
-      //     path: "/admin/login",
-      //     publicPaths: PUBLIC_PATHS,
-      //   });
-
       return redirectToLogin(request, {
         path: "/login",
         publicPaths: PUBLIC_PATHS,
@@ -54,12 +48,6 @@ const middleware = (request: NextRequest) => {
     },
     handleError: async (error) => {
       console.error("Unhandled authentication error", { error });
-
-      if (request.nextUrl.pathname.startsWith("/admin"))
-        return redirectToLogin(request, {
-          path: "/admin/login",
-          publicPaths: PUBLIC_PATHS,
-        });
 
       return redirectToLogin(request, {
         path: "/login",

@@ -2,16 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import {
-  Bell,
-  Calendar,
-  Eye,
-  ListCheck,
-  Loader,
-  MessageCircle,
-  Trash,
-  X,
-} from "lucide-react";
+import { Bell, Calendar, Eye, ListCheck, Loader, X } from "lucide-react";
 
 import {
   AlertDialog,
@@ -37,6 +28,7 @@ import {
 } from "~/components/ui/table";
 import { useApplications } from "~/hooks/firestore/use-applications";
 import { useAlert } from "~/hooks/use-alert";
+import { usePdf } from "~/hooks/use-pdf";
 import {
   getUsersRealtime,
   updateTalent,
@@ -67,6 +59,9 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
     status: ["pending", "tryout"],
   });
   const { component, openAlert } = useAlert();
+  const { toPDF, targetRef } = usePdf({
+    filename: `${talentId}-members-${new Date().getTime()}.pdf`,
+  });
 
   const handleRemoveMember = async (memberId: string) => {
     setLoadingState("removing");
@@ -91,6 +86,18 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
 
     setLoadingState("none");
   };
+
+  function handleGenerateReport() {
+    if (members.length === 0) {
+      openAlert({
+        title: "Warning",
+        description: "Cannot generate pdf report if there are no data.",
+      });
+      return;
+    }
+
+    toPDF();
+  }
 
   useEffect(() => {
     const memberIds = talent.members ?? [];
@@ -143,11 +150,15 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
 
             <span>Tryout Schedules</span>
           </ButtonLink>
+
+          <Button variant="blue" onClick={handleGenerateReport}>
+            Generate Reports
+          </Button>
         </div>
       </div>
 
       <Card className="p-0">
-        <Table>
+        <Table ref={targetRef}>
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>

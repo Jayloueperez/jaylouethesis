@@ -25,31 +25,35 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { useApplications } from "~/hooks/firestore/use-applications";
+import { useAlert } from "~/hooks/use-alert";
 import { usePdf } from "~/hooks/use-pdf";
 
 export default function AdminRegistrationsPage() {
-  // const [all, setAll] = useState<boolean>(false);
-  // const [selected, setSelected] = useState<string[]>([]);
   const [filterBy, setFilterBy] = useState<string>("all");
 
   const { data: applications, loading } = useApplications();
   const { toPDF, targetRef } = usePdf({
-    filename: `${new Date().getTime()}.pdf`,
+    filename: `applications-${new Date().getTime()}.pdf`,
   });
-
-  // const handleToggleApplication = (id: string) => {
-  //   const exist = selected.indexOf(id) !== -1;
-
-  //   if (exist) return setSelected((v) => v.filter((v1) => v1 !== id));
-
-  //   setSelected((v) => [...v, id]);
-  // };
+  const { component, openAlert } = useAlert();
 
   const filteredApplications = applications.filter((a) => {
     if (filterBy === "all") return true;
 
     return a.talentType === filterBy;
   });
+
+  function handleGenerateReport() {
+    if (applications.length === 0) {
+      openAlert({
+        title: "Warning",
+        description: "Cannot generate pdf report if there are no data.",
+      });
+      return;
+    }
+
+    toPDF();
+  }
 
   return (
     <AdminLayout className="gap-4 p-4">
@@ -77,7 +81,7 @@ export default function AdminRegistrationsPage() {
 
           <Input placeholder="Search..." />
 
-          <Button variant="blue" onClick={() => toPDF()}>
+          <Button variant="blue" onClick={handleGenerateReport}>
             Generate Report
           </Button>
         </div>
@@ -194,6 +198,8 @@ export default function AdminRegistrationsPage() {
           </TableBody>
         </Table>
       </Card>
+
+      {component}
     </AdminLayout>
   );
 }

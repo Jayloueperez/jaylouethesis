@@ -24,6 +24,10 @@ import { getUsersRealtime, updateUser } from "~/lib/firebase/client/firestore";
 import { UserRoleSchema } from "~/schema/data-base";
 import { UserSchema } from "~/schema/data-client";
 
+function toLowerTrim(s: string) {
+  return s.toLowerCase().trim();
+}
+
 export default function AdminUsersPage() {
   const [users, setUsers] = useState<UserSchema[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,8 +35,19 @@ export default function AdminUsersPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [assignUserRole, setAssignUserRole] = useState<string>("");
   const [assigning, setAssigning] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>("");
 
-  const filteredUsers = users;
+  const filteredUsers = users.filter((u) => {
+    const lowerSearch = toLowerTrim(search);
+    const searchFilter =
+      search.length > 0
+        ? toLowerTrim(u.firstName).includes(lowerSearch) ||
+          toLowerTrim(u.surname).includes(lowerSearch) ||
+          toLowerTrim(u.role).includes(lowerSearch)
+        : true;
+
+    return searchFilter;
+  });
 
   const { component, openAlert } = useAlert();
 
@@ -96,7 +111,11 @@ export default function AdminUsersPage() {
         <span className="text-xl font-medium">Users</span>
 
         <div className="flex items-center gap-2">
-          <Input placeholder="Search..." />
+          <Input
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
       </div>
 
@@ -109,7 +128,6 @@ export default function AdminUsersPage() {
               </TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Status</TableHead>
               <TableHead>Date Created</TableHead>
               <TableHead className="w-36 text-center">Actions</TableHead>
             </TableRow>
@@ -166,7 +184,6 @@ export default function AdminUsersPage() {
                     </div>
                   </TableCell>
                   <TableCell className="uppercase">{user.role}</TableCell>
-                  <TableCell className="uppercase">{user.status}</TableCell>
                   <TableCell className="uppercase">
                     {format(user.dateCreated, "MMM dd, yyyy")}
                   </TableCell>
