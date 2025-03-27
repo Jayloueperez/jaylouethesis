@@ -47,46 +47,50 @@ function TeacherLayout(props: TeacherLayoutProps) {
       <Header dashboard />
 
       <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white">
-        <SidebarLink href="/admin" icon={Home} active={pathname === "/admin"}>
+        <SidebarLink
+          href="/teacher"
+          icon={Home}
+          active={pathname === "/teacher"}
+        >
           Home
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/announcements"
+          href="/teacher/announcements"
           icon={Megaphone}
-          active={pathname.startsWith("/admin/announcements")}
+          active={pathname.startsWith("/teacher/announcements")}
         >
           Announcements
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/club"
+          href="/teacher/club"
           icon={Club}
-          active={pathname.startsWith("/admin/club")}
+          active={pathname.startsWith("/teacher/club")}
         >
           Clubs
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/sport"
+          href="/teacher/sport"
           icon={Volleyball}
-          active={pathname.startsWith("/admin/sport")}
+          active={pathname.startsWith("/teacher/sport")}
         >
           Sports
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/applications"
+          href="/teacher/applications"
           icon={ListTodo}
-          active={pathname.startsWith("/admin/applications")}
+          active={pathname.startsWith("/teacher/applications")}
         >
           Applications
         </SidebarLink>
 
         {/* <SidebarLink
-          href="/admin/messages"
+          href="/teacher/messages"
           icon={MessageCircle}
-          active={pathname.startsWith("/admin/messages")}
+          active={pathname.startsWith("/teacher/messages")}
         >
           Messages
         </SidebarLink> */}
