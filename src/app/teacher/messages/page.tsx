@@ -83,7 +83,7 @@ const messages = [
   },
 ];
 
-export default function AdminMessagesPage() {
+export default function TeacherMessagesPage() {
   const [selectedChat, setSelectedChat] = useState<string | null>("1");
 
   return (

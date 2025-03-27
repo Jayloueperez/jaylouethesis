@@ -16,7 +16,7 @@ import {
 import { getAnnouncementsRealtime } from "~/lib/firebase/client/firestore";
 import { AnnouncementSchema } from "~/schema/data-client";
 
-export default function AdminAnnouncementsPage() {
+export default function TeacherAnnouncementsPage() {
   const [announcements, setAnnouncements] = useState<AnnouncementSchema[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [sort, setSort] = useState<

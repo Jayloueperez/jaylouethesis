@@ -88,7 +88,7 @@ export default function TalentListPage() {
           {filteredTalents.map((talent) => (
             <TalentCard
               key={talent.id}
-              href={`/admin/${talentType}/${talent.id}`}
+              href={`/teacher/${talentType}/${talent.id}`}
               talent={talent}
               type={talentType}
             />

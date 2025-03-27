@@ -28,7 +28,7 @@ import { useApplications } from "~/hooks/firestore/use-applications";
 import { useAlert } from "~/hooks/use-alert";
 import { usePdf } from "~/hooks/use-pdf";
 
-export default function AdminRegistrationsPage() {
+export default function TeacherRegistrationsPage() {
   const [filterBy, setFilterBy] = useState<string>("all");
 
   const { data: applications, loading } = useApplications();
@@ -182,7 +182,7 @@ export default function AdminRegistrationsPage() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <ButtonLink
-                          href={`/admin/${talentType}/${talentId}/applicants`}
+                          href={`/teacher/${talentType}/${talentId}/applicants`}
                           type="button"
                           variant="blue"
                           size="icon"

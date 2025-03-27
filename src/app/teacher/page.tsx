@@ -16,7 +16,7 @@ import {
 } from "~/components/ui/table";
 import { useApplications } from "~/hooks/firestore/use-applications";
 
-export default function AdminPage() {
+export default function TeacherPage() {
   // const [] = useState<ApplicationSchema[]>([])
 
   const {
@@ -70,7 +70,7 @@ export default function AdminPage() {
         <div className="flex items-center justify-between gap-4">
           <span className="text-xl font-medium">Approved Applications</span>
 
-          <ButtonLink href="/admin/students" variant="yellow" size="sm">
+          <ButtonLink href="/teacher/students" variant="yellow" size="sm">
             View All
           </ButtonLink>
         </div>
@@ -141,7 +141,7 @@ export default function AdminPage() {
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <ButtonLink
-                            href={`/admin/${talentType}/${talentId}/applicants`}
+                            href={`/teacher/${talentType}/${talentId}/applicants`}
                             type="button"
                             variant="blue"
                             size="icon"
@@ -163,7 +163,7 @@ export default function AdminPage() {
         <div className="flex items-center justify-between gap-4">
           <span className="text-xl font-medium">Pending Applications</span>
 
-          <ButtonLink href="/admin/applications" variant="yellow" size="sm">
+          <ButtonLink href="/teacher/applications" variant="yellow" size="sm">
             View All
           </ButtonLink>
         </div>
@@ -234,7 +234,7 @@ export default function AdminPage() {
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <ButtonLink
-                            href={`/admin/${talentType}/${talentId}/applicants`}
+                            href={`/teacher/${talentType}/${talentId}/applicants`}
                             type="button"
                             variant="blue"
                             size="icon"

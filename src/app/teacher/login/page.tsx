@@ -21,7 +21,7 @@ import { useAppDispatch, useAppSelector } from "~/store";
 import { login } from "~/store/auth-slice";
 import { getError } from "~/utils/error";
 
-export default function AdminLoginPage() {
+export default function TeacherLoginPage() {
   const router = useRouter();
 
   const { openAlert, component } = useAlert();
@@ -39,9 +39,9 @@ export default function AdminLoginPage() {
 
   const handleLogin = async (data: LoginSchema) => {
     try {
-      await dispatch(login({ ...data, role: "admin" })).unwrap();
+      await dispatch(login({ ...data, role: "teacher" })).unwrap();
 
-      router.replace("/admin");
+      router.replace("/teacher");
     } catch (error) {
       const err = getError(error, "Failed to log in user.");
 
@@ -69,7 +69,7 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          <span className="text-center text-lg font-medium">ADMIN LOGIN</span>
+          <span className="text-center text-lg font-medium">TEACHER LOGIN</span>
 
           <div className="flex flex-col gap-2">
             <FormField

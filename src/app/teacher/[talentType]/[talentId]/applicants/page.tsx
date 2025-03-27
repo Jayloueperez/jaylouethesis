@@ -160,7 +160,7 @@ export default function Page() {
             variant="outline"
             size="icon"
             shape="pill"
-            href={`/admin/${talentType}/${talentId}`}
+            href={`/teacher/${talentType}/${talentId}`}
           >
             <ChevronLeft className="size-4" />
           </ButtonLink>
