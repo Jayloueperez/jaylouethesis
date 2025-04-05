@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -26,6 +26,9 @@ export default function AdminLoginPage() {
 
   const { openAlert, component } = useAlert();
   const { loading } = useAppSelector((state) => state.auth);
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+
   const dispatch = useAppDispatch();
 
   const form = useForm<LoginSchema>({
@@ -37,11 +40,11 @@ export default function AdminLoginPage() {
   });
   const { control, handleSubmit } = form;
 
-  const handleLogin = async (data: LoginSchema) => {
+  async function handleLogin(data: LoginSchema) {
     try {
       await dispatch(login({ ...data, role: "admin" })).unwrap();
 
-      router.replace("/admin");
+      router.replace(redirect ?? "/admin");
     } catch (error) {
       const err = getError(error, "Failed to log in user.");
 
@@ -50,7 +53,7 @@ export default function AdminLoginPage() {
         description: err.message,
       });
     }
-  };
+  }
 
   return (
     <PageLayout className="items-center justify-center p-4">

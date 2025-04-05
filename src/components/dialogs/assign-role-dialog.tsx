@@ -26,9 +26,7 @@ function AssignRoleDialog(props: AssignRoleDialogProps) {
     "unassigned"
   > | null>(null);
 
-  const handleRoleSelect = async (
-    role: Exclude<UserRoleSchema, "unassigned">,
-  ) => {
+  async function handleRoleSelect(role: Exclude<UserRoleSchema, "unassigned">) {
     if (!onRoleSelect) return;
 
     setLoading(role);
@@ -36,7 +34,7 @@ function AssignRoleDialog(props: AssignRoleDialogProps) {
     await onRoleSelect(role);
 
     setLoading(null);
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

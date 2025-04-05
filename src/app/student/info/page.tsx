@@ -11,7 +11,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
@@ -62,7 +61,7 @@ export default function StudentInfoPage() {
   });
   const { control, handleSubmit, setValue } = form;
 
-  const handleUpdateUserInfo = async (data: UpdateUserInfoSchema) => {
+  async function handleUpdateUserInfo(data: UpdateUserInfoSchema) {
     if (!userData) return;
 
     setLoading(true);
@@ -93,7 +92,7 @@ export default function StudentInfoPage() {
     }
 
     setLoading(false);
-  };
+  }
 
   useEffect(() => {
     if (userData) {
@@ -108,7 +107,7 @@ export default function StudentInfoPage() {
       setValue("surname", userData.surname);
       setValue("year", userData.year);
     }
-  }, [userData]);
+  }, [userData, setValue]);
 
   return (
     <StudentLayout

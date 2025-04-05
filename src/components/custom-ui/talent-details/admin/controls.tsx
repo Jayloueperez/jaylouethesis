@@ -6,6 +6,7 @@ import { SquarePen, Trash } from "lucide-react";
 
 import { TalentFormDialog } from "~/components/dialogs/talent-form-dialog";
 import { Button } from "~/components/ui/button";
+import { talentTypeText } from "~/const/text";
 import { useBoolean } from "~/hooks/use-boolean";
 import { deleteTalent } from "~/lib/firebase/client/firestore";
 import { TalentTypeSchema } from "~/schema/data-base";
@@ -53,7 +54,7 @@ function TalentDetailsAdminControls(props: TalentDetailsAdminControlsProps) {
         onClick={() =>
           openBoolean({
             title: "Confirm Delete",
-            description: `Are you sure you want to delete this ${talentType}?`,
+            description: `Are you sure you want to delete this ${talentTypeText[talentType]}?`,
           })
         }
       >
@@ -62,7 +63,7 @@ function TalentDetailsAdminControls(props: TalentDetailsAdminControlsProps) {
       </Button>
 
       <TalentFormDialog
-        type={talentType}
+        talentType={talentType}
         talent={talent}
         open={openState === "edit"}
         onOpenChange={(v) => setOpenState(v ? "edit" : "none")}

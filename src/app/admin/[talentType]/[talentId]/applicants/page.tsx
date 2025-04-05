@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import _ from "lodash";
 import { Calendar, Check, ChevronLeft, Loader, Trash } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
@@ -29,6 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { talentTypeText } from "~/const/text";
 import {
   ApplicationWithData,
   useApplications,
@@ -89,7 +89,7 @@ export default function Page() {
     return filterSearch && filterStatus;
   });
 
-  const handleAccept = async () => {
+  async function handleAccept() {
     if (!acceptApplication || !userData || !talent) return;
 
     setLoadingState("accepting");
@@ -125,9 +125,9 @@ export default function Page() {
     }
 
     setLoadingState("none");
-  };
+  }
 
-  const handleReject = async () => {
+  async function handleReject() {
     if (!rejectApplication) return;
 
     setLoadingState("rejecting");
@@ -147,7 +147,7 @@ export default function Page() {
     }
 
     setLoadingState("none");
-  };
+  }
 
   if (!talent || talentTypeLoading || loading) return <Loading />;
 
@@ -207,7 +207,7 @@ export default function Page() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <span className="text-lg">
-            {talent.name} {_.upperFirst(talentType)} Applicants
+            {talent.name} {talentTypeText[talentType]} Applicants
           </span>
         </div>
 

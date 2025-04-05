@@ -3,11 +3,12 @@
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  Club,
+  Drama,
   Home,
   ListTodo,
   Megaphone,
-  Users2,
+  Users,
+  UsersRound,
   Volleyball,
 } from "lucide-react";
 
@@ -66,27 +67,35 @@ function AdminLayout(props: AdminLayoutProps) {
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/club"
-          icon={Club}
-          active={pathname.startsWith("/admin/club")}
+          href="/admin/culture-and-arts"
+          icon={Drama}
+          active={pathname.startsWith("/admin/culture-and-arts")}
         >
-          Clubs
+          Culture & Arts
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/sport"
+          href="/admin/sports"
           icon={Volleyball}
-          active={pathname.startsWith("/admin/sport")}
+          active={pathname.startsWith("/admin/sports")}
         >
           Sports
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/users"
-          icon={Users2}
-          active={pathname.startsWith("/admin/users")}
+          href="/admin/teachers"
+          icon={Users}
+          active={pathname.startsWith("/admin/teachers")}
         >
-          Users
+          Teachers
+        </SidebarLink>
+
+        <SidebarLink
+          href="/admin/students"
+          icon={UsersRound}
+          active={pathname.startsWith("/admin/students")}
+        >
+          Students
         </SidebarLink>
 
         <SidebarLink

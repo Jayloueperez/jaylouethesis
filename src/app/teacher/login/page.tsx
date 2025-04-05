@@ -37,7 +37,7 @@ export default function TeacherLoginPage() {
   });
   const { control, handleSubmit } = form;
 
-  const handleLogin = async (data: LoginSchema) => {
+  async function handleLogin(data: LoginSchema) {
     try {
       await dispatch(login({ ...data, role: "teacher" })).unwrap();
 
@@ -50,7 +50,7 @@ export default function TeacherLoginPage() {
         description: err.message,
       });
     }
-  };
+  }
 
   return (
     <PageLayout className="items-center justify-center p-4">

@@ -59,7 +59,7 @@ export default function StudentProfilePage() {
   });
   const { control, handleSubmit, setValue } = form;
 
-  const handleUpdateUserInfo = async (data: UpdateUserInfoSchema) => {
+  async function handleUpdateUserInfo(data: UpdateUserInfoSchema) {
     if (!userData) return;
 
     setLoading(true);
@@ -88,7 +88,7 @@ export default function StudentProfilePage() {
     }
 
     setLoading(false);
-  };
+  }
 
   useEffect(() => {
     if (userData) {
@@ -103,7 +103,7 @@ export default function StudentProfilePage() {
       setValue("surname", userData.surname);
       setValue("year", userData.year);
     }
-  }, [userData]);
+  }, [userData, setValue]);
 
   return (
     <StudentLayout className="gap-4 p-4">

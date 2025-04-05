@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import {
   getNotificationsRealtime,
-  getUser,
   getUsers,
 } from "~/lib/firebase/client/firestore";
 import { NotificationSchema, UserSchema } from "~/schema/data-client";
@@ -51,7 +50,7 @@ function useNotifications(params: UseNotificationsParams) {
     });
 
     return unsubscribe;
-  }, [enabled, receiver, sender]);
+  }, [enabled, receiver, sender, notifications]);
 
   return { data: notifications, loading };
 }

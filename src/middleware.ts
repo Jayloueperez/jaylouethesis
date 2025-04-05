@@ -8,11 +8,17 @@ import {
 import { config as clientConfig } from "./lib/firebase/client/config";
 import { config as serverConfig } from "./lib/firebase/server/config";
 
-const AUTH_PATHS = ["/login", "/register", "/admin/login"];
+const AUTH_PATHS = [
+  "/login",
+  "/register",
+  "/admin/login",
+  "/teacher/login",
+  "/create-admin",
+];
 
 const PUBLIC_PATHS = ["/", "/about", ...AUTH_PATHS];
 
-const middleware = (request: NextRequest) => {
+export default function middleware(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
 
   const redirect = searchParams.get("redirect");
@@ -41,6 +47,20 @@ const middleware = (request: NextRequest) => {
     handleInvalidToken: async (reason) => {
       console.log("Missing or malformed credentials", { reason });
 
+      if (request.nextUrl.pathname.startsWith("/admin")) {
+        return redirectToLogin(request, {
+          path: "/admin/login",
+          publicPaths: PUBLIC_PATHS,
+        });
+      }
+
+      if (request.nextUrl.pathname.startsWith("/teacher")) {
+        return redirectToLogin(request, {
+          path: "/teacher/login",
+          publicPaths: PUBLIC_PATHS,
+        });
+      }
+
       return redirectToLogin(request, {
         path: "/login",
         publicPaths: PUBLIC_PATHS,
@@ -55,7 +75,7 @@ const middleware = (request: NextRequest) => {
       });
     },
   });
-};
+}
 
 export const config = {
   matcher: [
@@ -65,5 +85,3 @@ export const config = {
     "/api/logout",
   ],
 };
-
-export default middleware;

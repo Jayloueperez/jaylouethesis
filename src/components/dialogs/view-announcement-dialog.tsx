@@ -19,8 +19,8 @@ import { CreateAnnouncementDialog } from "./create-announcement-dialog";
 
 const typeText: Record<AnnouncementTypeSchema, string> = {
   all: "All",
-  club: "Clubs Only",
-  sport: "Sports Only",
+  "culture-and-arts": "Culture & Arts Only",
+  sports: "Sports Only",
   ids: "Specific",
 };
 

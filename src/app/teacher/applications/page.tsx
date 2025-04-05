@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { talentTypeText } from "~/const/text";
 import { useApplications } from "~/hooks/firestore/use-applications";
 import { useAlert } from "~/hooks/use-alert";
 import { usePdf } from "~/hooks/use-pdf";
@@ -59,7 +60,7 @@ export default function TeacherRegistrationsPage() {
     <TeacherLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">
-          Sport/Club Student Applications
+          Sports/Culture & Arts Student Applications
         </span>
 
         <div className="flex items-center gap-2">
@@ -73,8 +74,10 @@ export default function TeacherRegistrationsPage() {
 
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
-                <SelectItem value="sport">Sports Only</SelectItem>
-                <SelectItem value="club">Clubs Only</SelectItem>
+                <SelectItem value="sports">Sports Only</SelectItem>
+                <SelectItem value="culter-and-art">
+                  Culture & Arts Only
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -107,8 +110,8 @@ export default function TeacherRegistrationsPage() {
                 />
               </TableHead> */}
               <TableHead>Name</TableHead>
-              <TableHead>Sport/Club</TableHead>
-              <TableHead>Sport/Club Name</TableHead>
+              <TableHead>Sports/Culture & Arts</TableHead>
+              <TableHead>Sports/Culture & Arts Name</TableHead>
               <TableHead>Course</TableHead>
               <TableHead>Year</TableHead>
               <TableHead>Section</TableHead>
@@ -169,7 +172,9 @@ export default function TeacherRegistrationsPage() {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="uppercase">{talentType}</TableCell>
+                    <TableCell className="uppercase">
+                      {talentTypeText[talentType]}
+                    </TableCell>
                     <TableCell className="">
                       {application.talent.name}
                     </TableCell>

@@ -14,6 +14,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { talentTypeText } from "~/const/text";
 import { useApplications } from "~/hooks/firestore/use-applications";
 
 export default function AdminPage() {
@@ -66,99 +67,6 @@ export default function AdminPage() {
         </Card>
       </div>
 
-      {/* <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-4">
-          <span className="text-xl font-medium">Approved Applications</span>
-
-          <ButtonLink href="/admin/students" variant="yellow" size="sm">
-            View All
-          </ButtonLink>
-        </div>
-
-        <Card className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Sport/Club</TableHead>
-                <TableHead>Course</TableHead>
-                <TableHead>Year</TableHead>
-                <TableHead>Section</TableHead>
-                <TableHead className="w-36">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-
-            <TableBody>
-              {approvedApplicationsLoading && (
-                <TableRow>
-                  <TableCell colSpan={6}>
-                    <div className="flex items-center justify-center">
-                      <Loader className="size-4 animate-spin" />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-
-              {!approvedApplicationsLoading &&
-                approvedApplicationsCount === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={6}>
-                      <div className="flex items-center justify-center">
-                        <span className="text-center text-gray-500">
-                          No approved applications.
-                        </span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )}
-
-              {!approvedApplicationsLoading &&
-                approvedApplications.map(
-                  ({ id, user, talentType, talentId }) => (
-                    <TableRow key={id}>
-                      <TableCell>
-                        <div className="flex items-center gap-4">
-                          <Avatar className="size-12">
-                            <AvatarImage
-                              src={user.profile}
-                              alt={user.firstName[0].toUpperCase()}
-                            />
-
-                            <AvatarFallback>
-                              {user.firstName[0].toUpperCase()}
-                            </AvatarFallback>
-                          </Avatar>
-
-                          <span>
-                            {user.firstName} {user.surname}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="uppercase">{talentType}</TableCell>
-                      <TableCell>{user.course}</TableCell>
-                      <TableCell>{user.year}</TableCell>
-                      <TableCell>{user.section}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <ButtonLink
-                            href={`/admin/${talentType}/${talentId}/applicants`}
-                            type="button"
-                            variant="blue"
-                            size="icon"
-                            shape="pill"
-                          >
-                            <ArrowRight className="size-4" />
-                          </ButtonLink>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ),
-                )}
-            </TableBody>
-          </Table>
-        </Card>
-      </div> */}
-
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-4">
           <span className="text-xl font-medium">Pending Applications</span>
@@ -173,7 +81,7 @@ export default function AdminPage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Sport/Club</TableHead>
+                <TableHead>Sports/Culture & Arts</TableHead>
                 <TableHead>Course</TableHead>
                 <TableHead>Year</TableHead>
                 <TableHead>Section</TableHead>
@@ -227,7 +135,9 @@ export default function AdminPage() {
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="uppercase">{talentType}</TableCell>
+                      <TableCell className="uppercase">
+                        {talentTypeText[talentType]}
+                      </TableCell>
                       <TableCell>{user.course}</TableCell>
                       <TableCell>{user.year}</TableCell>
                       <TableCell>{user.section}</TableCell>

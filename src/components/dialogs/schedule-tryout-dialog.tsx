@@ -50,7 +50,7 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
     useTalentTryouts({ talentId, talentType, dateAfter: currentDate });
   const { openAlert, component } = useAlert();
 
-  const handleAssignStudent = async (talentTryout: TalentTryoutSchema) => {
+  async function handleAssignStudent(talentTryout: TalentTryoutSchema) {
     if (!userData) return;
 
     setLoading(talentTryout.id);
@@ -98,9 +98,9 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
     }
 
     setLoading(null);
-  };
+  }
 
-  const handleRemoveStudent = async (talentTryout: TalentTryoutSchema) => {
+  async function handleRemoveStudent(talentTryout: TalentTryoutSchema) {
     if (!userData) return;
 
     setLoading(talentTryout.id);
@@ -139,7 +139,7 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
     }
 
     setLoading(null);
-  };
+  }
 
   return (
     <Dialog {...rest}>

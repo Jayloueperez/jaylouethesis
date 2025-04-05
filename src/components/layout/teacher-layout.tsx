@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Club, Home, ListTodo, Megaphone, Volleyball } from "lucide-react";
+import { Drama, Home, ListTodo, Megaphone, Volleyball } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { useAppSelector } from "~/store";
@@ -64,17 +64,17 @@ function TeacherLayout(props: TeacherLayoutProps) {
         </SidebarLink>
 
         <SidebarLink
-          href="/teacher/club"
-          icon={Club}
-          active={pathname.startsWith("/teacher/club")}
+          href="/teacher/culture-and-arts"
+          icon={Drama}
+          active={pathname.startsWith("/teacher/culture-and-arts")}
         >
-          Clubs
+          Culture & Arts
         </SidebarLink>
 
         <SidebarLink
-          href="/teacher/sport"
+          href="/teacher/sports"
           icon={Volleyball}
-          active={pathname.startsWith("/teacher/sport")}
+          active={pathname.startsWith("/teacher/sports")}
         >
           Sports
         </SidebarLink>

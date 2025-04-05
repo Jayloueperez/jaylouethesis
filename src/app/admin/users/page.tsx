@@ -59,9 +59,9 @@ export default function AdminUsersPage() {
     setSelected((v) => [...v, id]);
   };
 
-  const handleAssignUserRole = async (
+  async function handleAssignUserRole(
     role: Exclude<UserRoleSchema, "unassigned">,
-  ) => {
+  ) {
     if (!assignUserRole) return;
 
     setAssigning(true);
@@ -84,7 +84,7 @@ export default function AdminUsersPage() {
     }
 
     setAssigning(false);
-  };
+  }
 
   useEffect(() => {
     if (all) {

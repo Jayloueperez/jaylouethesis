@@ -20,7 +20,7 @@ function useTalentTypeParams() {
 
     setLoadingState("loading");
 
-    if (!(talentType === "club" || talentType === "sport"))
+    if (!(talentType === "culture-and-arts" || talentType === "sports"))
       return router.replace(`/${userData.role}`);
 
     setLoadingState("none");

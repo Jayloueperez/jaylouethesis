@@ -47,13 +47,35 @@ function Header(props: HeaderProps) {
     enabled: !!userData,
   });
 
-  const handleLogout = async () => {
+  async function handleLogout() {
+    if (!userData) return;
+
     try {
-      // const redirect = userData?.role === "admin" ? "/admin/login" : "/login";
+      let redirect = "/login";
+
+      switch (userData.role) {
+        case "admin": {
+          redirect = "/admin/login";
+
+          break;
+        }
+
+        case "teacher": {
+          redirect = "/teacher/login";
+
+          break;
+        }
+
+        default: {
+          redirect = "/login";
+
+          break;
+        }
+      }
 
       await dispatch(logout()).unwrap();
 
-      router.replace("/login");
+      router.replace(redirect);
     } catch (error) {
       const err = getError(error, "Failed user logout.");
 
@@ -62,7 +84,7 @@ function Header(props: HeaderProps) {
         description: err.message,
       });
     }
-  };
+  }
 
   return (
     <>

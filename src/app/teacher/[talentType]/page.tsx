@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import _ from "lodash";
 import { Loader } from "lucide-react";
 
 import { Loading } from "~/components/custom-ui/loading";
@@ -11,7 +10,7 @@ import { TalentFormDialog } from "~/components/dialogs/talent-form-dialog";
 import { TeacherLayout } from "~/components/layout/teacher-layout";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
-import { talentTypePlurals } from "~/const/text";
+import { talentTypeText } from "~/const/text";
 import { useTalentTypeParams } from "~/hooks/use-talent-type-params";
 import { getTalentsRealtime } from "~/lib/firebase/client/firestore";
 import { TalentTypeSchema } from "~/schema/data-base";
@@ -37,7 +36,7 @@ export default function TalentListPage() {
   );
 
   useEffect(() => {
-    if (talentType !== "club" && talentType !== "sport") return;
+    if (talentType !== "culture-and-arts" && talentType !== "sports") return;
 
     const unsubscribe = getTalentsRealtime({ type: talentType })((v) => {
       setTalents(v);
@@ -53,7 +52,7 @@ export default function TalentListPage() {
     <TeacherLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">
-          {talentTypePlurals[talentType]}
+          {talentTypeText[talentType]}
         </span>
 
         <div className="flex items-center gap-2">
@@ -64,7 +63,7 @@ export default function TalentListPage() {
           />
 
           <Button variant="yellow" onClick={() => setOpen(true)}>
-            Add {_.upperFirst(talentType)}
+            Add {talentTypeText[talentType]}
           </Button>
         </div>
       </div>
@@ -79,7 +78,9 @@ export default function TalentListPage() {
 
       {!loading && filteredTalents.length === 0 && (
         <div className="flex flex-1 items-center justify-center">
-          <span className="text-gray-500">No {talentType} records found.</span>
+          <span className="text-gray-500">
+            No {talentTypeText[talentType]} records found.
+          </span>
         </div>
       )}
 
@@ -96,7 +97,11 @@ export default function TalentListPage() {
         </div>
       )}
 
-      <TalentFormDialog type={talentType} open={open} onOpenChange={setOpen} />
+      <TalentFormDialog
+        talentType={talentType}
+        open={open}
+        onOpenChange={setOpen}
+      />
     </TeacherLayout>
   );
 }

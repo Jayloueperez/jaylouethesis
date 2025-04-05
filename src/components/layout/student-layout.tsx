@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Club, House, User2, Volleyball } from "lucide-react";
+import { Drama, House, User2, Volleyball } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { useAppSelector } from "~/store";
@@ -48,7 +48,7 @@ function StudentLayout(props: StudentLayoutProps) {
     if (isLoaded && userData && !hasData) {
       router.replace("/student/info");
     }
-  }, [isLoaded]);
+  }, [isLoaded, hasData, router, userData]);
 
   if (
     loading ||
@@ -79,28 +79,20 @@ function StudentLayout(props: StudentLayoutProps) {
         </SidebarLink>
 
         <SidebarLink
-          href="/student/club"
-          icon={Club}
-          active={pathname.startsWith("/student/club")}
+          href="/student/culture-and-arts"
+          icon={Drama}
+          active={pathname.startsWith("/student/culture-and-arts")}
         >
-          Clubs
+          Culture & Arts
         </SidebarLink>
 
         <SidebarLink
-          href="/student/sport"
+          href="/student/sports"
           icon={Volleyball}
-          active={pathname.startsWith("/student/sport")}
+          active={pathname.startsWith("/student/sports")}
         >
           Sports
         </SidebarLink>
-
-        {/* <SidebarLink
-          href="/student/messages"
-          icon={MessageCircle}
-          active={pathname.startsWith("/student/messages")}
-        >
-          Messages
-        </SidebarLink> */}
 
         <SidebarLink
           href="/student/profile"

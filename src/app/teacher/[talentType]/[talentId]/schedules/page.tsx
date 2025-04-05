@@ -77,7 +77,7 @@ export default function TalentSchedulesPage() {
   const selectedTalentTryout =
     talentTryouts.find((tt) => tt.id === selectedTalentTryoutId) ?? null;
 
-  const handleDelete = async () => {
+  async function handleDelete() {
     if (!deleteTryoutSchedule) return;
 
     setLoadingState("deleting");
@@ -100,7 +100,7 @@ export default function TalentSchedulesPage() {
     }
 
     setLoadingState("none");
-  };
+  }
 
   useEffect(() => {
     if (scheduleId) setSelectedTalentTryoutId(scheduleId);

@@ -39,7 +39,7 @@ export default function LoginOldPage() {
   });
   const { control, handleSubmit } = form;
 
-  const handleLogin = async (data: LoginSchema) => {
+  async function handleLogin(data: LoginSchema) {
     try {
       const { uid } = await dispatch(login(data)).unwrap();
       const udata = await getUser(uid);
@@ -53,9 +53,9 @@ export default function LoginOldPage() {
         description: err.message,
       });
     }
-  };
+  }
 
-  const handleLoginWithGoogle = async () => {
+  async function handleLoginWithGoogle() {
     try {
       const { uid } = await dispatch(loginWithGoogle()).unwrap();
       const udata = await getUser(uid);
@@ -69,7 +69,7 @@ export default function LoginOldPage() {
         description: err.message,
       });
     }
-  };
+  }
 
   return (
     <PageLayout className="items-center justify-center p-4">

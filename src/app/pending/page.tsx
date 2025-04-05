@@ -18,7 +18,7 @@ export default function PendingPage() {
   const { userData, status } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
-  const handleLogout = async () => {
+  async function handleLogout() {
     try {
       await dispatch(logout()).unwrap();
 
@@ -31,12 +31,12 @@ export default function PendingPage() {
         description: err.message,
       });
     }
-  };
+  }
 
   useEffect(() => {
     if (userData && userData.role !== "unassigned")
       router.replace(`/${userData.role}`);
-  }, [userData]);
+  }, [userData, router]);
 
   if (!userData) return <Loading />;
 

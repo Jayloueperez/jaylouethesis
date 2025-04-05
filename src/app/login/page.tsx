@@ -18,7 +18,7 @@ export default function LoginPage() {
   const { loading } = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
 
-  const handleLoginWithGoogle = async () => {
+  async function handleLoginWithGoogle() {
     try {
       const { uid } = await dispatch(loginWithGoogle()).unwrap();
       const udata = await getUser(uid);
@@ -34,7 +34,7 @@ export default function LoginPage() {
         description: err.message,
       });
     }
-  };
+  }
 
   return (
     <PageLayout className="items-center justify-center p-4">

@@ -9,7 +9,6 @@ import { useAlert } from "~/hooks/use-alert";
 import {
   createNotification,
   deleteApplication,
-  deleteTalentTryout,
   updateApplication,
   updateTalent,
   updateTalentTryout,
@@ -45,7 +44,7 @@ function StudentItem(props: StudentItemProps) {
   const { talent, loading } = useTalentContext();
   const { userData } = useAppSelector((state) => state.user);
 
-  const handleAcceptApplication = async () => {
+  async function handleAcceptApplication() {
     if (!talent || !userData) return;
 
     setLoadingState("accepting");
@@ -91,9 +90,9 @@ function StudentItem(props: StudentItemProps) {
     }
 
     setLoadingState("none");
-  };
+  }
 
-  const handleRejectApplication = async () => {
+  async function handleRejectApplication() {
     if (!talent) return;
     setLoadingState("rejecting");
 
@@ -117,7 +116,7 @@ function StudentItem(props: StudentItemProps) {
     }
 
     setLoadingState("none");
-  };
+  }
 
   if (!talent || loading)
     return (
@@ -143,7 +142,7 @@ function StudentItem(props: StudentItemProps) {
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
             <Avatar className="size-12">
-              <AvatarImage src={student.profile} alt="Example Club 1" />
+              <AvatarImage src={student.profile} alt={student.firstName} />
 
               <AvatarFallback>
                 {student.firstName.substring(0, 2)}

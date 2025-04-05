@@ -15,7 +15,6 @@ import {
 } from "~/schema/crud";
 import { getError } from "~/utils/error";
 import { app } from ".";
-import { getUser } from "./firestore";
 
 let messaging: Messaging | undefined;
 
@@ -23,7 +22,7 @@ if (typeof window !== "undefined") {
   messaging = getMessaging(app);
 }
 
-export const requestNotificationPermission = async () => {
+export async function requestNotificationPermission() {
   try {
     const permission = await Notification.requestPermission();
 
@@ -35,9 +34,9 @@ export const requestNotificationPermission = async () => {
 
     throw err.message;
   }
-};
+}
 
-export const getFCMToken = async () => {
+export async function getFCMToken() {
   try {
     if (!messaging) throw new Error("FCM not initialized.");
 
@@ -51,7 +50,7 @@ export const getFCMToken = async () => {
 
     throw err.message;
   }
-};
+}
 
 export const onFCMMessage = (
   callback: NextFn<MessagePayload> | Observer<MessagePayload>,
@@ -61,33 +60,31 @@ export const onFCMMessage = (
   return onMessage(messaging, callback);
 };
 
-export const sendNotification = async (data: CreateNotificationInputSchema) => {
+export async function sendNotification(data: CreateNotificationInputSchema) {
   try {
-    // const result = await fetch("/api/send-notification", {
-    //   method: "POST",
-    //   body: JSON.stringify(data),
-    // }).then((r) => r.json());
+    const result = await fetch("/api/send-notification", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }).then((r) => r.json());
 
-    // const {
-    //   success,
-    //   data: responseData,
-    //   error,
-    // } = sendNotificationResponseSchema.safeParse(result);
+    const {
+      success,
+      data: responseData,
+      error,
+    } = sendNotificationResponseSchema.safeParse(result);
 
-    // if (!success) {
-    //   console.log("sendNotification error:", error);
-    //   throw new Error("Invalid response data.");
-    // }
-
-    // if (responseData.type === "error") {
-    //   throw new Error(responseData.message);
-    // }
-
-    // return responseData.data;
+    if (!success) {
+      console.log("sendNotification error:", error);
+      throw new Error("Invalid response data.");
+    }
+    if (responseData.type === "error") {
+      throw new Error(responseData.message);
+    }
+    return responseData.data;
   } catch (error) {
     console.log("sendNotification error:", error);
     const err = getError(error, "Failed sending notification.");
 
     throw err;
   }
-};
+}

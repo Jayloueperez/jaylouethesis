@@ -1,6 +1,6 @@
 import { TalentTypeSchema } from "~/schema/data-base";
 
-export const talentTypePlurals: Record<TalentTypeSchema, string> = {
-  club: "Clubs",
-  sport: "Sports",
+export const talentTypeText: Record<TalentTypeSchema, string> = {
+  "culture-and-arts": "Culture & Arts",
+  sports: "Sports",
 };

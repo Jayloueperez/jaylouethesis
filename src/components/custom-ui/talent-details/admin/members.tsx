@@ -63,7 +63,7 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
     filename: `${talentId}-members-${new Date().getTime()}.pdf`,
   });
 
-  const handleRemoveMember = async (memberId: string) => {
+  async function handleRemoveMember(memberId: string) {
     setLoadingState("removing");
 
     try {
@@ -85,7 +85,7 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
     }
 
     setLoadingState("none");
-  };
+  }
 
   function handleGenerateReport() {
     if (members.length === 0) {

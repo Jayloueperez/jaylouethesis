@@ -8,32 +8,32 @@ export interface RedirectToLoginOptions {
   redirectParamKeyName?: string;
 }
 
-const doesRequestPathnameMatchPublicPath = (
+function doesRequestPathnameMatchPublicPath(
   request: NextRequest,
   publicPath: PublicPath,
-) => {
+) {
   if (typeof publicPath === "string") {
     return publicPath === request.nextUrl.pathname;
   }
   return publicPath.test(request.nextUrl.pathname);
-};
+}
 
-const doesRequestPathnameMatchOneOfPublicPaths = (
+function doesRequestPathnameMatchOneOfPublicPaths(
   request: NextRequest,
   publicPaths: PublicPath[],
-) => {
+) {
   return publicPaths.some((path) =>
     doesRequestPathnameMatchPublicPath(request, path),
   );
-};
+}
 
-export const redirectToLogin = (
+export function redirectToLogin(
   request: NextRequest,
   options: RedirectToLoginOptions = {
     path: "/login",
     publicPaths: ["/login"],
   },
-) => {
+) {
   const redirectKey = options.redirectParamKeyName || "redirect";
 
   if (doesRequestPathnameMatchOneOfPublicPaths(request, options.publicPaths)) {
@@ -46,15 +46,15 @@ export const redirectToLogin = (
   url.search = `${redirectKey}=${request.nextUrl.pathname}${url.search}`;
 
   return NextResponse.redirect(url);
-};
+}
 
-export const redirectToLoginByRole = (
+export function redirectToLoginByRole(
   request: NextRequest,
   options: RedirectToLoginOptions = {
     path: "/login",
     publicPaths: ["/login"],
   },
-) => {
+) {
   const redirectKey = options.redirectParamKeyName || "redirect";
 
   if (doesRequestPathnameMatchOneOfPublicPaths(request, options.publicPaths)) {
@@ -67,4 +67,4 @@ export const redirectToLoginByRole = (
   url.search = `${redirectKey}=${request.nextUrl.pathname}${url.search}`;
 
   return NextResponse.redirect(url);
-};
+}

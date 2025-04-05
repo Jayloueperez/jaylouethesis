@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
-import _ from "lodash";
 import { Calendar, ChevronLeft, List, Loader, Trash } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
@@ -78,7 +77,7 @@ export default function TalentSchedulesPage() {
   const selectedTalentTryout =
     talentTryouts.find((tt) => tt.id === selectedTalentTryoutId) ?? null;
 
-  const handleDelete = async () => {
+  async function handleDelete() {
     if (!deleteTryoutSchedule) return;
 
     setLoadingState("deleting");
@@ -101,7 +100,7 @@ export default function TalentSchedulesPage() {
     }
 
     setLoadingState("none");
-  };
+  }
 
   useEffect(() => {
     if (scheduleId) setSelectedTalentTryoutId(scheduleId);

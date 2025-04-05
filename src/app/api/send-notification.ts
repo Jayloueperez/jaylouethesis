@@ -1,11 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { Message } from "firebase-admin/messaging";
 
-import { messaging } from "~/lib/firebase/server";
 import { createNotificationInputSchema } from "~/schema/crud";
 import { getError } from "~/utils/error";
 
-const HANDLER = async (request: NextRequest) => {
+async function HANDLER(request: NextRequest) {
   try {
     const dataRaw = await request.json();
 
@@ -46,6 +44,6 @@ const HANDLER = async (request: NextRequest) => {
       message: err.message,
     });
   }
-};
+}
 
 export { HANDLER as POST };

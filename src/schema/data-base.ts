@@ -42,8 +42,11 @@ export type UserBaseSchema = z.infer<typeof userBaseSchema>;
 /**
  * TALENT
  */
-export const talentTypeSchema = z.enum(["club", "sport"]);
+export const talentTypeSchema = z.enum(["culture-and-arts", "sports"]);
 export type TalentTypeSchema = z.infer<typeof talentTypeSchema>;
+
+export const talentNodeSchema = z.enum(["parent", "child"]);
+export type TalentNodeSchema = z.infer<typeof talentNodeSchema>;
 
 export const talentBaseSchema = z.object({
   id: z.string(),
@@ -54,6 +57,8 @@ export const talentBaseSchema = z.object({
   members: z.string().array(),
   type: talentTypeSchema,
   keywords: z.string().array(),
+  node: talentNodeSchema,
+  parentId: z.string(),
 });
 export type TalentBaseSchema = z.infer<typeof talentBaseSchema>;
 

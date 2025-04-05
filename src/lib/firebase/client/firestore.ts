@@ -73,7 +73,7 @@ export const NOTIFICATION_COLLECTION =
 export const TALENT_TRYOUT_COLLECTION =
   createCollection<TalentTryoutSchema>("talent-tryout");
 
-export const checkUser = async (email: string, role: UserRoleSchema) => {
+export async function checkUser(email: string, role: UserRoleSchema) {
   try {
     const result = await getDocs(
       query(USERS_COLLECTION, where("email", "==", email), limit(1)),
@@ -97,9 +97,9 @@ export const checkUser = async (email: string, role: UserRoleSchema) => {
 
     throw err;
   }
-};
+}
 
-export const checkUserExist = async (id: string) => {
+export async function checkUserExist(id: string) {
   try {
     const result = await getDoc(doc(USERS_COLLECTION, id));
 
@@ -110,12 +110,12 @@ export const checkUserExist = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const createUser = async (
+export async function createUser(
   id: string,
   data: Omit<UserSchema, "id" | "dateCreated" | "dateUpdated">,
-) => {
+) {
   try {
     const ref = doc(USERS_COLLECTION, id);
 
@@ -133,12 +133,12 @@ export const createUser = async (
 
     throw err;
   }
-};
+}
 
-export const updateUser = async (
+export async function updateUser(
   id: string,
   data: Partial<Omit<UserSchema, "id" | "dateCreated" | "dateUpdated">>,
-) => {
+) {
   try {
     const ref = doc(USERS_COLLECTION, id);
 
@@ -154,9 +154,9 @@ export const updateUser = async (
 
     throw err;
   }
-};
+}
 
-export const deleteUser = async (id: string) => {
+export async function deleteUser(id: string) {
   try {
     const ref = doc(USERS_COLLECTION, id);
 
@@ -167,9 +167,9 @@ export const deleteUser = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const getUser = async (id: string) => {
+export async function getUser(id: string) {
   try {
     const snapshot = await getDoc(doc(USERS_COLLECTION, id));
 
@@ -189,11 +189,11 @@ export const getUser = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const getUserRealtime =
-  (id: string) => (callback: (user: UserSchema | null) => void) =>
-    onSnapshot(doc(USERS_COLLECTION, id), (snapshot) => {
+export function getUserRealtime(id: string) {
+  return function (callback: (user: UserSchema | null) => void) {
+    return onSnapshot(doc(USERS_COLLECTION, id), (snapshot) => {
       if (!snapshot.exists()) return callback(null);
 
       const { data, error } = userSchema.safeParse(snapshot.data());
@@ -202,11 +202,13 @@ export const getUserRealtime =
 
       callback(data ?? null);
     });
+  };
+}
 
-export const getUsers = async (params?: {
+export async function getUsers(params?: {
   ids?: string[];
   role?: UserRoleSchema;
-}) => {
+}) {
   try {
     const { ids, role } = params ?? {};
 
@@ -231,15 +233,14 @@ export const getUsers = async (params?: {
 
     throw err;
   }
-};
+}
 
-export const getUsersRealtime =
-  (params?: {
-    ids?: string[];
-    role?: UserRoleSchema;
-    roles?: UserRoleSchema[];
-  }) =>
-  (callback: (users: UserSchema[]) => void) => {
+export function getUsersRealtime(params?: {
+  ids?: string[];
+  role?: UserRoleSchema;
+  roles?: UserRoleSchema[];
+}) {
+  return function (callback: (users: UserSchema[]) => void) {
     const { ids, role, roles } = params ?? {};
 
     let q = query(USERS_COLLECTION);
@@ -260,11 +261,12 @@ export const getUsersRealtime =
       callback(data ?? []);
     });
   };
+}
 
 /**
  * TALENT
  */
-export const createTalent = async (data: CreateTalentInputSchema) => {
+export async function createTalent(data: CreateTalentInputSchema) {
   try {
     const ref = doc(TALENTS_COLLECTION);
 
@@ -283,12 +285,9 @@ export const createTalent = async (data: CreateTalentInputSchema) => {
 
     throw err;
   }
-};
+}
 
-export const updateTalent = async (
-  id: string,
-  data: UpdateTalentInputSchema,
-) => {
+export async function updateTalent(id: string, data: UpdateTalentInputSchema) {
   try {
     const ref = doc(TALENTS_COLLECTION, id);
 
@@ -303,9 +302,9 @@ export const updateTalent = async (
 
     throw err;
   }
-};
+}
 
-export const deleteTalent = async (id: string) => {
+export async function deleteTalent(id: string) {
   try {
     const ref = doc(TALENTS_COLLECTION, id);
 
@@ -316,9 +315,9 @@ export const deleteTalent = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const getTalent = async (id: string) => {
+export async function getTalent(id: string) {
   try {
     const ref = doc(TALENTS_COLLECTION, id);
     const snapshot = await getDoc(ref);
@@ -337,10 +336,10 @@ export const getTalent = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const getTalentRealtime =
-  (id: string) => (callback: (talent: TalentSchema | null) => void) => {
+export function getTalentRealtime(id: string) {
+  return function (callback: (talent: TalentSchema | null) => void) {
     const ref = doc(TALENTS_COLLECTION, id);
 
     return onSnapshot(ref, (snapshot) => {
@@ -351,11 +350,12 @@ export const getTalentRealtime =
       callback(data ?? null);
     });
   };
+}
 
-export const getTalents = async (params?: {
+export async function getTalents(params?: {
   ids?: string[];
   type?: TalentTypeSchema;
-}) => {
+}) {
   try {
     const { ids, type } = params ?? {};
 
@@ -382,11 +382,13 @@ export const getTalents = async (params?: {
 
     throw err;
   }
-};
+}
 
-export const getTalentsRealtime =
-  (params?: { ids?: string[]; type?: TalentTypeSchema }) =>
-  (callback: (talents: TalentSchema[]) => void) => {
+export function getTalentsRealtime(params?: {
+  ids?: string[];
+  type?: TalentTypeSchema;
+}) {
+  return function (callback: (talents: TalentSchema[]) => void) {
     const { ids, type } = params ?? {};
 
     let q = query(TALENTS_COLLECTION);
@@ -406,13 +408,12 @@ export const getTalentsRealtime =
       callback(data ?? []);
     });
   };
+}
 
 /**
  * TALENT_TRYOUT
  */
-export const createTalentTryout = async (
-  data: CreateTalentTryoutInputSchema,
-) => {
+export async function createTalentTryout(data: CreateTalentTryoutInputSchema) {
   try {
     const ref = doc(TALENT_TRYOUT_COLLECTION);
 
@@ -430,12 +431,12 @@ export const createTalentTryout = async (
 
     throw err;
   }
-};
+}
 
-export const updateTalentTryout = async (
+export async function updateTalentTryout(
   id: string,
   data: UpdateTalentTryoutInputSchema,
-) => {
+) {
   try {
     const ref = doc(TALENT_TRYOUT_COLLECTION, id);
 
@@ -449,9 +450,9 @@ export const updateTalentTryout = async (
 
     throw err;
   }
-};
+}
 
-export const deleteTalentTryout = async (id: string) => {
+export async function deleteTalentTryout(id: string) {
   try {
     const ref = doc(TALENT_TRYOUT_COLLECTION, id);
 
@@ -462,14 +463,14 @@ export const deleteTalentTryout = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const getTalentTryouts = async (params?: {
+export async function getTalentTryouts(params?: {
   talentId?: string;
   talentType?: TalentTypeSchema;
   dateAfter?: number;
   dateBefore?: number;
-}) => {
+}) {
   try {
     const { dateAfter, dateBefore, talentId, talentType } = params ?? {};
 
@@ -499,16 +500,15 @@ export const getTalentTryouts = async (params?: {
 
     throw err;
   }
-};
+}
 
-export const getTalentTryoutsRealtime =
-  (params?: {
-    talentId?: string;
-    talentType?: TalentTypeSchema;
-    dateAfter?: number;
-    dateBefore?: number;
-  }) =>
-  (callback: (talentTryouts: TalentTryoutSchema[]) => void) => {
+export function getTalentTryoutsRealtime(params?: {
+  talentId?: string;
+  talentType?: TalentTypeSchema;
+  dateAfter?: number;
+  dateBefore?: number;
+}) {
+  return function (callback: (talentTryouts: TalentTryoutSchema[]) => void) {
     const { dateAfter, dateBefore, talentId, talentType } = params ?? {};
 
     let q = query(TALENT_TRYOUT_COLLECTION);
@@ -532,10 +532,15 @@ export const getTalentTryoutsRealtime =
       callback(data ?? []);
     });
   };
+}
 
-export const getTalentTryoutByRealtime =
-  (params?: { talentId: string; applicationId: string }) =>
-  (callback: (talentTryouts: TalentTryoutSchema | null) => void) => {
+export function getTalentTryoutByRealtime(params?: {
+  talentId: string;
+  applicationId: string;
+}) {
+  return function (
+    callback: (talentTryouts: TalentTryoutSchema | null) => void,
+  ) {
     const { talentId, applicationId } = params ?? {};
     console.log(talentId, applicationId);
 
@@ -559,13 +564,12 @@ export const getTalentTryoutByRealtime =
       callback(data ?? null);
     });
   };
+}
 
 /**
  * ANNOUNCEMENT
  */
-export const createAnnouncement = async (
-  data: CreateAnnouncementInputSchema,
-) => {
+export async function createAnnouncement(data: CreateAnnouncementInputSchema) {
   try {
     const ref = doc(ANNOUNCEMENTS_COLLECTION);
 
@@ -583,12 +587,12 @@ export const createAnnouncement = async (
 
     throw err;
   }
-};
+}
 
-export const updateAnnouncement = async (
+export async function updateAnnouncement(
   id: string,
   data: UpdateAnnouncementInputSchema,
-) => {
+) {
   try {
     const ref = doc(ANNOUNCEMENTS_COLLECTION, id);
 
@@ -602,9 +606,9 @@ export const updateAnnouncement = async (
 
     throw err;
   }
-};
+}
 
-export const deleteAnnouncement = async (id: string) => {
+export async function deleteAnnouncement(id: string) {
   try {
     const ref = doc(ANNOUNCEMENTS_COLLECTION, id);
 
@@ -615,9 +619,9 @@ export const deleteAnnouncement = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const getAnnouncement = async (id: string) => {
+export async function getAnnouncement(id: string) {
   try {
     const snapshot = await getDoc(doc(ANNOUNCEMENTS_COLLECTION, id));
     const { data, error } = announcementSchema.safeParse(snapshot.data());
@@ -631,29 +635,31 @@ export const getAnnouncement = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const getAnnouncementRealtime =
-  (id: string) =>
-  (callback: (announcement: AnnouncementSchema | null) => void) =>
-    onSnapshot(doc(ANNOUNCEMENTS_COLLECTION, id), (snapshot) => {
+export function getAnnouncementRealtime(id: string) {
+  return function (
+    callback: (announcement: AnnouncementSchema | null) => void,
+  ) {
+    return onSnapshot(doc(ANNOUNCEMENTS_COLLECTION, id), (snapshot) => {
       const { data, error } = announcementSchema.safeParse(snapshot.data());
 
       if (error) console.log("getAnnouncementRealtime error:", error);
 
       callback(data ?? null);
     });
+  };
+}
 
-export const getAnnouncementsRealtime =
-  (params?: {
-    ids?: string[];
-    type?:
-      | Exclude<AnnouncementTypeSchema, "ids">
-      | Exclude<AnnouncementTypeSchema, "ids">[];
-    forIds?: string[];
-    sort?: "latest" | "oldest" | "latest-by-date" | "oldest-by-date";
-  }) =>
-  (callback: (announcements: AnnouncementSchema[]) => void) => {
+export function getAnnouncementsRealtime(params?: {
+  ids?: string[];
+  type?:
+    | Exclude<AnnouncementTypeSchema, "ids">
+    | Exclude<AnnouncementTypeSchema, "ids">[];
+  forIds?: string[];
+  sort?: "latest" | "oldest" | "latest-by-date" | "oldest-by-date";
+}) {
+  return function (callback: (announcements: AnnouncementSchema[]) => void) {
     const { ids, type, forIds, sort = "latest" } = params ?? {};
 
     let q = query(ANNOUNCEMENTS_COLLECTION);
@@ -714,13 +720,12 @@ export const getAnnouncementsRealtime =
       callback(data ?? []);
     });
   };
+}
 
 /**
  * NOTIFICATIONS
  */
-export const createNotification = async (
-  data: CreateNotificationInputSchema,
-) => {
+export async function createNotification(data: CreateNotificationInputSchema) {
   try {
     const ref = doc(NOTIFICATION_COLLECTION);
 
@@ -739,11 +744,13 @@ export const createNotification = async (
 
     throw err;
   }
-};
+}
 
-export const getNotificationsRealtime =
-  (params?: { sender?: string; receiver?: string }) =>
-  (callback: (notifications: NotificationSchema[]) => void) => {
+export function getNotificationsRealtime(params?: {
+  sender?: string;
+  receiver?: string;
+}) {
+  return function (callback: (notifications: NotificationSchema[]) => void) {
     const { receiver, sender } = params ?? {};
 
     let q = query(NOTIFICATION_COLLECTION);
@@ -763,13 +770,14 @@ export const getNotificationsRealtime =
       callback(data ?? []);
     });
   };
+}
 
 /**
  * APPLICATIONS
  */
-export const createApplication = async (
+export async function createApplication(
   data: Omit<ApplicationSchema, "id" | "dateCreated" | "dateUpdated">,
-) => {
+) {
   try {
     const studentData = await getUser(data.userId);
     const talentData = await getTalent(data.talentId);
@@ -826,12 +834,12 @@ export const createApplication = async (
 
     throw err;
   }
-};
+}
 
-export const updateApplication = async (
+export async function updateApplication(
   id: string,
   data: Partial<Omit<ApplicationSchema, "id" | "dateCreated" | "dateUpdated">>,
-) => {
+) {
   try {
     const ref = doc(APPLICATION_COLLECTION, id);
 
@@ -842,9 +850,9 @@ export const updateApplication = async (
 
     throw err;
   }
-};
+}
 
-export const deleteApplication = async (id: string) => {
+export async function deleteApplication(id: string) {
   try {
     const ref = doc(APPLICATION_COLLECTION, id);
 
@@ -855,11 +863,11 @@ export const deleteApplication = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const getApplicationBy = async (
+export async function getApplicationBy(
   params: Pick<ApplicationSchema, "talentType" | "talentId" | "userId">,
-) => {
+) {
   try {
     const { talentType, talentId, userId } = params;
 
@@ -887,15 +895,14 @@ export const getApplicationBy = async (
 
     throw err;
   }
-};
+}
 
-export const getApplicationByRealtime =
-  (
-    params: Pick<ApplicationSchema, "talentType" | "talentId" | "userId"> & {
-      status?: ApplicationStatusSchema | ApplicationStatusSchema[];
-    },
-  ) =>
-  (callback: (application: ApplicationSchema | null) => void) => {
+export function getApplicationByRealtime(
+  params: Pick<ApplicationSchema, "talentType" | "talentId" | "userId"> & {
+    status?: ApplicationStatusSchema | ApplicationStatusSchema[];
+  },
+) {
+  return function (callback: (application: ApplicationSchema | null) => void) {
     const { status, talentType, talentId, userId } = params;
 
     let q = query(
@@ -924,8 +931,9 @@ export const getApplicationByRealtime =
       callback(data ?? null);
     });
   };
+}
 
-export const getApplication = async (id: string) => {
+export async function getApplication(id: string) {
   try {
     const snapshot = await getDoc(doc(APPLICATION_COLLECTION, id));
 
@@ -940,11 +948,11 @@ export const getApplication = async (id: string) => {
 
     throw err;
   }
-};
+}
 
-export const getApplicationRealtime =
-  (id: string) => (callback: (application: ApplicationSchema | null) => void) =>
-    onSnapshot(doc(APPLICATION_COLLECTION, id), (snapshot) => {
+export function getApplicationRealtime(id: string) {
+  return function (callback: (application: ApplicationSchema | null) => void) {
+    return onSnapshot(doc(APPLICATION_COLLECTION, id), (snapshot) => {
       if (!snapshot.exists()) return callback(null);
 
       const { data, error } = applicationSchema.safeParse(snapshot.data());
@@ -953,12 +961,14 @@ export const getApplicationRealtime =
 
       callback(data ?? null);
     });
+  };
+}
 
-export const getApplications = async (params?: {
+export async function getApplications(params?: {
   status?: ApplicationStatusSchema | ApplicationStatusSchema[];
   talentType?: TalentTypeSchema;
   talentId?: string;
-}) => {
+}) {
   try {
     const { status, talentType, talentId } = params ?? {};
 
@@ -987,16 +997,15 @@ export const getApplications = async (params?: {
 
     throw err;
   }
-};
+}
 
-export const getApplicationsRealtime =
-  (params?: {
-    status?: ApplicationStatusSchema | ApplicationStatusSchema[];
-    talentType?: TalentTypeSchema;
-    talentId?: string;
-    ids?: string[];
-  }) =>
-  (callback: (applications: ApplicationSchema[]) => void) => {
+export function getApplicationsRealtime(params?: {
+  status?: ApplicationStatusSchema | ApplicationStatusSchema[];
+  talentType?: TalentTypeSchema;
+  talentId?: string;
+  ids?: string[];
+}) {
+  return function (callback: (applications: ApplicationSchema[]) => void) {
     const { status, talentType, talentId, ids } = params ?? {};
 
     let q = query(APPLICATION_COLLECTION);
@@ -1021,3 +1030,4 @@ export const getApplicationsRealtime =
       callback(data ?? []);
     });
   };
+}

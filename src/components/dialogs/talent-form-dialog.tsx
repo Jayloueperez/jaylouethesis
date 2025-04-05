@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "~/components/ui/dialog";
+import { talentTypeText } from "~/const/text";
 import { useAlert } from "~/hooks/use-alert";
 import { createTalent, updateTalent } from "~/lib/firebase/client/firestore";
 import {
@@ -38,11 +39,11 @@ interface TalentFormDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   talent?: TalentSchema;
-  type: TalentTypeSchema;
+  talentType: TalentTypeSchema;
 }
 
 function TalentFormDialog(props: TalentFormDialogProps) {
-  const { open, onOpenChange, talent, type } = props;
+  const { open, onOpenChange, talent, talentType } = props;
   const [loading, setLoading] = useState<boolean>(false);
 
   const { openAlert, component } = useAlert();
@@ -55,7 +56,8 @@ function TalentFormDialog(props: TalentFormDialogProps) {
       accepting: new Date().getTime(),
       image: "",
       members: [],
-      type,
+      type: talentType,
+      nodeType: "parent",
     },
   });
 
@@ -78,7 +80,7 @@ function TalentFormDialog(props: TalentFormDialogProps) {
       } catch (error) {
         const err = getError(
           error,
-          `Failed ${talent ? "updating" : "creating new"} ${type}.`,
+          `Failed ${talent ? "updating" : "creating new"} ${talentTypeText[talentType]}.`,
         );
 
         openAlert({ title: "Failed", description: err.message });
@@ -86,7 +88,7 @@ function TalentFormDialog(props: TalentFormDialogProps) {
 
       setLoading(false);
     },
-    [talent, onOpenChange, openAlert, reset, type],
+    [talent, onOpenChange, openAlert, reset, talentType],
   );
 
   useEffect(() => {
@@ -106,10 +108,12 @@ function TalentFormDialog(props: TalentFormDialogProps) {
           >
             <DialogHeader>
               <DialogTitle>
-                {talent ? "Update" : "Create"} {_.upperFirst(type)}
+                {talent ? "Update" : "Create"}{" "}
+                {_.upperFirst(talentTypeText[talentType])}
               </DialogTitle>
               <DialogDescription>
-                {talent ? "Update" : "Create new"} {type}.
+                {talent ? "Update" : "Create new"}{" "}
+                {talentTypeText[talentType].toLowerCase()}.
               </DialogDescription>
             </DialogHeader>
 
@@ -120,7 +124,7 @@ function TalentFormDialog(props: TalentFormDialogProps) {
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-2 space-y-0">
                     <FormLabel className="px-1">
-                      {_.upperFirst(type)} Name
+                      {_.upperFirst(talentTypeText[talentType])} Name
                     </FormLabel>
 
                     <FormControl>

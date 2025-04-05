@@ -69,9 +69,7 @@ function CreateAnnouncementDialog(props: CreateAnnouncementDialogProps) {
 
   const { control, handleSubmit, reset, setValue } = form;
 
-  const handleSubmitAnnouncement = async (
-    data: CreateAnnouncementInputSchema,
-  ) => {
+  async function handleSubmitAnnouncement(data: CreateAnnouncementInputSchema) {
     setLoading(true);
 
     try {
@@ -93,7 +91,7 @@ function CreateAnnouncementDialog(props: CreateAnnouncementDialogProps) {
     }
 
     setLoading(false);
-  };
+  }
 
   useEffect(() => {
     if (announcement) {
@@ -194,15 +192,17 @@ function CreateAnnouncementDialog(props: CreateAnnouncementDialogProps) {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger>
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select for" />
                         </SelectTrigger>
                       </FormControl>
 
                       <SelectContent>
                         <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="club">Clubs Only</SelectItem>
-                        <SelectItem value="sport">Sports Only</SelectItem>
+                        <SelectItem value="sports">Sports Only</SelectItem>
+                        <SelectItem value="culture-and-arts">
+                          Culter & Arts Only
+                        </SelectItem>
                       </SelectContent>
                     </Select>
 

@@ -59,9 +59,7 @@ function JoinTalentDialog(props: JoinTalentDialogProps) {
 
   const { control, handleSubmit, reset } = form;
 
-  const handleCreateApplication = async (
-    data: CreateApplicationInputSchema,
-  ) => {
+  async function handleCreateApplication(data: CreateApplicationInputSchema) {
     setLoading(true);
 
     try {
@@ -76,13 +74,13 @@ function JoinTalentDialog(props: JoinTalentDialogProps) {
     }
 
     setLoading(false);
-  };
+  }
 
   useEffect(() => {
     if (!open) {
       reset();
     }
-  }, [open]);
+  }, [open, reset]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

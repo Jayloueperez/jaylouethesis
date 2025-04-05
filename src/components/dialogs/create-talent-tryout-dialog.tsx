@@ -71,9 +71,7 @@ function CreateTalentTryoutDialog(props: CreateTalentTryoutDialogProps) {
     });
   }, [reset, talentId, talentType]);
 
-  const handleCreateTalentTryout = async (
-    data: CreateTalentTryoutInputSchema,
-  ) => {
+  async function handleCreateTalentTryout(data: CreateTalentTryoutInputSchema) {
     setLoading(true);
 
     try {
@@ -100,7 +98,7 @@ function CreateTalentTryoutDialog(props: CreateTalentTryoutDialogProps) {
     }
 
     setLoading(false);
-  };
+  }
 
   useEffect(() => {
     if (!open) handleReset();

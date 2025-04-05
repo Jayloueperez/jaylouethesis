@@ -19,6 +19,7 @@ import {
   AlertDialogTrigger,
 } from "~/components/ui/alert-dialog";
 import { Button } from "~/components/ui/button";
+import { talentTypeText } from "~/const/text";
 import { useAlert } from "~/hooks/use-alert";
 import {
   createApplication,
@@ -26,13 +27,12 @@ import {
   deleteApplication,
   getApplicationByRealtime,
   getTalentTryoutByRealtime,
-  updateApplication,
   updateTalent,
   updateTalentTryout,
 } from "~/lib/firebase/client/firestore";
 import { sendNotification } from "~/lib/firebase/client/messaging";
 import { CreateApplicationInputSchema } from "~/schema/crud";
-import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
+import { TalentTypeSchema } from "~/schema/data-base";
 import {
   ApplicationSchema,
   TalentSchema,
@@ -79,7 +79,7 @@ function TalentDetailsStudentControls(
   const canJoin = !!(userData && loadingState === "none");
   const isMember = talent.members.find((m) => m === userData?.id);
 
-  const handleJoin = async (data: CreateApplicationInputSchema) => {
+  async function handleJoin(data: CreateApplicationInputSchema) {
     if (canJoin) {
       setLoadingState("joining");
 
@@ -92,7 +92,10 @@ function TalentDetailsStudentControls(
         });
       } catch (error) {
         console.log("handleJoin error:", error);
-        const err = getError(error, `Failed joining ${talentType}.`);
+        const err = getError(
+          error,
+          `Failed joining ${talentTypeText[talentType]}.`,
+        );
 
         openAlert({
           title: "Failed",
@@ -102,9 +105,9 @@ function TalentDetailsStudentControls(
 
       setLoadingState("none");
     }
-  };
+  }
 
-  const handleCancelApplication = async (applicationId: string) => {
+  async function handleCancelApplication(applicationId: string) {
     if (!userData) return;
 
     setLoadingState("cancelling");
@@ -148,9 +151,9 @@ function TalentDetailsStudentControls(
     }
 
     setLoadingState("none");
-  };
+  }
 
-  const handleLeaveTalent = async () => {
+  async function handleLeaveTalent() {
     if (!userData) return;
 
     setLoadingState("leaving");
@@ -161,7 +164,7 @@ function TalentDetailsStudentControls(
       });
 
       await sendNotification({
-        title: `Left ${_.upperFirst(talentType)}`,
+        title: `Left ${talentTypeText[talentType]}`,
         body: `${userData.firstName} left ${talent.name}.`,
         // isRead: [],
         receiver: talentId,
@@ -169,7 +172,7 @@ function TalentDetailsStudentControls(
       });
 
       await createNotification({
-        title: `Left ${_.upperFirst(talentType)}`,
+        title: `Left ${talentTypeText[talentType]}`,
         body: `${userData.firstName} left ${talent.name}.`,
         // isRead: [],
         receiver: talentId,
@@ -178,19 +181,19 @@ function TalentDetailsStudentControls(
 
       openAlert({
         title: "Success",
-        description: `Successfully left ${talentType}.`,
+        description: `Successfully left ${talentTypeText[talentType]}.`,
       });
     } catch (error) {
       console.log("handleLeaveTalent error:", error);
 
       openAlert({
         title: "Failed",
-        description: `Failed leaving ${talentType}.`,
+        description: `Failed leaving ${talentTypeText[talentType]}.`,
       });
     }
 
     setLoadingState("none");
-  };
+  }
 
   useEffect(() => {
     if (userData) {
@@ -216,7 +219,7 @@ function TalentDetailsStudentControls(
     } else {
       setTalentTryout(null);
     }
-  }, [application]);
+  }, [application, talentId]);
 
   useEffect(() => {
     if (isMember && openState === "tryout-schedule") setOpenState("none");
@@ -245,7 +248,7 @@ function TalentDetailsStudentControls(
               <Button variant="destructive">
                 <ArrowLeft className="size-4" />
 
-                <span>Leave {_.capitalize(talentType)}</span>
+                <span>Leave {_.capitalize(talentTypeText[talentType])}</span>
               </Button>
             </AlertDialogTrigger>
 
@@ -254,7 +257,8 @@ function TalentDetailsStudentControls(
                 <AlertDialogTitle>Confirm Action</AlertDialogTitle>
 
                 <AlertDialogDescription>
-                  Are you sure you want to leave this {talentType}?
+                  Are you sure you want to leave this{" "}
+                  {talentTypeText[talentType]}?
                 </AlertDialogDescription>
               </AlertDialogHeader>
 

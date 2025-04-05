@@ -25,7 +25,17 @@ export const dateSchema = z.object({
 });
 export type DateSchema = z.infer<typeof dateSchema>;
 
-export const userSchema = userBaseSchema.and(dateSchema);
+export const userSchema = userBaseSchema
+  .and(dateSchema)
+  .superRefine(({ email, role }, ctx) => {
+    if (role === "student" && !email.endsWith("@bisu.edu.ph")) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Email is not a valid BISU email.",
+        path: ["email"],
+      });
+    }
+  });
 export type UserSchema = z.infer<typeof userSchema>;
 
 export const talentSchema = talentBaseSchema.and(dateSchema);

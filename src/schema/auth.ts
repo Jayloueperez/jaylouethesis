@@ -2,12 +2,17 @@ import { z } from "zod";
 
 import { userBaseSchema } from "./data-base";
 
-export const loginSchema = z.object({
-  email: userBaseSchema.shape.email,
-  password: z
-    .string()
-    .min(8, "Password should have be at least 8 characters long."),
-});
+export const loginSchema = userBaseSchema
+  .pick({
+    email: true,
+  })
+  .and(
+    z.object({
+      password: z
+        .string()
+        .min(8, "Password should have be at least 8 characters long."),
+    }),
+  );
 export type LoginSchema = z.infer<typeof loginSchema>;
 
 export const registerSchema = z
