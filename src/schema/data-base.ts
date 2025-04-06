@@ -12,7 +12,12 @@ export const userRoleSchema = z.enum([
 ]);
 export type UserRoleSchema = z.infer<typeof userRoleSchema>;
 
-export const userStatusSchema = z.enum(["pending", "confirmed", "rejected"]);
+export const userStatusSchema = z.enum([
+  "pending",
+  "confirmed",
+  "rejected",
+  "revoked",
+]);
 export type UserStatusSchema = z.infer<typeof userStatusSchema>;
 
 export const userBaseSchema = z.object({

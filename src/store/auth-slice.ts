@@ -75,18 +75,18 @@ export const loginWithGoogle = createAsyncThunk(
         return thunkApi.rejectWithValue("Email doesn't have an email.");
       }
 
-      // if (!user.email.endsWith("@bisu.edu.ph")) {
-      //   const userDataExist = await checkUserExist(user.uid);
+      if (!user.email.endsWith("@bisu.edu.ph")) {
+        const userDataExist = await checkUserExist(user.uid);
 
-      //   if (userDataExist) await firestoreDeleteUser(user.uid);
+        if (userDataExist) await firestoreDeleteUser(user.uid);
 
-      //   await signOut(auth);
-      //   await deleteUser(user);
+        await signOut(auth);
+        await deleteUser(user);
 
-      //   return thunkApi.rejectWithValue(
-      //     "Invalid email address. Must be bisu email address.",
-      //   );
-      // }
+        return thunkApi.rejectWithValue(
+          "Invalid email address. Must be a valid BISU email address.",
+        );
+      }
 
       const userDataExist = await checkUserExist(user.uid);
 
@@ -109,7 +109,7 @@ export const loginWithGoogle = createAsyncThunk(
           course: "",
           section: "",
           year: "",
-          role: "unassigned",
+          role: "student",
           profile: user.photoURL ?? "",
           keywords: [
             ...generateKeywords(user.email),
@@ -157,7 +157,7 @@ export const register = createAsyncThunk(
       await createUser(user.uid, {
         email,
         ...rest,
-        role: "unassigned",
+        role: "student",
         profile: "",
         provider: "email-password",
       });

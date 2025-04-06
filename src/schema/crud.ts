@@ -13,6 +13,11 @@ import {
 /**
  * USER
  */
+export const createUserInputSchema = userBaseSchema.omit({
+  id: true,
+});
+export type CreateUserInputSchema = z.infer<typeof createUserInputSchema>;
+
 export const updateUserInfoSchema = userBaseSchema
   .omit({
     id: true,
