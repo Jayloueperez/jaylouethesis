@@ -30,6 +30,7 @@ import {
 import {
   AnnouncementTypeSchema,
   ApplicationStatusSchema,
+  TalentNodeSchema,
   TalentTypeSchema,
   UserRoleSchema,
 } from "~/schema/data-base";
@@ -387,14 +388,20 @@ export async function getTalents(params?: {
 export function getTalentsRealtime(params?: {
   ids?: string[];
   type?: TalentTypeSchema;
+  node?: TalentNodeSchema;
+  orderBy?: "asc" | "desc";
+  parentId?: string;
 }) {
   return function (callback: (talents: TalentSchema[]) => void) {
-    const { ids, type } = params ?? {};
+    const { ids, type, node, orderBy: orderTalentsBy, parentId } = params ?? {};
 
     let q = query(TALENTS_COLLECTION);
 
     if (ids) q = query(q, where("id", "in", ids));
     if (type) q = query(q, where("type", "==", type));
+    if (node) q = query(q, where("node", "==", node));
+    if (parentId) q = query(q, where("parentId", "==", parentId));
+    if (orderTalentsBy) q = query(q, orderBy("dateCreated", orderTalentsBy));
 
     return onSnapshot(q, (snapshot) => {
       if (snapshot.size === 0) return callback([]);

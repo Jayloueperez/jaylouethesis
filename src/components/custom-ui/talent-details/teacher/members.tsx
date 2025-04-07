@@ -45,11 +45,11 @@ import { TalentTypeSchema } from "~/schema/data-base";
 import { TalentSchema, UserSchema } from "~/schema/data-client";
 import { ButtonLink } from "../../button-link";
 
-interface TalentDetailsAdminMembersProps {
+interface TalentDetailsTeacherMembersProps {
   talent: TalentSchema;
 }
 
-function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
+function TalentDetailsTeacherMembers(props: TalentDetailsTeacherMembersProps) {
   const { talent } = props;
 
   const [members, setMembers] = useState<UserSchema[]>([]);
@@ -133,7 +133,7 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
         <div className="flex items-center gap-2">
           <ButtonLink
             className="flex items-center gap-2"
-            href={`/admin/${talentType}/${talentId}/applicants`}
+            href={`/teacher/${talentType}/${talentId}/applicants`}
             variant="outline"
           >
             {applicationsCount > 0 ? (
@@ -151,7 +151,7 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
 
           <ButtonLink
             className="flex items-center gap-2"
-            href={`/admin/${talentType}/${talentId}/schedules`}
+            href={`/teacher/${talentType}/${talentId}/schedules`}
             variant="yellow"
           >
             <Calendar className="size-4" />
@@ -291,4 +291,4 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
   );
 }
 
-export { TalentDetailsAdminMembers };
+export { TalentDetailsTeacherMembers };

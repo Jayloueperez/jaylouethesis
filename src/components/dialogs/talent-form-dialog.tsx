@@ -40,10 +40,11 @@ interface TalentFormDialogProps {
   onOpenChange?: (open: boolean) => void;
   talent?: TalentSchema;
   talentType: TalentTypeSchema;
+  parentId?: string;
 }
 
 function TalentFormDialog(props: TalentFormDialogProps) {
-  const { open, onOpenChange, talent, talentType } = props;
+  const { open, onOpenChange, talent, talentType, parentId } = props;
   const [loading, setLoading] = useState<boolean>(false);
 
   const { openAlert, component } = useAlert();
@@ -57,24 +58,45 @@ function TalentFormDialog(props: TalentFormDialogProps) {
       image: "",
       members: [],
       type: talentType,
-      nodeType: "parent",
+      node: parentId ? "child" : "parent",
+      parentId: parentId ?? "",
     },
   });
 
   const { control, handleSubmit, setValue, reset } = form;
+
+  let title = `Create ${talentTypeText[talentType]}`;
+  let description = `Create new ${talentTypeText[talentType].toLowerCase()}.`;
+  let labelText = `${talentTypeText[talentType]} Name`;
+  let buttonText = `Save`;
+  let successMessage = `Successfully added new ${talentTypeText[talentType]}.`;
+
+  if (talent && !parentId) {
+    title = `Update ${talent.name}`;
+    description = `Update ${talent.name} data.`;
+    buttonText = `Update`;
+    successMessage = `Successfully updated ${talent.name}.`;
+  } else if (talent && parentId) {
+    title = `Create Event`;
+    description = `Create new event for ${talent.name}.`;
+    labelText = `Event Name`;
+    successMessage = `Successfully added new ${talent.name} event.`;
+  }
 
   const handleCreateOrUpdateTalent = useCallback(
     async (data: CreateTalentInputSchema) => {
       setLoading(true);
 
       try {
-        if (talent) {
+        if (talent && !parentId) {
           await updateTalent(talent.id, data);
         } else {
           await createTalent(data);
 
           reset();
         }
+
+        openAlert({ title: "Success", description: successMessage });
 
         onOpenChange?.(false);
       } catch (error) {
@@ -92,11 +114,11 @@ function TalentFormDialog(props: TalentFormDialogProps) {
   );
 
   useEffect(() => {
-    if (talent) {
+    if (talent && !parentId) {
       setValue("name", talent.name);
       setValue("description", talent.description);
     }
-  }, [talent, setValue]);
+  }, [parentId, talent, setValue]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -107,14 +129,8 @@ function TalentFormDialog(props: TalentFormDialogProps) {
             className="flex flex-col gap-4"
           >
             <DialogHeader>
-              <DialogTitle>
-                {talent ? "Update" : "Create"}{" "}
-                {_.upperFirst(talentTypeText[talentType])}
-              </DialogTitle>
-              <DialogDescription>
-                {talent ? "Update" : "Create new"}{" "}
-                {talentTypeText[talentType].toLowerCase()}.
-              </DialogDescription>
+              <DialogTitle>{title}</DialogTitle>
+              <DialogDescription>{description}</DialogDescription>
             </DialogHeader>
 
             <div className="flex flex-1 flex-col gap-4">
@@ -123,9 +139,7 @@ function TalentFormDialog(props: TalentFormDialogProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem className="flex flex-col gap-2 space-y-0">
-                    <FormLabel className="px-1">
-                      {_.upperFirst(talentTypeText[talentType])} Name
-                    </FormLabel>
+                    <FormLabel className="px-1">{labelText}</FormLabel>
 
                     <FormControl>
                       <Input {...field} />
@@ -155,7 +169,7 @@ function TalentFormDialog(props: TalentFormDialogProps) {
 
             <DialogFooter>
               <Button type="submit" variant="yellow" loading={loading}>
-                {talent ? "Update" : "Save"}
+                {buttonText}
               </Button>
             </DialogFooter>
           </form>

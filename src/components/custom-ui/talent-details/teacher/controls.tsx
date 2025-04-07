@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Plus, SquarePen, Trash } from "lucide-react";
+import { SquarePen, Trash } from "lucide-react";
 
 import { TalentFormDialog } from "~/components/dialogs/talent-form-dialog";
 import { Button } from "~/components/ui/button";
@@ -12,17 +12,17 @@ import { deleteTalent } from "~/lib/firebase/client/firestore";
 import { TalentTypeSchema } from "~/schema/data-base";
 import { TalentSchema } from "~/schema/data-client";
 
-interface TalentDetailsAdminControlsProps {
+interface TalentDetailsTeacherControlsProps {
   talent: TalentSchema;
 }
 
-function TalentDetailsAdminControls(props: TalentDetailsAdminControlsProps) {
+function TalentDetailsTeacherControls(props: TalentDetailsTeacherControlsProps) {
   const { talent } = props;
 
   const [loadingState, setLoadingState] = useState<
     "none" | "updating" | "deleting"
   >("none");
-  const [openState, setOpenState] = useState<"none" | "edit" | "event">("none");
+  const [openState, setOpenState] = useState<"none" | "edit">("none");
   const router = useRouter();
 
   const { talentId, talentType } = useParams<{
@@ -38,7 +38,7 @@ function TalentDetailsAdminControls(props: TalentDetailsAdminControlsProps) {
       setLoadingState("deleting");
 
       await deleteTalent(talentId);
-      router.replace(`/admin/${talentType}`);
+      router.replace(`/teacher/${talentType}`);
     },
   });
 
@@ -48,13 +48,6 @@ function TalentDetailsAdminControls(props: TalentDetailsAdminControlsProps) {
         <SquarePen className="size-4" />
         <span>Edit</span>
       </Button>
-
-      {talentType === "culture-and-arts" && (
-        <Button variant="yellow" onClick={() => setOpenState("event")}>
-          <Plus className="size-4" />
-          <span>Add Event</span>
-        </Button>
-      )}
 
       <Button
         variant="destructive"
@@ -76,17 +69,9 @@ function TalentDetailsAdminControls(props: TalentDetailsAdminControlsProps) {
         onOpenChange={(v) => setOpenState(v ? "edit" : "none")}
       />
 
-      <TalentFormDialog
-        talentType={talentType}
-        talent={talent}
-        open={openState === "event"}
-        onOpenChange={(v) => setOpenState(v ? "event" : "none")}
-        parentId={talentId}
-      />
-
       {component}
     </>
   );
 }
 
-export { TalentDetailsAdminControls };
+export { TalentDetailsTeacherControls };

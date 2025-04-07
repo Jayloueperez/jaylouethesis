@@ -38,7 +38,11 @@ export default function TalentListPage() {
   useEffect(() => {
     if (talentType !== "culture-and-arts" && talentType !== "sports") return;
 
-    const unsubscribe = getTalentsRealtime({ type: talentType })((v) => {
+    const unsubscribe = getTalentsRealtime({
+      type: talentType,
+      node: "parent",
+      orderBy: "asc",
+    })((v) => {
       setTalents(v);
       setLoading(false);
     });
@@ -91,7 +95,7 @@ export default function TalentListPage() {
               key={talent.id}
               href={`/teacher/${talentType}/${talent.id}`}
               talent={talent}
-              type={talentType}
+              talentType={talentType}
             />
           ))}
         </div>

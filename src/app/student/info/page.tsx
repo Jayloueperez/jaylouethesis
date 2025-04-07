@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { courses } from "~/const/courses";
 import { useAlert } from "~/hooks/use-alert";
 import { updateUser } from "~/lib/firebase/client/firestore";
 import { updateUserInfoSchema, UpdateUserInfoSchema } from "~/schema/crud";
@@ -126,9 +127,9 @@ export default function StudentInfoPage() {
           <Form {...form}>
             <form
               onSubmit={handleSubmit(handleUpdateUserInfo)}
-              className="flex flex-col gap-4 lg:min-w-2xl lg:flex-row"
+              className="grid grid-cols-1 gap-4 lg:w-2xl lg:grid-cols-2"
             >
-              <div className="flex flex-1 flex-col gap-4">
+              <div className="flex flex-col gap-4">
                 <FormField
                   control={control}
                   name="firstName"
@@ -223,7 +224,7 @@ export default function StudentInfoPage() {
                 />
               </div>
 
-              <div className="flex flex-1 flex-col gap-4">
+              <div className="flex flex-col gap-4">
                 <FormField
                   control={control}
                   name="contact"
@@ -264,7 +265,25 @@ export default function StudentInfoPage() {
                       <FormLabel className="px-1">Course</FormLabel>
 
                       <FormControl>
-                        <Input {...field} />
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                          {...field}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="w-full">
+                              <SelectValue placeholder="Select course" />
+                            </SelectTrigger>
+                          </FormControl>
+
+                          <SelectContent>
+                            {courses.map((c) => (
+                              <SelectItem key={c.id} value={c.id}>
+                                {c.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </FormControl>
 
                       <FormMessage />

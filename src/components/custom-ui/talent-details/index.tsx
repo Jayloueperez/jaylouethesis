@@ -1,15 +1,22 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { getTalentsRealtime } from "~/lib/firebase/client/firestore";
 import { TalentSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 import { Loading } from "../loading";
+import { TalentCard } from "../talent-card";
 import { TalentDetailsAdminAnnouncements } from "./admin/announcements";
 import { TalentDetailsAdminControls } from "./admin/controls";
 import { TalentDetailsAdminMembers } from "./admin/members";
 import { TalentDetailsStudentAnnouncements } from "./student/announcements";
 import { TalentDetailsStudentControls } from "./student/controls";
 import { TalentDetailsStudentMembers } from "./student/members";
+import { TalentDetailsTeacherAnnouncements } from "./teacher/announcements";
+import { TalentDetailsTeacherControls } from "./teacher/controls";
+import { TalentDetailsTeacherMembers } from "./teacher/members";
 
 interface TalentDetailsProps {
   talent: TalentSchema;
@@ -18,9 +25,29 @@ interface TalentDetailsProps {
 function TalentDetails(props: TalentDetailsProps) {
   const { talent } = props;
 
-  const { userData, loading } = useAppSelector((state) => state.user);
+  const [events, setEvents] = useState<TalentSchema[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  if (!userData || loading) return <Loading />;
+  const { userData, loading: userDataLoading } = useAppSelector(
+    (state) => state.user,
+  );
+
+  if (!userData || userDataLoading) return <Loading />;
+
+  useEffect(() => {
+    if (talent.type !== "culture-and-arts") return;
+
+    const unsubscribe = getTalentsRealtime({
+      node: "child",
+      orderBy: "asc",
+      parentId: talent.id,
+    })((v) => {
+      setEvents(v);
+      setLoading(false);
+    });
+
+    return unsubscribe;
+  }, [talent]);
 
   return (
     <>
@@ -44,38 +71,93 @@ function TalentDetails(props: TalentDetailsProps) {
               <TalentDetailsAdminControls talent={talent} />
             )}
 
-            {userData.role === "student" && (
-              <TalentDetailsStudentControls talent={talent} />
+            {userData.role === "teacher" && (
+              <TalentDetailsTeacherControls talent={talent} />
             )}
+
+            {(talent.type === "sports" ||
+              (talent.type === "culture-and-arts" &&
+                talent.node === "child")) &&
+              userData.role === "student" && (
+                <TalentDetailsStudentControls talent={talent} />
+              )}
           </div>
         </div>
         {/* CONTROLS */}
       </div>
       {/* HEADER */}
 
-      {/* ANNOUNCEMENTS */}
-      <div className="flex flex-col gap-2">
-        <span className="text-lg">Announcements</span>
+      {(talent.type === "sports" ||
+        (talent.type === "culture-and-arts" && talent.node === "child")) && (
+        <>
+          {/* ANNOUNCEMENTS */}
+          <div className="flex flex-col gap-2">
+            <span className="text-lg">Announcements</span>
 
-        {userData.role === "admin" && (
-          <TalentDetailsAdminAnnouncements talent={talent} />
-        )}
+            {userData.role === "admin" && (
+              <TalentDetailsAdminAnnouncements talent={talent} />
+            )}
 
-        {userData.role === "student" && (
-          <TalentDetailsStudentAnnouncements talent={talent} />
-        )}
-      </div>
-      {/* ANNOUNCEMENTS */}
+            {userData.role === "teacher" && (
+              <TalentDetailsTeacherAnnouncements talent={talent} />
+            )}
 
-      {/* MEMBERS */}
-      {userData.role === "admin" && (
-        <TalentDetailsAdminMembers talent={talent} />
+            {userData.role === "student" && (
+              <TalentDetailsStudentAnnouncements talent={talent} />
+            )}
+          </div>
+          {/* ANNOUNCEMENTS */}
+
+          {/* MEMBERS */}
+          {userData.role === "admin" && (
+            <TalentDetailsAdminMembers talent={talent} />
+          )}
+
+          {userData.role === "teacher" && (
+            <TalentDetailsTeacherMembers talent={talent} />
+          )}
+
+          {userData.role === "student" && (
+            <TalentDetailsStudentMembers talent={talent} />
+          )}
+          {/* MEMBERS */}
+        </>
       )}
 
-      {userData.role === "student" && (
-        <TalentDetailsStudentMembers talent={talent} />
+      {talent.type === "culture-and-arts" && talent.node === "parent" && (
+        <>
+          <div className="flex flex-col gap-2">
+            <span className="text-lg">Events</span>
+
+            {loading && (
+              <span className="text-center text-gray-500">
+                Loading events...
+              </span>
+            )}
+
+            {!loading && events.length === 0 && (
+              <span className="text-center text-gray-500">
+                No event records found.
+              </span>
+            )}
+
+            {!loading && (
+              <div className="grid grid-cols-4">
+                {events.map((e) => (
+                  <TalentCard
+                    key={e.id}
+                    talent={e}
+                    talentType="culture-and-arts"
+                    href={`/${userData.role}/${talent.type}/${talent.id}/event/${e.id}`}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+
+          {loading}
+        </>
       )}
-      {/* MEMBERS */}
     </>
   );
 }

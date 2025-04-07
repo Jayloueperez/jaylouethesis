@@ -122,7 +122,7 @@ export const loginWithGoogle = createAsyncThunk(
           ],
           provider: "google",
           tokens: [],
-          status: "pending",
+          status: "confirmed",
         });
       }
 
