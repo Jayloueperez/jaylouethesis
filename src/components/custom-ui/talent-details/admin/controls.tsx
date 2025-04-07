@@ -49,7 +49,7 @@ function TalentDetailsAdminControls(props: TalentDetailsAdminControlsProps) {
         <span>Edit</span>
       </Button>
 
-      {talentType === "culture-and-arts" && (
+      {talentType === "culture-and-arts" && talent.node === "parent" && (
         <Button variant="yellow" onClick={() => setOpenState("event")}>
           <Plus className="size-4" />
           <span>Add Event</span>
