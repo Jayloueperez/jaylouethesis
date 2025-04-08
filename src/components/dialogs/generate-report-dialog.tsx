@@ -50,7 +50,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
   const { talent, ...rest } = props;
 
   const [loading, setLoading] = useState<boolean>(true);
-  const [generating, setGenerating] = useState<boolean>(true);
+  const [generating, setGenerating] = useState<boolean>(false);
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [title, setTitle] = useState<string>("");
   const [filter, setFilter] = useState<{
