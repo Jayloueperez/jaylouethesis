@@ -7,6 +7,7 @@ import {
   messageBaseSchema,
   messageContainerBaseSchema,
   notificationBaseSchema,
+  reportBaseSchema,
   talentBaseSchema,
   talentTeamBaseSchema,
   talentTryoutBaseSchema,
@@ -62,3 +63,6 @@ export type ApplicationSchema = z.infer<typeof applicationSchema>;
 
 export const notificationSchema = notificationBaseSchema.and(dateSchema);
 export type NotificationSchema = z.infer<typeof notificationSchema>;
+
+export const reportSchema = reportBaseSchema.and(dateSchema);
+export type ReportSchema = z.infer<typeof reportSchema>;

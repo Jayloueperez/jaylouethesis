@@ -173,3 +173,13 @@ export const notificationBaseSchema = z.object({
   isRead: z.string().array(),
 });
 export type NotificationBaseSchema = z.infer<typeof notificationBaseSchema>;
+
+/**
+ * REPORTS
+ */
+export const reportBaseSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  members: z.string().array(),
+});
+export type ReportBaseSchema = z.infer<typeof reportBaseSchema>;

@@ -1,27 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  Bell,
-  Calendar,
-  ClipboardList,
-  Eye,
-  ListCheck,
-  Loader,
-  X,
-} from "lucide-react";
+import { Bell, ClipboardList, ListCheck, Loader } from "lucide-react";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "~/components/ui/alert-dialog";
+import { GenerateReportDialog } from "~/components/dialogs/generate-report-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -54,7 +36,9 @@ function TalentDetailsTeacherMembers(props: TalentDetailsTeacherMembersProps) {
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingState, setLoadingState] = useState<"none" | "removing">("none");
-  const [openState, setOpenState] = useState<"none" | "remove-member">("none");
+  const [openState, setOpenState] = useState<
+    "none" | "generate" | "remove-member"
+  >("none");
 
   const { count: applicationsCount } = useApplications({
     talentId,
@@ -97,15 +81,16 @@ function TalentDetailsTeacherMembers(props: TalentDetailsTeacherMembersProps) {
   }
 
   function handleGenerateReport() {
-    if (members.length === 0) {
-      openAlert({
-        title: "Warning",
-        description: "Cannot generate pdf report if there are no data.",
-      });
-      return;
-    }
+    setOpenState("generate");
+    // if (members.length === 0) {
+    //   openAlert({
+    //     title: "Warning",
+    //     description: "Cannot generate pdf report if there are no data.",
+    //   });
+    //   return;
+    // }
 
-    toPDF();
+    // toPDF();
   }
 
   useEffect(() => {
@@ -219,16 +204,16 @@ function TalentDetailsTeacherMembers(props: TalentDetailsTeacherMembersProps) {
                 <TableCell>{member.section}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Button
+                    {/* <Button
                       type="button"
                       variant="blue"
                       size="icon"
                       shape="pill"
                     >
                       <Eye className="size-4" />
-                    </Button>
+                    </Button> */}
 
-                    <AlertDialog
+                    {/* <AlertDialog
                       open={openState === "remove-member"}
                       onOpenChange={(b) =>
                         setOpenState((v) => (b ? v : "none"))
@@ -268,7 +253,7 @@ function TalentDetailsTeacherMembers(props: TalentDetailsTeacherMembersProps) {
                           </AlertDialogCancel>
                         </AlertDialogFooter>
                       </AlertDialogContent>
-                    </AlertDialog>
+                    </AlertDialog> */}
                   </div>
                 </TableCell>
               </TableRow>
@@ -276,6 +261,12 @@ function TalentDetailsTeacherMembers(props: TalentDetailsTeacherMembersProps) {
           </TableBody>
         </Table>
       </Card>
+
+      <GenerateReportDialog
+        open={openState === "generate"}
+        onOpenChange={(o) => setOpenState(() => (o ? "generate" : "none"))}
+        talent={talent}
+      />
 
       {component}
     </div>

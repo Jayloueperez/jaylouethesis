@@ -3,11 +3,16 @@ import { Eye, EyeOff } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+function Input({
+  wrapperClassName,
+  className,
+  type,
+  ...props
+}: React.ComponentProps<"input"> & { wrapperClassName?: string }) {
   const [show, setShow] = React.useState<boolean>(false);
 
   return (
-    <div className="relative">
+    <div className={cn("relative", wrapperClassName)}>
       <input
         type={type === "password" ? (show ? "text" : "password") : type}
         data-slot="input"

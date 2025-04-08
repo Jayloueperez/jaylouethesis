@@ -43,6 +43,7 @@ import {
   MessageSchema,
   notificationSchema,
   NotificationSchema,
+  ReportSchema,
   talentSchema,
   TalentSchema,
   talentTryoutSchema,
@@ -73,6 +74,7 @@ export const NOTIFICATION_COLLECTION =
   createCollection<NotificationSchema>("notification");
 export const TALENT_TRYOUT_COLLECTION =
   createCollection<TalentTryoutSchema>("talent-tryout");
+export const REPORTS_COLLECTION = createCollection<ReportSchema>("reports");
 
 export async function checkUser(email: string, role: UserRoleSchema) {
   try {
@@ -1040,4 +1042,26 @@ export function getApplicationsRealtime(params?: {
       callback(data ?? []);
     });
   };
+}
+
+export async function createReport(
+  data?: Omit<ReportSchema, "id" | "dateCreated" | "dateUpdated">,
+) {
+  try {
+    const ref = doc(REPORTS_COLLECTION);
+
+    await setDoc(ref, {
+      ...data,
+      id: ref.id,
+      dateCreated: new Date(),
+      dateUpdated: new Date(),
+    });
+
+    return ref.id;
+  } catch (error) {
+    console.log("createReport error:", error);
+    const err = getError(error, "Failed creating report.");
+
+    throw err;
+  }
 }
