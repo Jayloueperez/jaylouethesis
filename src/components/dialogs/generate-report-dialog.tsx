@@ -50,6 +50,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
   const { talent, ...rest } = props;
 
   const [loading, setLoading] = useState<boolean>(true);
+  const [generating, setGenerating] = useState<boolean>(true);
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [title, setTitle] = useState<string>("");
   const [filter, setFilter] = useState<{
@@ -86,6 +87,8 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
       });
     }
 
+    setGenerating(true);
+
     try {
       await createReport({ title, members: filteredMembers.map((m) => m.id) });
       await toPDF();
@@ -102,6 +105,8 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
         description: "Failed generating report.",
       });
     }
+
+    setGenerating(false);
   }
 
   useEffect(() => {
@@ -313,6 +318,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
               variant="yellow"
               disabled={filteredMembers.length === 0}
               onClick={handleDownload}
+              loading={generating}
             >
               <Download className="size-4" />
               <span>Download</span>
