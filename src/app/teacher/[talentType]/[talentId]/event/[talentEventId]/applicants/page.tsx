@@ -8,7 +8,7 @@ import { ButtonLink } from "~/components/custom-ui/button-link";
 import { Loading } from "~/components/custom-ui/loading";
 import { BooleanDialog } from "~/components/dialogs/boolean-dialog";
 import { ScheduleTryoutDialog } from "~/components/dialogs/schedule-tryout-dialog";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { TeacherLayout } from "~/components/layout/teacher-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -40,7 +40,7 @@ import {
   updateTalent,
 } from "~/lib/firebase/client/firestore";
 import { sendNotification } from "~/lib/firebase/client/messaging";
-import { useTalentContext } from "~/providers/TalentProvider";
+import { useTalentEventContext } from "~/providers/TalentEventProvider";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 import { useAppSelector } from "~/store";
 import { getError } from "~/utils/error";
@@ -60,14 +60,15 @@ export default function Page() {
     useState<ApplicationWithData | null>(null);
   const [search, setSearch] = useState<string>("");
 
-  const { talentId, talentType } = useParams<{
+  const { talentType, talentEventId } = useParams<{
     talentId: string;
     talentType: TalentTypeSchema;
+    talentEventId: string;
   }>();
 
-  const { talent, loading } = useTalentContext();
+  const { talent, loading } = useTalentEventContext();
   const { data: applications, loading: applicationsLoading } = useApplications({
-    talentId,
+    talentId: talentEventId,
     talentType,
   });
   const { loading: talentTypeLoading } = useTalentTypeParams();
@@ -171,7 +172,7 @@ export default function Page() {
   if (!talent || talentTypeLoading || loading) return <Loading />;
 
   return (
-    <AdminLayout className="gap-8 p-4">
+    <TeacherLayout className="gap-8 p-4">
       {/* HEADER */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-4">
@@ -179,7 +180,7 @@ export default function Page() {
             variant="outline"
             size="icon"
             shape="pill"
-            href={`/admin/${talentType}/${talentId}`}
+            href={`/teacher/${talentType}/${talent.parentId}/event/${talent.id}`}
           >
             <ChevronLeft className="size-4" />
           </ButtonLink>
@@ -384,7 +385,7 @@ export default function Page() {
         <ScheduleTryoutDialog
           open={!!studentTryout}
           onOpenChange={(v) => setStudentTryout((p) => (v ? p : null))}
-          talentId={talentId}
+          talentId={talentEventId}
           talentType={talentType}
           student={studentTryout}
           talent={talent}
@@ -393,6 +394,6 @@ export default function Page() {
 
       {component}
       {/* MODALS */}
-    </AdminLayout>
+    </TeacherLayout>
   );
 }

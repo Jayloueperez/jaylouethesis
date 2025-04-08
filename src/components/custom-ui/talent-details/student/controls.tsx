@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import _ from "lodash";
 import { ArrowLeft, Calendar, CheckCheck, Plus, X } from "lucide-react";
 
@@ -32,7 +31,6 @@ import {
 } from "~/lib/firebase/client/firestore";
 import { sendNotification } from "~/lib/firebase/client/messaging";
 import { CreateApplicationInputSchema } from "~/schema/crud";
-import { TalentTypeSchema } from "~/schema/data-base";
 import {
   ApplicationSchema,
   TalentSchema,
@@ -50,6 +48,7 @@ function TalentDetailsStudentControls(
   props: TalentDetailsStudentControlsProps,
 ) {
   const { talent } = props;
+  const { id: talentId, type: talentType } = talent;
 
   const [application, setApplication] = useState<ApplicationSchema | null>(
     null,
@@ -67,11 +66,6 @@ function TalentDetailsStudentControls(
     | "leave-talent"
     | "tryout-schedule"
   >("none");
-
-  const { talentId, talentType } = useParams<{
-    talentId: string;
-    talentType: TalentTypeSchema;
-  }>();
 
   const { userData, loading } = useAppSelector((state) => state.user);
   const { component, openAlert } = useAlert();
@@ -125,7 +119,7 @@ function TalentDetailsStudentControls(
         title: `Cancel Application`,
         body: `${userData.firstName} cancelled application for ${talent.name}.`,
         // isRead: [],
-        receiver: talentId,
+        receiver: "all",
         sender: userData.id,
       });
 
@@ -133,7 +127,7 @@ function TalentDetailsStudentControls(
         title: `Cancel Application`,
         body: `${userData.firstName} cancelled application for ${talent.name}.`,
         // isRead: [],
-        receiver: talentId,
+        receiver: "all",
         sender: userData.id,
       });
 
@@ -167,7 +161,7 @@ function TalentDetailsStudentControls(
         title: `Left ${talentTypeText[talentType]}`,
         body: `${userData.firstName} left ${talent.name}.`,
         // isRead: [],
-        receiver: talentId,
+        receiver: "all",
         sender: userData.id,
       });
 
@@ -175,7 +169,7 @@ function TalentDetailsStudentControls(
         title: `Left ${talentTypeText[talentType]}`,
         body: `${userData.firstName} left ${talent.name}.`,
         // isRead: [],
-        receiver: talentId,
+        receiver: "all",
         sender: userData.id,
       });
 

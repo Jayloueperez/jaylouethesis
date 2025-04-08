@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SquarePen, Trash } from "lucide-react";
 
 import { TalentFormDialog } from "~/components/dialogs/talent-form-dialog";
@@ -9,26 +9,23 @@ import { Button } from "~/components/ui/button";
 import { talentTypeText } from "~/const/text";
 import { useBoolean } from "~/hooks/use-boolean";
 import { deleteTalent } from "~/lib/firebase/client/firestore";
-import { TalentTypeSchema } from "~/schema/data-base";
 import { TalentSchema } from "~/schema/data-client";
 
 interface TalentDetailsTeacherControlsProps {
   talent: TalentSchema;
 }
 
-function TalentDetailsTeacherControls(props: TalentDetailsTeacherControlsProps) {
+function TalentDetailsTeacherControls(
+  props: TalentDetailsTeacherControlsProps,
+) {
   const { talent } = props;
+  const { id: talentId, type: talentType } = talent;
 
   const [loadingState, setLoadingState] = useState<
     "none" | "updating" | "deleting"
   >("none");
   const [openState, setOpenState] = useState<"none" | "edit">("none");
   const router = useRouter();
-
-  const { talentId, talentType } = useParams<{
-    talentId: string;
-    talentType: TalentTypeSchema;
-  }>();
 
   const { component, openBoolean } = useBoolean({
     positiveText: "Delete",

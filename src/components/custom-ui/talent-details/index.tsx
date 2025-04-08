@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ChevronLeft } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { getTalentsRealtime } from "~/lib/firebase/client/firestore";
 import { TalentSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
+import { ButtonLink } from "../button-link";
 import { Loading } from "../loading";
 import { TalentCard } from "../talent-card";
 import { TalentDetailsAdminAnnouncements } from "./admin/announcements";
@@ -52,38 +54,51 @@ function TalentDetails(props: TalentDetailsProps) {
   return (
     <>
       {/* HEADER */}
-      <div className="flex items-center gap-4">
-        <Avatar className="size-40">
-          <AvatarImage src={talent.image} alt={talent.name} />
+      <div className="flex items-start gap-4">
+        {talent.node === "child" && (
+          <ButtonLink
+            variant="outline"
+            size="icon"
+            shape="pill"
+            href={`/${userData.role}/${talent.type}/${talent.parentId}`}
+          >
+            <ChevronLeft className="size-4" />
+          </ButtonLink>
+        )}
 
-          <AvatarFallback>{talent.name.substring(0, 2)}</AvatarFallback>
-        </Avatar>
+        <div className="flex items-center gap-4">
+          <Avatar className="size-40">
+            <AvatarImage src={talent.image} alt={talent.name} />
 
-        {/* CONTROLS */}
-        <div className="flex flex-col items-start gap-4">
-          <span className="text-4xl">{talent.name}</span>
-
-          <span className="">{talent.description}</span>
+            <AvatarFallback>{talent.name.substring(0, 2)}</AvatarFallback>
+          </Avatar>
 
           {/* CONTROLS */}
-          <div className="flex items-center gap-2">
-            {userData.role === "admin" && (
-              <TalentDetailsAdminControls talent={talent} />
-            )}
+          <div className="flex flex-col items-start gap-4">
+            <span className="text-4xl">{talent.name}</span>
 
-            {userData.role === "teacher" && (
-              <TalentDetailsTeacherControls talent={talent} />
-            )}
+            <span className="">{talent.description}</span>
 
-            {(talent.type === "sports" ||
-              (talent.type === "culture-and-arts" &&
-                talent.node === "child")) &&
-              userData.role === "student" && (
-                <TalentDetailsStudentControls talent={talent} />
+            {/* CONTROLS */}
+            <div className="flex items-center gap-2">
+              {userData.role === "admin" && (
+                <TalentDetailsAdminControls talent={talent} />
               )}
+
+              {userData.role === "teacher" && (
+                <TalentDetailsTeacherControls talent={talent} />
+              )}
+
+              {(talent.type === "sports" ||
+                (talent.type === "culture-and-arts" &&
+                  talent.node === "child")) &&
+                userData.role === "student" && (
+                  <TalentDetailsStudentControls talent={talent} />
+                )}
+            </div>
           </div>
+          {/* CONTROLS */}
         </div>
-        {/* CONTROLS */}
       </div>
       {/* HEADER */}
 
@@ -142,7 +157,7 @@ function TalentDetails(props: TalentDetailsProps) {
             )}
 
             {!loading && (
-              <div className="grid grid-cols-4">
+              <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
                 {events.map((e) => (
                   <TalentCard
                     key={e.id}

@@ -208,7 +208,7 @@ export function getUserRealtime(id: string) {
 
 export async function getUsers(params?: {
   ids?: string[];
-  role?: UserRoleSchema;
+  role?: UserRoleSchema | UserRoleSchema[];
 }) {
   try {
     const { ids, role } = params ?? {};
@@ -216,7 +216,10 @@ export async function getUsers(params?: {
     let q = query(USERS_COLLECTION);
 
     if (ids && ids.length > 0) q = query(q, where("id", "in", ids));
-    if (role) q = query(q, where("role", "==", role));
+    if (typeof role === "string" && role)
+      q = query(q, where("role", "==", role));
+    if (typeof role === "object" && role.length > 0)
+      q = query(q, where("role", "in", role));
 
     const snapshot = await getDocs(q);
     if (snapshot.docs.length === 0) return [];
@@ -822,7 +825,7 @@ export async function createApplication(
       title: `New ${_.upperFirst(data.talentType)} Application`,
       body: `${studentData.firstName} sent an application for ${talentData.name}.`,
       // isRead: [],
-      receiver: data.talentId,
+      receiver: "all",
       sender: data.userId,
     });
 
@@ -830,7 +833,7 @@ export async function createApplication(
       title: `New ${_.upperFirst(data.talentType)} Application`,
       body: `${studentData.firstName} sent an application for ${talentData.name}.`,
       // isRead: [],
-      receiver: data.talentId,
+      receiver: "all",
       sender: data.userId,
     });
 

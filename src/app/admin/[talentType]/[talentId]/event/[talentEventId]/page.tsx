@@ -11,7 +11,7 @@ import { useTalentEventContext } from "~/providers/TalentEventProvider";
 import { TalentTypeSchema } from "~/schema/data-base";
 import { useAppSelector } from "~/store";
 
-export default function TalentEventDetailsPage() {
+export default function Page() {
   const router = useRouter();
   const { talentType } = useParams<{
     talentId: string;

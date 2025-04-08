@@ -32,6 +32,7 @@ interface TalentDetailsStudentMembersProps {
 
 function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
   const { talent } = props;
+  const { id: talentId, type: talentType } = talent;
 
   const [application, setApplication] = useState<ApplicationSchema | null>(
     null,
@@ -39,10 +40,6 @@ function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const { talentId, talentType } = useParams<{
-    talentId: string;
-    talentType: TalentTypeSchema;
-  }>();
   const { userData } = useAppSelector((state) => state.user);
 
   const canShowMembers = userData

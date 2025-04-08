@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-import { Calendar, Check, ChevronLeft, Loader, Trash } from "lucide-react";
+import { Check, ChevronLeft, Loader, X } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
 import { Loading } from "~/components/custom-ui/loading";
@@ -28,7 +28,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { talentTypeText } from "~/const/text";
 import {
   ApplicationWithData,
   useApplications,
@@ -38,6 +37,7 @@ import { useTalentTypeParams } from "~/hooks/use-talent-type-params";
 import {
   createNotification,
   updateApplication,
+  updateTalent,
 } from "~/lib/firebase/client/firestore";
 import { sendNotification } from "~/lib/firebase/client/messaging";
 import { useTalentContext } from "~/providers/TalentProvider";
@@ -96,12 +96,15 @@ export default function Page() {
 
     try {
       await updateApplication(acceptApplication.id, {
-        status: "tryout",
+        status: "accepted",
+      });
+      await updateTalent(talent.id, {
+        members: [...talent.members, acceptApplication.userId],
       });
 
       await sendNotification({
         title: `Application Accepted`,
-        body: `${userData.firstName} accepted your application for ${talent.name}. Please wait while we schedule your tryout.`,
+        body: `${userData.firstName} accepted your application for ${talent.name}.`,
         // isRead: [],
         receiver: acceptApplication.userId,
         sender: userData.id,
@@ -109,7 +112,7 @@ export default function Page() {
 
       await createNotification({
         title: `Application Accepted`,
-        body: `${userData.firstName} accepted your application for ${talent.name}. Please wait while we schedule your tryout.`,
+        body: `${userData.firstName} accepted your application for ${talent.name}.`,
         // isRead: [],
         receiver: acceptApplication.userId,
         sender: userData.id,
@@ -128,13 +131,29 @@ export default function Page() {
   }
 
   async function handleReject() {
-    if (!rejectApplication) return;
+    if (!rejectApplication || !userData || !talent) return;
 
     setLoadingState("rejecting");
 
     try {
       await updateApplication(rejectApplication.id, {
         status: "rejected",
+      });
+
+      await sendNotification({
+        title: `Application Rejected`,
+        body: `${userData.firstName} rejected your application for ${talent.name}.`,
+        // isRead: [],
+        receiver: rejectApplication.userId,
+        sender: userData.id,
+      });
+
+      await createNotification({
+        title: `Application Rejected`,
+        body: `${userData.firstName} rejected your application for ${talent.name}.`,
+        // isRead: [],
+        receiver: rejectApplication.userId,
+        sender: userData.id,
       });
     } catch (error) {
       console.log("handleReject error:", error);
@@ -206,9 +225,7 @@ export default function Page() {
       {/* LIST */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <span className="text-lg">
-            {talent.name} {talentTypeText[talentType]} Applicants
-          </span>
+          <span className="text-lg">{talent.name} Applicants</span>
         </div>
 
         <Card className="p-0">
@@ -286,6 +303,8 @@ export default function Page() {
                                 onClick={() =>
                                   setAcceptApplication(application)
                                 }
+                                loading={loadingState === "accepting"}
+                                disabled={loadingState !== "none"}
                               >
                                 <Check className="size-4" />
                               </Button>
@@ -298,13 +317,15 @@ export default function Page() {
                                 onClick={() =>
                                   setRejectApplication(application)
                                 }
+                                loading={loadingState === "rejecting"}
+                                disabled={loadingState !== "none"}
                               >
-                                <Trash className="size-4" />
+                                <X className="size-4" />
                               </Button>
                             </>
                           )}
 
-                          {status === "tryout" && (
+                          {/* {status === "tryout" && (
                             <>
                               <Button
                                 type="button"
@@ -316,7 +337,7 @@ export default function Page() {
                                 <span>Schedule Tryout</span>
                               </Button>
                             </>
-                          )}
+                          )} */}
                         </div>
                       </TableCell>
                     </TableRow>

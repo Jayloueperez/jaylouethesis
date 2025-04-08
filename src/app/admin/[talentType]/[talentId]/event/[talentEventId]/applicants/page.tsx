@@ -40,7 +40,7 @@ import {
   updateTalent,
 } from "~/lib/firebase/client/firestore";
 import { sendNotification } from "~/lib/firebase/client/messaging";
-import { useTalentContext } from "~/providers/TalentProvider";
+import { useTalentEventContext } from "~/providers/TalentEventProvider";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 import { useAppSelector } from "~/store";
 import { getError } from "~/utils/error";
@@ -60,14 +60,15 @@ export default function Page() {
     useState<ApplicationWithData | null>(null);
   const [search, setSearch] = useState<string>("");
 
-  const { talentId, talentType } = useParams<{
+  const { talentType, talentEventId } = useParams<{
     talentId: string;
     talentType: TalentTypeSchema;
+    talentEventId: string;
   }>();
 
-  const { talent, loading } = useTalentContext();
+  const { talent, loading } = useTalentEventContext();
   const { data: applications, loading: applicationsLoading } = useApplications({
-    talentId,
+    talentId: talentEventId,
     talentType,
   });
   const { loading: talentTypeLoading } = useTalentTypeParams();
@@ -179,7 +180,7 @@ export default function Page() {
             variant="outline"
             size="icon"
             shape="pill"
-            href={`/admin/${talentType}/${talentId}`}
+            href={`/admin/${talentType}/${talent.parentId}/event/${talent.id}`}
           >
             <ChevronLeft className="size-4" />
           </ButtonLink>
@@ -384,7 +385,7 @@ export default function Page() {
         <ScheduleTryoutDialog
           open={!!studentTryout}
           onOpenChange={(v) => setStudentTryout((p) => (v ? p : null))}
-          talentId={talentId}
+          talentId={talentEventId}
           talentType={talentType}
           student={studentTryout}
           talent={talent}

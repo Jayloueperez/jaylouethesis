@@ -6,11 +6,11 @@ import { useParams } from "next/navigation";
 import { TalentProvider } from "~/providers/TalentProvider";
 import { TalentTypeSchema } from "~/schema/data-base";
 
-interface TalentLayoutProps {
+interface LayoutProps {
   children?: ReactNode;
 }
 
-export default function TalentLayout(props: TalentLayoutProps) {
+export default function Layout(props: LayoutProps) {
   const { children } = props;
 
   const { talentId, talentType } = useParams<{

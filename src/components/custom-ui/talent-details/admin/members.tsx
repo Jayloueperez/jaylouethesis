@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import {
   Bell,
   Calendar,
@@ -41,7 +40,6 @@ import {
   getUsersRealtime,
   updateTalent,
 } from "~/lib/firebase/client/firestore";
-import { TalentTypeSchema } from "~/schema/data-base";
 import { TalentSchema, UserSchema } from "~/schema/data-client";
 import { ButtonLink } from "../../button-link";
 
@@ -51,16 +49,13 @@ interface TalentDetailsAdminMembersProps {
 
 function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
   const { talent } = props;
+  const { id: talentId, type: talentType } = talent;
 
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadingState, setLoadingState] = useState<"none" | "removing">("none");
   const [openState, setOpenState] = useState<"none" | "remove-member">("none");
 
-  const { talentId, talentType } = useParams<{
-    talentId: string;
-    talentType: TalentTypeSchema;
-  }>();
   const { count: applicationsCount } = useApplications({
     talentId,
     talentType,
@@ -70,6 +65,12 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
   const { toPDF, targetRef } = usePdf({
     filename: `${talentId}-members-${new Date().getTime()}.pdf`,
   });
+
+  let applicationsUrl = `/admin/${talentType}/${talentId}/applicants`;
+
+  if (talent.node === "child") {
+    applicationsUrl = `/admin/${talentType}/${talent.parentId}/event/${talent.id}/applicants`;
+  }
 
   async function handleRemoveMember(memberId: string) {
     setLoadingState("removing");
@@ -133,7 +134,7 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
         <div className="flex items-center gap-2">
           <ButtonLink
             className="flex items-center gap-2"
-            href={`/admin/${talentType}/${talentId}/applicants`}
+            href={applicationsUrl}
             variant="outline"
           >
             {applicationsCount > 0 ? (
@@ -147,16 +148,6 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
                 ? `${applicationsCount} New ${applicationsCount === 1 ? "Applicant" : "Applicants"}`
                 : "View Applications"}
             </span>
-          </ButtonLink>
-
-          <ButtonLink
-            className="flex items-center gap-2"
-            href={`/admin/${talentType}/${talentId}/schedules`}
-            variant="yellow"
-          >
-            <Calendar className="size-4" />
-
-            <span>Tryout Schedules</span>
           </ButtonLink>
 
           <Button

@@ -212,7 +212,7 @@ export type SendNotificationInpuSchema = z.infer<
 export const sendNotificationResponseSchema = z
   .object({
     type: z.enum(["success"]),
-    data: z.boolean(),
+    data: z.string().array(),
   })
   .or(
     z.object({
