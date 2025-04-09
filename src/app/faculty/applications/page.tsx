@@ -75,7 +75,7 @@ export default function FacultyRegistrationsPage() {
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
                 <SelectItem value="sports">Sports Only</SelectItem>
-                <SelectItem value="culter-and-art">
+                <SelectItem value="culture-and-art">
                   Culture & Arts Only
                 </SelectItem>
               </SelectContent>

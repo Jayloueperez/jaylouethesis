@@ -75,8 +75,8 @@ export default function AdminRegistrationsPage() {
               <SelectContent>
                 <SelectItem value="all">All</SelectItem>
                 <SelectItem value="sports">Sports Only</SelectItem>
-                <SelectItem value="culter-and-art">
-                  Culter & Arts Only
+                <SelectItem value="culture-and-art">
+                  Culture & Arts Only
                 </SelectItem>
               </SelectContent>
             </Select>

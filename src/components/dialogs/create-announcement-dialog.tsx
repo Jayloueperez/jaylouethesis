@@ -201,7 +201,7 @@ function CreateAnnouncementDialog(props: CreateAnnouncementDialogProps) {
                         <SelectItem value="all">All</SelectItem>
                         <SelectItem value="sports">Sports Only</SelectItem>
                         <SelectItem value="culture-and-arts">
-                          Culter & Arts Only
+                          Culture & Arts Only
                         </SelectItem>
                       </SelectContent>
                     </Select>
