@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Download, Loader } from "lucide-react";
+import { ArrowRight, Loader } from "lucide-react";
 
 import {
   Dialog,
@@ -20,65 +20,38 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { courses, departments } from "~/const/courses";
 import { useAlert } from "~/hooks/use-alert";
 import { usePdf } from "~/hooks/use-pdf";
 import {
   createReport,
   getUsersRealtime,
 } from "~/lib/firebase/client/firestore";
-import { TalentSchema, UserSchema } from "~/schema/data-client";
+import { ReportSchema, TalentSchema, UserSchema } from "~/schema/data-client";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 
-interface GenerateReportDialogProps {
+interface ReportDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   talent: TalentSchema;
+  report: ReportSchema | null;
 }
 
-function GenerateReportDialog(props: GenerateReportDialogProps) {
-  const { talent, ...rest } = props;
+function ReportDialog(props: ReportDialogProps) {
+  const { talent, report, ...rest } = props;
 
   const [loading, setLoading] = useState<boolean>(true);
   const [generating, setGenerating] = useState<boolean>(false);
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [title, setTitle] = useState<string>("");
-  const [filter, setFilter] = useState<{
-    department: string;
-    course: string;
-    gender: string;
-  }>({ department: "all", course: "all", gender: "all" });
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
 
   const { toPDF, targetRef } = usePdf({
     filename: `${talent.id}-members-${new Date().getTime()}.pdf`,
   });
   const { component, openAlert } = useAlert();
-
-  const filteredMembers = members.filter((m) => {
-    const courseObj = courses.find((c) => c.id === m.course);
-
-    const filterDepartment =
-      filter.department === "all" || !courseObj
-        ? true
-        : courseObj.department === filter.department;
-    const filterCourse =
-      filter.course === "all" ? true : m.course === filter.course;
-    const filterGender =
-      filter.gender === "all" ? true : m.gender === filter.gender;
-
-    return filterDepartment && filterCourse && filterGender;
-  });
 
   async function handleDownload() {
     if (selectedMembers.length === 0) {
@@ -125,7 +98,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
   }
 
   useEffect(() => {
-    const memberIds = talent.members ?? [];
+    const memberIds = report?.members ?? [];
 
     if (memberIds.length > 0) {
       setLoading(true);
@@ -140,17 +113,22 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
       setMembers([]);
       setLoading(false);
     }
-  }, [talent]);
+  }, [report]);
+
+  useEffect(() => {
+    setTitle(report?.title ?? "");
+    setSelectedMembers(report?.members ?? []);
+  }, [report]);
 
   return (
     <Dialog {...rest}>
       <DialogContent className="flex w-full flex-col gap-4 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-3xl 2xl:max-w-4xl">
         <div className="flex flex-col gap-4">
           <DialogHeader>
-            <DialogTitle>Generate Report</DialogTitle>
+            <DialogTitle>Proceed Report</DialogTitle>
 
             <DialogDescription>
-              Must select student(s) to generate report.
+              Must select student(s) to proceed.
             </DialogDescription>
           </DialogHeader>
 
@@ -165,96 +143,6 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                 />
-              </div>
-
-              <div className="flex items-center gap-2">
-                <div className="flex items-center gap-2">
-                  <span>Department:</span>
-
-                  <Select
-                    value={filter.department}
-                    onValueChange={(v) => {
-                      setSelectedMembers([]);
-                      setFilter((f) => ({
-                        ...f,
-                        department: v,
-                        course: "all",
-                      }));
-                    }}
-                  >
-                    <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Filter by department" />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      <SelectItem value="all">All</SelectItem>
-                      {departments.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
-                          {c.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span>Course:</span>
-
-                  <Select
-                    value={filter.course}
-                    onValueChange={(v) => {
-                      setSelectedMembers([]);
-                      setFilter((f) => ({
-                        ...f,
-                        course: v,
-                      }));
-                    }}
-                  >
-                    <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Filter by course" />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      <SelectItem value="all">All</SelectItem>
-                      {courses
-                        .filter((c) =>
-                          filter.department === "all"
-                            ? true
-                            : filter.department === c.department,
-                        )
-                        .map((c) => (
-                          <SelectItem key={c.id} value={c.id}>
-                            {c.name}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span>Gender:</span>
-
-                  <Select
-                    value={filter.gender}
-                    onValueChange={(v) => {
-                      setSelectedMembers([]);
-                      setFilter((f) => ({
-                        ...f,
-                        gender: v,
-                      }));
-                    }}
-                  >
-                    <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Filter by gender" />
-                    </SelectTrigger>
-
-                    <SelectContent>
-                      <SelectItem value="all">All</SelectItem>
-                      <SelectItem value="male">Male</SelectItem>
-                      <SelectItem value="female">Female</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
             </div>
 
@@ -271,9 +159,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
                 />
               </div>
 
-              {!!title && (
-                <span className="text-center text-xl font-medium">{title}</span>
-              )}
+              <span className="text-center text-xl font-medium">{title}</span>
 
               <Table>
                 <TableHeader>
@@ -313,7 +199,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
                     </TableRow>
                   )}
 
-                  {!loading && filteredMembers.length === 0 && (
+                  {!loading && members.length === 0 && (
                     <TableRow>
                       <TableCell
                         className="text-center text-gray-500"
@@ -324,7 +210,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
                     </TableRow>
                   )}
 
-                  {filteredMembers.map((member) => (
+                  {members.map((member) => (
                     <TableRow
                       key={member.id}
                       {...(selectedMembers.includes(member.id)
@@ -366,13 +252,13 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
 
           <DialogFooter>
             <Button
-              variant="yellow"
+              variant="blue"
               disabled={selectedMembers.length === 0}
               onClick={handleDownload}
               loading={generating}
             >
-              <Download className="size-4" />
-              <span>Download</span>
+              <span>Proceed</span>
+              <ArrowRight className="size-4" />
             </Button>
           </DialogFooter>
         </div>
@@ -383,4 +269,4 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
   );
 }
 
-export { GenerateReportDialog };
+export { ReportDialog };

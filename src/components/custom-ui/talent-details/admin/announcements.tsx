@@ -35,7 +35,7 @@ function TalentDetailsAdminAnnouncements(
     <div className="col-span-3 flex items-center justify-center gap-2 text-gray-500">
       <Loader className="size-4 animate-spin" />
 
-      <span>Loading announcements...</span>
+      <span>Loading...</span>
     </div>
   ) : (
     <div className="grid grid-cols-3 gap-4">

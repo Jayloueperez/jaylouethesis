@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { FacultyLayout } from "~/components/layout/faculty-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -24,12 +24,12 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { talentTypeText } from "~/const/text";
 import { useApplications } from "~/hooks/firestore/use-applications";
 import { useAlert } from "~/hooks/use-alert";
 import { usePdf } from "~/hooks/use-pdf";
-import { talentTypeText } from "~/const/text";
 
-export default function AdminRegistrationsPage() {
+export default function FacultyRegistrationsPage() {
   const [filterBy, setFilterBy] = useState<string>("all");
 
   const { data: applications, loading } = useApplications();
@@ -57,7 +57,7 @@ export default function AdminRegistrationsPage() {
   }
 
   return (
-    <AdminLayout className="gap-4 p-4">
+    <FacultyLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">
           Sports/Culture & Arts Student Applications
@@ -76,7 +76,7 @@ export default function AdminRegistrationsPage() {
                 <SelectItem value="all">All</SelectItem>
                 <SelectItem value="sports">Sports Only</SelectItem>
                 <SelectItem value="culter-and-art">
-                  Culter & Arts Only
+                  Culture & Arts Only
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -172,7 +172,9 @@ export default function AdminRegistrationsPage() {
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="uppercase">{talentTypeText[talentType]}</TableCell>
+                    <TableCell className="uppercase">
+                      {talentTypeText[talentType]}
+                    </TableCell>
                     <TableCell className="">
                       {application.talent.name}
                     </TableCell>
@@ -185,7 +187,7 @@ export default function AdminRegistrationsPage() {
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <ButtonLink
-                          href={`/admin/${talentType}/${talentId}/applicants`}
+                          href={`/faculty/${talentType}/${talentId}/applicants`}
                           type="button"
                           variant="blue"
                           size="icon"
@@ -203,6 +205,6 @@ export default function AdminRegistrationsPage() {
       </Card>
 
       {component}
-    </AdminLayout>
+    </FacultyLayout>
   );
 }

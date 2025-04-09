@@ -1,11 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Eye } from "lucide-react";
 
+import { ReportDialog } from "~/components/dialogs/report-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { getTalentsRealtime } from "~/lib/firebase/client/firestore";
-import { TalentSchema } from "~/schema/data-client";
+import { Button } from "~/components/ui/button";
+import { Card } from "~/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "~/components/ui/table";
+import {
+  getReportsRealtime,
+  getTalentsRealtime,
+} from "~/lib/firebase/client/firestore";
+import { ReportSchema, TalentSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 import { ButtonLink } from "../button-link";
 import { Loading } from "../loading";
@@ -13,12 +27,12 @@ import { TalentCard } from "../talent-card";
 import { TalentDetailsAdminAnnouncements } from "./admin/announcements";
 import { TalentDetailsAdminControls } from "./admin/controls";
 import { TalentDetailsAdminMembers } from "./admin/members";
+import { TalentDetailsFacultyAnnouncements } from "./faculty/announcements";
+import { TalentDetailsFacultyControls } from "./faculty/controls";
+import { TalentDetailsFacultyMembers } from "./faculty/members";
 import { TalentDetailsStudentAnnouncements } from "./student/announcements";
 import { TalentDetailsStudentControls } from "./student/controls";
 import { TalentDetailsStudentMembers } from "./student/members";
-import { TalentDetailsTeacherAnnouncements } from "./teacher/announcements";
-import { TalentDetailsTeacherControls } from "./teacher/controls";
-import { TalentDetailsTeacherMembers } from "./teacher/members";
 
 interface TalentDetailsProps {
   talent: TalentSchema;
@@ -29,6 +43,10 @@ function TalentDetails(props: TalentDetailsProps) {
 
   const [events, setEvents] = useState<TalentSchema[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [reports, setReports] = useState<ReportSchema[]>([]);
+  const [selectedReport, setSelectedReport] = useState<ReportSchema | null>(
+    null,
+  );
 
   const { userData, loading: userDataLoading } = useAppSelector(
     (state) => state.user,
@@ -46,6 +64,14 @@ function TalentDetails(props: TalentDetailsProps) {
     })((v) => {
       setEvents(v);
       setLoading(false);
+    });
+
+    return unsubscribe;
+  }, [talent]);
+
+  useEffect(() => {
+    const unsubscribe = getReportsRealtime({ talentId: talent.id })((v) => {
+      setReports(v);
     });
 
     return unsubscribe;
@@ -85,8 +111,8 @@ function TalentDetails(props: TalentDetailsProps) {
                 <TalentDetailsAdminControls talent={talent} />
               )}
 
-              {userData.role === "teacher" && (
-                <TalentDetailsTeacherControls talent={talent} />
+              {userData.role === "faculty" && (
+                <TalentDetailsFacultyControls talent={talent} />
               )}
 
               {(talent.type === "sports" ||
@@ -113,8 +139,8 @@ function TalentDetails(props: TalentDetailsProps) {
               <TalentDetailsAdminAnnouncements talent={talent} />
             )}
 
-            {userData.role === "teacher" && (
-              <TalentDetailsTeacherAnnouncements talent={talent} />
+            {userData.role === "faculty" && (
+              <TalentDetailsFacultyAnnouncements talent={talent} />
             )}
 
             {userData.role === "student" && (
@@ -128,14 +154,64 @@ function TalentDetails(props: TalentDetailsProps) {
             <TalentDetailsAdminMembers talent={talent} />
           )}
 
-          {userData.role === "teacher" && (
-            <TalentDetailsTeacherMembers talent={talent} />
+          {userData.role === "faculty" && (
+            <TalentDetailsFacultyMembers talent={talent} />
           )}
 
           {userData.role === "student" && (
             <TalentDetailsStudentMembers talent={talent} />
           )}
           {/* MEMBERS */}
+
+          {userData.role !== "student" && reports.length > 0 && (
+            <>
+              <div className="flex flex-col gap-4">
+                <span className="text-lg">Reports</span>
+
+                <Card className="p-0">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Title</TableHead>
+                        <TableHead>No. of Members</TableHead>
+                        <TableHead className="w-24 text-center">
+                          Actions
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+
+                    <TableBody>
+                      {reports.map((report) => (
+                        <TableRow key={report.id}>
+                          <TableCell>{report.title}</TableCell>
+                          <TableCell>{report.members.length}</TableCell>
+                          <TableCell>
+                            <div className="flex items-center justify-center gap-2">
+                              <Button
+                                variant="yellow"
+                                size="icon"
+                                shape="pill"
+                                onClick={() => setSelectedReport(report)}
+                              >
+                                <Eye className="size-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </Card>
+              </div>
+
+              <ReportDialog
+                talent={talent}
+                report={selectedReport}
+                open={!!selectedReport}
+                onOpenChange={(v) => setSelectedReport((r) => (v ? r : null))}
+              />
+            </>
+          )}
         </>
       )}
 
@@ -146,7 +222,7 @@ function TalentDetails(props: TalentDetailsProps) {
 
             {loading && (
               <span className="text-center text-gray-500">
-                Loading events...
+                Loading...
               </span>
             )}
 

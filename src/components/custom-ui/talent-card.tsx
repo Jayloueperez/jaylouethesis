@@ -1,10 +1,8 @@
 "use client";
 
 import { UrlObject } from "url";
-import _ from "lodash";
 import { ChevronsRight } from "lucide-react";
 
-import { talentTypeText } from "~/const/text";
 import { TalentTypeSchema } from "~/schema/data-base";
 import { TalentSchema } from "~/schema/data-client";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";

@@ -7,7 +7,7 @@ import { z } from "zod";
 export const userRoleSchema = z.enum([
   "admin",
   "student",
-  "teacher",
+  "faculty",
   "unassigned",
 ]);
 export type UserRoleSchema = z.infer<typeof userRoleSchema>;
@@ -179,6 +179,7 @@ export type NotificationBaseSchema = z.infer<typeof notificationBaseSchema>;
  */
 export const reportBaseSchema = z.object({
   id: z.string(),
+  talentId: z.string(),
   title: z.string(),
   members: z.string().array(),
 });

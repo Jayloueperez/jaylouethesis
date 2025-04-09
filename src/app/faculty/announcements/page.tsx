@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader } from "lucide-react";
 
 import { AnnouncementCard } from "~/components/custom-ui/announcement-card";
-import { StudentLayout } from "~/components/layout/student-layout";
+import { CreateAnnouncementDialog } from "~/components/dialogs/create-announcement-dialog";
+import { FacultyLayout } from "~/components/layout/faculty-layout";
+import { Button } from "~/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -15,24 +16,21 @@ import {
 import { getAnnouncementsRealtime } from "~/lib/firebase/client/firestore";
 import { AnnouncementSchema } from "~/schema/data-client";
 
-export default function StudentPage() {
+export default function FacultyAnnouncementsPage() {
   const [announcements, setAnnouncements] = useState<AnnouncementSchema[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [open, setOpen] = useState<boolean>(false);
   const [sort, setSort] = useState<
     "latest" | "oldest" | "latest-by-date" | "oldest-by-date"
   >("latest");
 
   useEffect(() => {
-    const unsubscribe = getAnnouncementsRealtime({ type: "all", sort })((v) => {
-      setAnnouncements(v);
-      setLoading(false);
-    });
+    const unsubscribe = getAnnouncementsRealtime({ sort })(setAnnouncements);
 
     return unsubscribe;
   }, [sort]);
 
   return (
-    <StudentLayout className="gap-4 p-4">
+    <FacultyLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">Announcements</span>
 
@@ -56,34 +54,31 @@ export default function StudentPage() {
               </SelectContent>
             </Select>
           </div>
+
+          <Button variant="yellow" onClick={() => setOpen(true)}>
+            Create Announcement
+          </Button>
         </div>
       </div>
 
-      {loading && (
-        <div className="flex flex-1 items-center justify-center gap-2">
-          <Loader className="size-4 animate-spin" />
-
-          <span>Loading...</span>
-        </div>
-      )}
-
-      {!loading && announcements.length === 0 && (
-        <div className="flex flex-1 items-center justify-center gap-2">
-          <span className="text-gray-500">No announcements.</span>
-        </div>
-      )}
-
-      {!loading && announcements.length > 0 && (
+      {announcements.length > 0 && (
         <div className="grid grid-cols-3 gap-4">
           {announcements.map((announcement, i) => (
             <AnnouncementCard
               key={`announcement-${i}`}
               announcement={announcement}
-              viewOnly
             />
           ))}
         </div>
       )}
-    </StudentLayout>
+
+      {announcements.length === 0 && (
+        <div className="flex flex-1 items-center justify-center">
+          <span className="text-gray-500">No announcement records found.</span>
+        </div>
+      )}
+
+      {open && <CreateAnnouncementDialog open={open} onOpenChange={setOpen} />}
+    </FacultyLayout>
   );
 }

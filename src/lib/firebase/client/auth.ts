@@ -9,7 +9,7 @@ import { getError } from "~/utils/error";
 import { auth2 } from ".";
 import { createUser } from "./firestore";
 
-export async function createTeacher(data: NewUserFormSchema) {
+export async function createFaculty(data: NewUserFormSchema) {
   try {
     const {
       email,
@@ -37,7 +37,7 @@ export async function createTeacher(data: NewUserFormSchema) {
       section: "",
       profile: "",
       provider: "email-password",
-      role: "teacher",
+      role: "faculty",
       status: "confirmed",
       keywords: [],
       tokens: [],
@@ -47,9 +47,9 @@ export async function createTeacher(data: NewUserFormSchema) {
 
     return true;
   } catch (error) {
-    console.log("createTeacher error:", error);
+    console.log("createFaculty error:", error);
 
-    const err = getError(error, "Failed creating new teacher account.");
+    const err = getError(error, "Failed creating new faculty account.");
 
     throw err;
   }

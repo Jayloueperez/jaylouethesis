@@ -43,6 +43,7 @@ import {
   MessageSchema,
   notificationSchema,
   NotificationSchema,
+  reportSchema,
   ReportSchema,
   talentSchema,
   TalentSchema,
@@ -1064,4 +1065,26 @@ export async function createReport(
 
     throw err;
   }
+}
+
+export function getReportsRealtime(params?: { talentId?: string }) {
+  return function (callback: (reports: ReportSchema[]) => void) {
+    const { talentId } = params ?? {};
+
+    let q = query(REPORTS_COLLECTION);
+
+    if (talentId) q = query(q, where("talentId", "==", talentId));
+
+    return onSnapshot(q, (snapshot) => {
+      if (snapshot.size === 0) return callback([]);
+
+      const { success, data, error } = reportSchema
+        .array()
+        .safeParse(snapshot.docs.map((d) => d.data()));
+
+      if (!success) console.log("getReportsRealtime error:", error);
+
+      callback(data ?? []);
+    });
+  };
 }

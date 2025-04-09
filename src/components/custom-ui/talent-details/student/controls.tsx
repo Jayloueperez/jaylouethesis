@@ -231,7 +231,7 @@ function TalentDetailsStudentControls(
             <span className="text-sm">Member</span>
           </div>
 
-          <AlertDialog
+          {/* <AlertDialog
             open={openState === "leave-talent"}
             onOpenChange={(b) => setOpenState((v) => (b ? v : "none"))}
           >
@@ -270,7 +270,7 @@ function TalentDetailsStudentControls(
                 </AlertDialogCancel>
               </AlertDialogFooter>
             </AlertDialogContent>
-          </AlertDialog>
+          </AlertDialog> */}
         </>
       )}
 

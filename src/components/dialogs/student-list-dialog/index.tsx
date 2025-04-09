@@ -77,7 +77,7 @@ function StudentListDialog(props: StudentListDialogProps) {
 
           <div className="flex flex-1 flex-col gap-4">
             {loading && (
-              <span className="text-center">Loading assigned students...</span>
+              <span className="text-center">Loading...</span>
             )}
 
             {!loading && applications.length === 0 && (

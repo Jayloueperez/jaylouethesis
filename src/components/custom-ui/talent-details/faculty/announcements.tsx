@@ -7,12 +7,12 @@ import { getAnnouncementsRealtime } from "~/lib/firebase/client/firestore";
 import { AnnouncementSchema, TalentSchema } from "~/schema/data-client";
 import { AnnouncementCard } from "../../announcement-card";
 
-interface TalentDetailsStudentAnnouncementsProps {
+interface TalentDetailsFacultyAnnouncementsProps {
   talent: TalentSchema;
 }
 
-function TalentDetailsStudentAnnouncements(
-  props: TalentDetailsStudentAnnouncementsProps,
+function TalentDetailsFacultyAnnouncements(
+  props: TalentDetailsFacultyAnnouncementsProps,
 ) {
   const { talent } = props;
 
@@ -46,14 +46,10 @@ function TalentDetailsStudentAnnouncements(
       )}
 
       {announcements.map((announcement) => (
-        <AnnouncementCard
-          key={announcement.id}
-          announcement={announcement}
-          viewOnly
-        />
+        <AnnouncementCard key={announcement.id} announcement={announcement} />
       ))}
     </div>
   );
 }
 
-export { TalentDetailsStudentAnnouncements };
+export { TalentDetailsFacultyAnnouncements };

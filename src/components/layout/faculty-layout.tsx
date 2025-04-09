@@ -2,15 +2,7 @@
 
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  Drama,
-  Home,
-  ListTodo,
-  Megaphone,
-  Users,
-  UsersRound,
-  Volleyball,
-} from "lucide-react";
+import { Drama, Home, ListTodo, Megaphone, Volleyball } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { useAppSelector } from "~/store";
@@ -18,12 +10,12 @@ import { Loading } from "../custom-ui/loading";
 import { SidebarLink } from "../custom-ui/sidebar-link";
 import { Header } from "./header";
 
-interface AdminLayoutProps {
+interface FacultyLayoutProps {
   children?: ReactNode;
   className?: string;
 }
 
-function AdminLayout(props: AdminLayoutProps) {
+function FacultyLayout(props: FacultyLayoutProps) {
   const { children, className } = props;
 
   const router = useRouter();
@@ -37,7 +29,7 @@ function AdminLayout(props: AdminLayoutProps) {
     if (isLoaded && userData) {
       if (userData.role === "unassigned" || userData.status === "pending")
         return router.replace("/pending");
-      if (userData.role !== "admin") router.replace(`/${userData.role}`);
+      if (userData.role !== "faculty") router.replace(`/${userData.role}`);
     }
   }, [isLoaded, router, userData]);
 
@@ -45,7 +37,8 @@ function AdminLayout(props: AdminLayoutProps) {
     loading ||
     !isLoaded ||
     !userData ||
-    (userData && (userData.role !== "admin" || userData.status !== "confirmed"))
+    (userData &&
+      (userData.role !== "faculty" || userData.status !== "confirmed"))
   )
     return <Loading />;
 
@@ -54,62 +47,50 @@ function AdminLayout(props: AdminLayoutProps) {
       <Header dashboard />
 
       <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white">
-        <SidebarLink href="/admin" icon={Home} active={pathname === "/admin"}>
+        <SidebarLink
+          href="/faculty"
+          icon={Home}
+          active={pathname === "/faculty"}
+        >
           Home
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/announcements"
+          href="/faculty/announcements"
           icon={Megaphone}
-          active={pathname.startsWith("/admin/announcements")}
+          active={pathname.startsWith("/faculty/announcements")}
         >
           Announcements
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/culture-and-arts"
+          href="/faculty/culture-and-arts"
           icon={Drama}
-          active={pathname.startsWith("/admin/culture-and-arts")}
+          active={pathname.startsWith("/faculty/culture-and-arts")}
         >
           Culture & Arts
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/sports"
+          href="/faculty/sports"
           icon={Volleyball}
-          active={pathname.startsWith("/admin/sports")}
+          active={pathname.startsWith("/faculty/sports")}
         >
           Sports
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/faculties"
-          icon={Users}
-          active={pathname.startsWith("/admin/faculties")}
-        >
-          Faculties
-        </SidebarLink>
-
-        <SidebarLink
-          href="/admin/students"
-          icon={UsersRound}
-          active={pathname.startsWith("/admin/students")}
-        >
-          Students
-        </SidebarLink>
-
-        <SidebarLink
-          href="/admin/applications"
+          href="/faculty/applications"
           icon={ListTodo}
-          active={pathname.startsWith("/admin/applications")}
+          active={pathname.startsWith("/faculty/applications")}
         >
           Applications
         </SidebarLink>
 
         {/* <SidebarLink
-          href="/admin/messages"
+          href="/faculty/messages"
           icon={MessageCircle}
-          active={pathname.startsWith("/admin/messages")}
+          active={pathname.startsWith("/faculty/messages")}
         >
           Messages
         </SidebarLink> */}
@@ -127,4 +108,4 @@ function AdminLayout(props: AdminLayoutProps) {
   );
 }
 
-export { AdminLayout };
+export { FacultyLayout };

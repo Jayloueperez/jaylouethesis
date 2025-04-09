@@ -7,7 +7,8 @@ import { Loader } from "lucide-react";
 import { Loading } from "~/components/custom-ui/loading";
 import { TalentCard } from "~/components/custom-ui/talent-card";
 import { TalentFormDialog } from "~/components/dialogs/talent-form-dialog";
-import { StudentLayout } from "~/components/layout/student-layout";
+import { FacultyLayout } from "~/components/layout/faculty-layout";
+import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { talentTypeText } from "~/const/text";
 import { useTalentTypeParams } from "~/hooks/use-talent-type-params";
@@ -52,7 +53,7 @@ export default function TalentListPage() {
   if (talentTypeLoading) return <Loading />;
 
   return (
-    <StudentLayout className="gap-4 p-4">
+    <FacultyLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">
           {talentTypeText[talentType]}
@@ -64,6 +65,10 @@ export default function TalentListPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+
+          <Button variant="yellow" onClick={() => setOpen(true)}>
+            Add {talentTypeText[talentType]}
+          </Button>
         </div>
       </div>
 
@@ -88,7 +93,7 @@ export default function TalentListPage() {
           {filteredTalents.map((talent) => (
             <TalentCard
               key={talent.id}
-              href={`/student/${talentType}/${talent.id}`}
+              href={`/faculty/${talentType}/${talent.id}`}
               talent={talent}
               talentType={talentType}
             />
@@ -101,6 +106,6 @@ export default function TalentListPage() {
         open={open}
         onOpenChange={setOpen}
       />
-    </StudentLayout>
+    </FacultyLayout>
   );
 }

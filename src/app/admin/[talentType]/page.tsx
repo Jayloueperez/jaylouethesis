@@ -76,7 +76,7 @@ export default function TalentListPage() {
         <div className="flex flex-1 items-center justify-center gap-2">
           <Loader className="size-4 animate-spin" />
 
-          <span>Loading announcements...</span>
+          <span>Loading...</span>
         </div>
       )}
 

@@ -96,7 +96,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     const unsubscribe = getUsersRealtime({
-      roles: ["student", "teacher", "unassigned"],
+      roles: ["student", "faculty", "unassigned"],
     })((v) => {
       setUsers(v);
       setLoading(false);

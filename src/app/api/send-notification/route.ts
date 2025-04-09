@@ -71,9 +71,9 @@ async function HANDLER(request: NextRequest) {
         break;
       }
 
-      case "teacher": {
-        console.log("SENDING TO TEACHERS!");
-        const users = await getUsers({ role: "teacher" });
+      case "faculty": {
+        console.log("SENDING TO FACULTIES!");
+        const users = await getUsers({ role: "faculty" });
 
         if (users.length === 0) {
           return getSuccessResponse(userIds);
@@ -101,7 +101,7 @@ async function HANDLER(request: NextRequest) {
 
       case "all": {
         console.log("SENDING TO ADMINS!");
-        const users = await getUsers({ role: ["admin", "teacher"] });
+        const users = await getUsers({ role: ["admin", "faculty"] });
 
         if (users.length === 0) {
           return getSuccessResponse(userIds);
