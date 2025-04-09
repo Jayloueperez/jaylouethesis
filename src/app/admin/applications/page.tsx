@@ -28,7 +28,6 @@ import {
 import { courses, departments } from "~/const/courses";
 import { talentTypeText } from "~/const/text";
 import { useApplications } from "~/hooks/firestore/use-applications";
-import { useAlert } from "~/hooks/use-alert";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 
 export default function AdminRegistrationsPage() {

@@ -91,8 +91,11 @@ export default function FacultyPage() {
                 )}
 
               {!pendingApplicationsLoading &&
-                pendingApplications.map(
-                  ({ id, user, talentType, talentId }) => (
+                pendingApplications.map((application) => {
+                  const { id, user, talentType, talentId, talent } =
+                    application;
+
+                  return (
                     <TableRow key={id}>
                       <TableCell>
                         <div className="flex items-center gap-4">
@@ -112,14 +115,20 @@ export default function FacultyPage() {
                           </span>
                         </div>
                       </TableCell>
-                      <TableCell className="uppercase">{talentTypeText[talentType]}</TableCell>
+                      <TableCell className="uppercase">
+                        {talentTypeText[talentType]}
+                      </TableCell>
                       <TableCell>{user.course}</TableCell>
                       <TableCell>{user.year}</TableCell>
                       <TableCell>{user.section}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <ButtonLink
-                            href={`/faculty/${talentType}/${talentId}/applicants`}
+                            href={
+                              talentType === "sports"
+                                ? `/admin/${talentType}/${talentId}/applicants`
+                                : `/admin/${talentType}/${talent.parentId}/event/${talentId}/applicants`
+                            }
                             type="button"
                             variant="blue"
                             size="icon"
@@ -130,8 +139,8 @@ export default function FacultyPage() {
                         </div>
                       </TableCell>
                     </TableRow>
-                  ),
-                )}
+                  );
+                })}
             </TableBody>
           </Table>
         </Card>

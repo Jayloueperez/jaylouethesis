@@ -114,8 +114,11 @@ export default function AdminPage() {
                 )}
 
               {!pendingApplicationsLoading &&
-                pendingApplications.map(
-                  ({ id, user, talentType, talentId }) => (
+                pendingApplications.map((application) => {
+                  const { id, user, talentType, talentId, talent } =
+                    application;
+
+                  return (
                     <TableRow key={id}>
                       <TableCell>
                         <div className="flex items-center gap-4">
@@ -144,7 +147,11 @@ export default function AdminPage() {
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <ButtonLink
-                            href={`/admin/${talentType}/${talentId}/applicants`}
+                            href={
+                              talentType === "sports"
+                                ? `/admin/${talentType}/${talentId}/applicants`
+                                : `/admin/${talentType}/${talent.parentId}/event/${talentId}/applicants`
+                            }
                             type="button"
                             variant="blue"
                             size="icon"
@@ -155,8 +162,8 @@ export default function AdminPage() {
                         </div>
                       </TableCell>
                     </TableRow>
-                  ),
-                )}
+                  );
+                })}
             </TableBody>
           </Table>
         </Card>
