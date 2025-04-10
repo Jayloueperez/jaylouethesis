@@ -72,7 +72,7 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
       await sendNotification({
         title: `Tryout Schedule`,
         body: `${userData.firstName} assigned you to ${talent.name}'s ${talentTryout.title} schedule. Please check your schedule for the date.`,
-        // isRead: [],
+        // isRead: false,
         receiver: student.id,
         sender: userData.id,
       });
@@ -80,7 +80,7 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
       await createNotification({
         title: `Tryout Schedule`,
         body: `${userData.firstName} assigned you to ${talent.name}'s ${talentTryout.title} schedule. Please check your schedule for the date.`,
-        // isRead: [],
+        // isRead: false,
         receiver: student.id,
         sender: userData.id,
       });
@@ -113,7 +113,7 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
       await sendNotification({
         title: `Tryout Schedule Removed`,
         body: `${userData.firstName} removed you from ${talent.name}'s ${talentTryout.title} schedule. Please wait for the next tryout schedule.`,
-        // isRead: [],
+        // isRead: false,
         receiver: student.id,
         sender: userData.id,
       });
@@ -121,7 +121,7 @@ function ScheduleTryoutDialog(props: ScheduleTryoutDialogProps) {
       await createNotification({
         title: `Tryout Schedule Removed`,
         body: `${userData.firstName} removed you from ${talent.name}'s ${talentTryout.title} schedule. Please wait for the next tryout schedule.`,
-        // isRead: [],
+        // isRead: false,
         receiver: student.id,
         sender: userData.id,
       });

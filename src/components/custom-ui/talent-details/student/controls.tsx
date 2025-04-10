@@ -1,11 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import _ from "lodash";
-import { ArrowLeft, Calendar, CheckCheck, Plus, X } from "lucide-react";
+import { CheckCheck, Plus, X } from "lucide-react";
 
 import { JoinTalentDialog } from "~/components/dialogs/join-talent-dialog";
-import { TryoutScheduleDialog } from "~/components/dialogs/tryout-schedule-dialog";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -25,17 +23,10 @@ import {
   createNotification,
   deleteApplication,
   getApplicationByRealtime,
-  getTalentTryoutByRealtime,
-  updateTalent,
-  updateTalentTryout,
 } from "~/lib/firebase/client/firestore";
 import { sendNotification } from "~/lib/firebase/client/messaging";
 import { CreateApplicationInputSchema } from "~/schema/crud";
-import {
-  ApplicationSchema,
-  TalentSchema,
-  TalentTryoutSchema,
-} from "~/schema/data-client";
+import { ApplicationSchema, TalentSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 import { getError } from "~/utils/error";
 import { Loading } from "../../loading";
@@ -53,9 +44,9 @@ function TalentDetailsStudentControls(
   const [application, setApplication] = useState<ApplicationSchema | null>(
     null,
   );
-  const [talentTryout, setTalentTryout] = useState<TalentTryoutSchema | null>(
-    null,
-  );
+  // const [talentTryout, setTalentTryout] = useState<TalentTryoutSchema | null>(
+  //   null,
+  // );
   const [loadingState, setLoadingState] = useState<
     "none" | "joining" | "cancelling" | "leaving"
   >("none");
@@ -109,16 +100,16 @@ function TalentDetailsStudentControls(
     try {
       await deleteApplication(applicationId);
 
-      if (talentTryout) {
-        await updateTalentTryout(talentTryout.id, {
-          students: talentTryout.students.filter((s) => s !== applicationId),
-        });
-      }
+      // if (talentTryout) {
+      //   await updateTalentTryout(talentTryout.id, {
+      //     students: talentTryout.students.filter((s) => s !== applicationId),
+      //   });
+      // }
 
       await sendNotification({
         title: `Cancel Application`,
         body: `${userData.firstName} cancelled application for ${talent.name}.`,
-        // isRead: [],
+        // isRead: false,
         receiver: "all",
         sender: userData.id,
       });
@@ -126,7 +117,7 @@ function TalentDetailsStudentControls(
       await createNotification({
         title: `Cancel Application`,
         body: `${userData.firstName} cancelled application for ${talent.name}.`,
-        // isRead: [],
+        // isRead: false,
         receiver: "all",
         sender: userData.id,
       });
@@ -147,47 +138,47 @@ function TalentDetailsStudentControls(
     setLoadingState("none");
   }
 
-  async function handleLeaveTalent() {
-    if (!userData) return;
+  // async function handleLeaveTalent() {
+  //   if (!userData) return;
 
-    setLoadingState("leaving");
+  //   setLoadingState("leaving");
 
-    try {
-      await updateTalent(talent.id, {
-        members: talent.members.filter((m) => m !== userData.id),
-      });
+  //   try {
+  //     await updateTalent(talent.id, {
+  //       members: talent.members.filter((m) => m !== userData.id),
+  //     });
 
-      await sendNotification({
-        title: `Left ${talentTypeText[talentType]}`,
-        body: `${userData.firstName} left ${talent.name}.`,
-        // isRead: [],
-        receiver: "all",
-        sender: userData.id,
-      });
+  //     await sendNotification({
+  //       title: `Left ${talentTypeText[talentType]}`,
+  //       body: `${userData.firstName} left ${talent.name}.`,
+  //       // isRead: false,
+  //       receiver: "all",
+  //       sender: userData.id,
+  //     });
 
-      await createNotification({
-        title: `Left ${talentTypeText[talentType]}`,
-        body: `${userData.firstName} left ${talent.name}.`,
-        // isRead: [],
-        receiver: "all",
-        sender: userData.id,
-      });
+  //     await createNotification({
+  //       title: `Left ${talentTypeText[talentType]}`,
+  //       body: `${userData.firstName} left ${talent.name}.`,
+  //       // isRead: false,
+  //       receiver: "all",
+  //       sender: userData.id,
+  //     });
 
-      openAlert({
-        title: "Success",
-        description: `Successfully left ${talentTypeText[talentType]}.`,
-      });
-    } catch (error) {
-      console.log("handleLeaveTalent error:", error);
+  //     openAlert({
+  //       title: "Success",
+  //       description: `Successfully left ${talentTypeText[talentType]}.`,
+  //     });
+  //   } catch (error) {
+  //     console.log("handleLeaveTalent error:", error);
 
-      openAlert({
-        title: "Failed",
-        description: `Failed leaving ${talentTypeText[talentType]}.`,
-      });
-    }
+  //     openAlert({
+  //       title: "Failed",
+  //       description: `Failed leaving ${talentTypeText[talentType]}.`,
+  //     });
+  //   }
 
-    setLoadingState("none");
-  }
+  //   setLoadingState("none");
+  // }
 
   useEffect(() => {
     if (userData) {
@@ -195,25 +186,25 @@ function TalentDetailsStudentControls(
         talentType,
         talentId,
         userId: userData.id,
-        status: ["pending", "tryout", "accepted"],
+        status: ["pending", "accepted"],
       })(setApplication);
 
       return unsubscribe;
     }
   }, [talentId, talentType, userData]);
 
-  useEffect(() => {
-    if (application?.status === "tryout") {
-      const unsubscribe = getTalentTryoutByRealtime({
-        talentId,
-        applicationId: application.id,
-      })(setTalentTryout);
+  // useEffect(() => {
+  //   if (application?.status === "tryout") {
+  //     const unsubscribe = getTalentTryoutByRealtime({
+  //       talentId,
+  //       applicationId: application.id,
+  //     })(setTalentTryout);
 
-      return unsubscribe;
-    } else {
-      setTalentTryout(null);
-    }
-  }, [application, talentId]);
+  //     return unsubscribe;
+  //   } else {
+  //     setTalentTryout(null);
+  //   }
+  // }, [application, talentId]);
 
   useEffect(() => {
     if (isMember && openState === "tryout-schedule") setOpenState("none");
@@ -286,7 +277,7 @@ function TalentDetailsStudentControls(
         </Button>
       )}
 
-      {!isMember && application?.status === "tryout" && (
+      {/* {!isMember && application?.status === "tryout" && (
         <Button
           variant="outline"
           onClick={() => setOpenState("tryout-schedule")}
@@ -295,51 +286,49 @@ function TalentDetailsStudentControls(
 
           <span>View Tryout Schedule</span>
         </Button>
-      )}
+      )} */}
 
-      {!isMember &&
-        (application?.status === "pending" ||
-          application?.status === "tryout") && (
-          <AlertDialog
-            open={openState === "cancel-application"}
-            onOpenChange={(b) => setOpenState((v) => (b ? v : "none"))}
+      {!isMember && application?.status === "pending" && (
+        <AlertDialog
+          open={openState === "cancel-application"}
+          onOpenChange={(b) => setOpenState((v) => (b ? v : "none"))}
+        >
+          <AlertDialogTrigger
+            asChild
+            onClick={() => setOpenState("cancel-application")}
           >
-            <AlertDialogTrigger
-              asChild
-              onClick={() => setOpenState("cancel-application")}
-            >
-              <Button variant="destructive">
-                <X className="size-4" />
+            <Button variant="destructive">
+              <X className="size-4" />
 
-                <span>Cancel Application</span>
-              </Button>
-            </AlertDialogTrigger>
+              <span>Cancel Application</span>
+            </Button>
+          </AlertDialogTrigger>
 
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Confirm Action</AlertDialogTitle>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Confirm Action</AlertDialogTitle>
 
-                <AlertDialogDescription>
-                  Are you sure you want to cancel your application?
-                </AlertDialogDescription>
-              </AlertDialogHeader>
+              <AlertDialogDescription>
+                Are you sure you want to cancel your application?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
 
-              <AlertDialogFooter>
-                <AlertDialogAction
-                  variant="destructive"
-                  onClick={() => handleCancelApplication(application.id)}
-                  loading={loadingState === "cancelling"}
-                >
-                  Cancel Application
-                </AlertDialogAction>
+            <AlertDialogFooter>
+              <AlertDialogAction
+                variant="destructive"
+                onClick={() => handleCancelApplication(application.id)}
+                loading={loadingState === "cancelling"}
+              >
+                Cancel Application
+              </AlertDialogAction>
 
-                <AlertDialogCancel disabled={loadingState === "cancelling"}>
-                  Cancel
-                </AlertDialogCancel>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        )}
+              <AlertDialogCancel disabled={loadingState === "cancelling"}>
+                Cancel
+              </AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
 
       <JoinTalentDialog
         open={openState === "join-talent"}
@@ -348,11 +337,11 @@ function TalentDetailsStudentControls(
         onSubmit={handleJoin}
       />
 
-      <TryoutScheduleDialog
+      {/* <TryoutScheduleDialog
         open={openState === "tryout-schedule"}
         onOpenChange={(v) => setOpenState(v ? "tryout-schedule" : "none")}
         talentTryout={talentTryout}
-      />
+      /> */}
 
       {component}
     </>

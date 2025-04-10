@@ -15,6 +15,7 @@ import {
   setDoc,
   updateDoc,
   where,
+  writeBatch,
 } from "firebase/firestore";
 import _ from "lodash";
 
@@ -70,9 +71,9 @@ export const MESSAGE_CONTAINERS_COLLECTION =
   createCollection<MessageContainerSchema>("message-containers");
 export const MESSAGES_COLLECTION = createCollection<MessageSchema>("messages");
 export const APPLICATION_COLLECTION =
-  createCollection<ApplicationSchema>("application");
+  createCollection<ApplicationSchema>("applications");
 export const NOTIFICATION_COLLECTION =
-  createCollection<NotificationSchema>("notification");
+  createCollection<NotificationSchema>("notifications");
 export const TALENT_TRYOUT_COLLECTION =
   createCollection<TalentTryoutSchema>("talent-tryout");
 export const REPORTS_COLLECTION = createCollection<ReportSchema>("reports");
@@ -314,6 +315,27 @@ export async function updateTalent(id: string, data: UpdateTalentInputSchema) {
 export async function deleteTalent(id: string) {
   try {
     const ref = doc(TALENTS_COLLECTION, id);
+
+    const applications = await getDocs(
+      query(APPLICATION_COLLECTION, where("talentId", "==", id)),
+    );
+    const reports = await getDocs(
+      query(REPORTS_COLLECTION, where("talentId", "==", id)),
+    );
+
+    if (applications.size > 0 || reports.size > 0) {
+      const batch = writeBatch(firestore);
+
+      applications.forEach((a) => {
+        batch.delete(a.ref);
+      });
+
+      reports.forEach((r) => {
+        batch.delete(r.ref);
+      });
+
+      await batch.commit();
+    }
 
     return deleteDoc(ref);
   } catch (error) {
@@ -745,7 +767,7 @@ export async function createNotification(data: CreateNotificationInputSchema) {
     await setDoc(ref, {
       ...data,
       id: ref.id,
-      isRead: [],
+      isRead: false,
       dateCreated: new Date(),
       dateUpdated: new Date(),
     });
@@ -827,7 +849,7 @@ export async function createApplication(
     await sendNotification({
       title: `New ${_.upperFirst(data.talentType)} Application`,
       body: `${studentData.firstName} sent an application for ${talentData.name}.`,
-      // isRead: [],
+      // isRead: false,
       receiver: "all",
       sender: data.userId,
     });
@@ -835,7 +857,7 @@ export async function createApplication(
     await createNotification({
       title: `New ${_.upperFirst(data.talentType)} Application`,
       body: `${studentData.firstName} sent an application for ${talentData.name}.`,
-      // isRead: [],
+      // isRead: false,
       receiver: "all",
       sender: data.userId,
     });

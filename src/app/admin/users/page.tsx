@@ -4,10 +4,8 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Loader } from "lucide-react";
 
-import { AssignRoleDialog } from "~/components/dialogs/assign-role-dialog";
 import { AdminLayout } from "~/components/layout/admin-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
@@ -19,9 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { useAlert } from "~/hooks/use-alert";
-import { getUsersRealtime, updateUser } from "~/lib/firebase/client/firestore";
-import { UserRoleSchema } from "~/schema/data-base";
+import { getUsersRealtime } from "~/lib/firebase/client/firestore";
 import { UserSchema } from "~/schema/data-client";
 
 function toLowerTrim(s: string) {
@@ -33,8 +29,8 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [all, setAll] = useState<boolean>(false);
   const [selected, setSelected] = useState<string[]>([]);
-  const [assignUserRole, setAssignUserRole] = useState<string>("");
-  const [assigning, setAssigning] = useState<boolean>(false);
+  // const [assignUserRole, setAssignUserRole] = useState<string>("");
+  // const [assigning, setAssigning] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
 
   const filteredUsers = users.filter((u) => {
@@ -49,8 +45,6 @@ export default function AdminUsersPage() {
     return searchFilter;
   });
 
-  const { component, openAlert } = useAlert();
-
   const handleToggleUser = (id: string) => {
     const exist = selected.indexOf(id) !== -1;
 
@@ -59,32 +53,32 @@ export default function AdminUsersPage() {
     setSelected((v) => [...v, id]);
   };
 
-  async function handleAssignUserRole(
-    role: Exclude<UserRoleSchema, "unassigned">,
-  ) {
-    if (!assignUserRole) return;
+  // async function handleAssignUserRole(
+  //   role: Exclude<UserRoleSchema, "unassigned">,
+  // ) {
+  //   if (!assignUserRole) return;
 
-    setAssigning(true);
+  //   setAssigning(true);
 
-    try {
-      await updateUser(assignUserRole, { role, status: "confirmed" });
-      setAssignUserRole("");
+  //   try {
+  //     await updateUser(assignUserRole, { role, status: "confirmed" });
+  //     setAssignUserRole("");
 
-      openAlert({
-        title: "Success",
-        description: `Successfully assigned user role to ${role}.`,
-      });
-    } catch (error) {
-      console.log("handleAssignUserRole error:", error);
+  //     openAlert({
+  //       title: "Success",
+  //       description: `Successfully assigned user role to ${role}.`,
+  //     });
+  //   } catch (error) {
+  //     console.log("handleAssignUserRole error:", error);
 
-      openAlert({
-        title: "Failed",
-        description: "Failed assigning user role.",
-      });
-    }
+  //     openAlert({
+  //       title: "Failed",
+  //       description: "Failed assigning user role.",
+  //     });
+  //   }
 
-    setAssigning(false);
-  }
+  //   setAssigning(false);
+  // }
 
   useEffect(() => {
     if (all) {
@@ -96,7 +90,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     const unsubscribe = getUsersRealtime({
-      roles: ["student", "faculty", "unassigned"],
+      roles: ["student", "faculty"],
     })((v) => {
       setUsers(v);
       setLoading(false);
@@ -189,7 +183,7 @@ export default function AdminUsersPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center justify-center gap-2">
-                      {user.role === "unassigned" && (
+                      {/* {user.role === "unassigned" && (
                         <Button
                           type="button"
                           variant="yellow"
@@ -198,7 +192,7 @@ export default function AdminUsersPage() {
                         >
                           Assign Role
                         </Button>
-                      )}
+                      )} */}
                     </div>
                   </TableCell>
                 </TableRow>
@@ -207,13 +201,11 @@ export default function AdminUsersPage() {
         </Table>
       </Card>
 
-      <AssignRoleDialog
+      {/* <AssignRoleDialog
         open={!!assignUserRole}
         onOpenChange={(b) => setAssignUserRole((v) => (b ? v : ""))}
         onRoleSelect={handleAssignUserRole}
-      />
-
-      {component}
+      /> */}
     </AdminLayout>
   );
 }

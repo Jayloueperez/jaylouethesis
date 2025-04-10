@@ -32,7 +32,7 @@ messaging.onBackgroundMessage(async (payload) => {
     .set({
       id: ref.id,
       ...payload.data,
-      isRead: [],
+      isRead: false,
       dateCreated: new Date(),
       dateUpdated: new Date(),
     });

@@ -82,7 +82,7 @@ export default function Page() {
     const filterStatus =
       filter.status !== "all"
         ? filter.status === "active"
-          ? a.status === "pending" || a.status === "tryout"
+          ? a.status === "pending"
           : a.status === filter.status
         : true;
 
@@ -105,7 +105,7 @@ export default function Page() {
       await sendNotification({
         title: `Application Accepted`,
         body: `${userData.firstName} accepted your application for ${talent.name}.`,
-        // isRead: [],
+        // isRead: false,
         receiver: acceptApplication.userId,
         sender: userData.id,
       });
@@ -113,7 +113,7 @@ export default function Page() {
       await createNotification({
         title: `Application Accepted`,
         body: `${userData.firstName} accepted your application for ${talent.name}.`,
-        // isRead: [],
+        // isRead: false,
         receiver: acceptApplication.userId,
         sender: userData.id,
       });
@@ -143,7 +143,7 @@ export default function Page() {
       await sendNotification({
         title: `Application Rejected`,
         body: `${userData.firstName} rejected your application for ${talent.name}.`,
-        // isRead: [],
+        // isRead: false,
         receiver: rejectApplication.userId,
         sender: userData.id,
       });
@@ -151,7 +151,7 @@ export default function Page() {
       await createNotification({
         title: `Application Rejected`,
         body: `${userData.firstName} rejected your application for ${talent.name}.`,
-        // isRead: [],
+        // isRead: false,
         receiver: rejectApplication.userId,
         sender: userData.id,
       });

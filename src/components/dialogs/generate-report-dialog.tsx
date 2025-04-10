@@ -280,7 +280,10 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
                   <TableRow>
                     <TableHead data-html2canvas-ignore>
                       <Checkbox
-                        checked={members.length === selectedMembers.length}
+                        checked={
+                          filteredMembers.length > 0 &&
+                          filteredMembers.length === selectedMembers.length
+                        }
                         onCheckedChange={() =>
                           setSelectedMembers((mIds) =>
                             mIds.length === members.length

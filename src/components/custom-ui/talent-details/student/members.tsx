@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import { Loader } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -14,16 +13,8 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import {
-  getApplicationByRealtime,
-  getUsersRealtime,
-} from "~/lib/firebase/client/firestore";
-import { TalentTypeSchema } from "~/schema/data-base";
-import {
-  ApplicationSchema,
-  TalentSchema,
-  UserSchema,
-} from "~/schema/data-client";
+import { getUsersRealtime } from "~/lib/firebase/client/firestore";
+import { TalentSchema, UserSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 
 interface TalentDetailsStudentMembersProps {
@@ -32,11 +23,11 @@ interface TalentDetailsStudentMembersProps {
 
 function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
   const { talent } = props;
-  const { id: talentId, type: talentType } = talent;
+  // const { id: talentId, type: talentType } = talent;
 
-  const [application, setApplication] = useState<ApplicationSchema | null>(
-    null,
-  );
+  // const [application, setApplication] = useState<ApplicationSchema | null>(
+  //   null,
+  // );
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -61,18 +52,18 @@ function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
     }
   }, [talent]);
 
-  useEffect(() => {
-    if (userData) {
-      const unsubscribe = getApplicationByRealtime({
-        talentType,
-        talentId,
-        userId: userData.id,
-        status: ["pending", "tryout", "accepted"],
-      })(setApplication);
+  // useEffect(() => {
+  //   if (userData) {
+  //     const unsubscribe = getApplicationByRealtime({
+  //       talentType,
+  //       talentId,
+  //       userId: userData.id,
+  //       status: ["pending", "accepted"],
+  //     })(setApplication);
 
-      return unsubscribe;
-    }
-  }, [talentId, talentType, userData]);
+  //     return unsubscribe;
+  //   }
+  // }, [talentId, talentType, userData]);
 
   return (
     <div className="flex flex-col gap-2">

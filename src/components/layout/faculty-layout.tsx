@@ -27,8 +27,7 @@ function FacultyLayout(props: FacultyLayoutProps) {
 
   useEffect(() => {
     if (isLoaded && userData) {
-      if (userData.role === "unassigned" || userData.status === "pending")
-        return router.replace("/pending");
+      if (userData.status === "pending") return router.replace("/pending");
       if (userData.role !== "faculty") router.replace(`/${userData.role}`);
     }
   }, [isLoaded, router, userData]);

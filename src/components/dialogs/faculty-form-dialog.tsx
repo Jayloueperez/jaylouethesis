@@ -14,7 +14,6 @@ import { useAlert } from "~/hooks/use-alert";
 import { createFaculty } from "~/lib/firebase/client/auth";
 import { UserSchema } from "~/schema/data-client";
 import { newUserFormSchema, NewUserFormSchema } from "~/schema/form";
-import { getError } from "~/utils/error";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -25,7 +24,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
 
 interface FacultyFormDialogProps {
   open?: boolean;
@@ -33,11 +31,7 @@ interface FacultyFormDialogProps {
   faculty?: UserSchema | null;
 }
 
-function FacultyFormDialog({
-  onOpenChange,
-  open,
-  faculty,
-}: FacultyFormDialogProps) {
+function FacultyFormDialog({ onOpenChange, open }: FacultyFormDialogProps) {
   const [loading, setLoading] = useState<boolean>(false);
 
   const form = useForm<NewUserFormSchema>({
@@ -81,7 +75,7 @@ function FacultyFormDialog({
 
   useEffect(() => {
     if (open === false) reset();
-  }, [open]);
+  }, [open, reset]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

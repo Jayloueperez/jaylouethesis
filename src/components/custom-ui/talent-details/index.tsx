@@ -52,8 +52,6 @@ function TalentDetails(props: TalentDetailsProps) {
     (state) => state.user,
   );
 
-  if (!userData || userDataLoading) return <Loading />;
-
   useEffect(() => {
     if (talent.type !== "culture-and-arts") return;
 
@@ -76,6 +74,8 @@ function TalentDetails(props: TalentDetailsProps) {
 
     return unsubscribe;
   }, [talent]);
+
+  if (!userData || userDataLoading) return <Loading />;
 
   return (
     <>
@@ -221,9 +221,7 @@ function TalentDetails(props: TalentDetailsProps) {
             <span className="text-lg">Events</span>
 
             {loading && (
-              <span className="text-center text-gray-500">
-                Loading...
-              </span>
+              <span className="text-center text-gray-500">Loading...</span>
             )}
 
             {!loading && events.length === 0 && (

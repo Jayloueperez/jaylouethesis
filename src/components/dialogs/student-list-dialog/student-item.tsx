@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Check, CheckCheck, X } from "lucide-react";
+import { CheckCheck, X } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
-import { Button } from "~/components/ui/button";
 import { useAlert } from "~/hooks/use-alert";
 import {
   createNotification,
@@ -61,7 +60,7 @@ function StudentItem(props: StudentItemProps) {
       await sendNotification({
         title: `Request Accepted`,
         body: `You passed your tryout, you are now a member of ${talent.name} ${talent.type}.`,
-        // isRead: [],
+        // isRead: false,
         receiver: application.userId,
         sender: userData.id,
       });
@@ -69,7 +68,7 @@ function StudentItem(props: StudentItemProps) {
       await createNotification({
         title: `Request Accepted`,
         body: `You passed your tryout, you are now a member of ${talent.name} ${talent.type}.`,
-        // isRead: [],
+        // isRead: false,
         receiver: application.userId,
         sender: userData.id,
       });
@@ -162,7 +161,7 @@ function StudentItem(props: StudentItemProps) {
 
           {status === "rejected" && <X className="size-4 text-red-600" />}
 
-          {status === "tryout" && (
+          {/* {status === "tryout" && (
             <>
               <Button
                 variant="yellow"
@@ -190,7 +189,7 @@ function StudentItem(props: StudentItemProps) {
                 <X className="size-4" />
               </Button>
             </>
-          )}
+          )} */}
         </div>
       </div>
 

@@ -53,7 +53,6 @@ function TalentFormDialog(props: TalentFormDialogProps) {
     defaultValues: {
       name: "",
       description: "",
-      accepting: new Date().getTime(),
       image: "",
       members: [],
       type: talentType,
@@ -109,7 +108,15 @@ function TalentFormDialog(props: TalentFormDialogProps) {
 
       setLoading(false);
     },
-    [talent, onOpenChange, openAlert, reset, talentType],
+    [
+      talent,
+      onOpenChange,
+      openAlert,
+      reset,
+      talentType,
+      parentId,
+      successMessage,
+    ],
   );
 
   useEffect(() => {

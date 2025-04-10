@@ -4,12 +4,7 @@ import { z } from "zod";
  * USER
  */
 
-export const userRoleSchema = z.enum([
-  "admin",
-  "student",
-  "faculty",
-  "unassigned",
-]);
+export const userRoleSchema = z.enum(["admin", "student", "faculty"]);
 export type UserRoleSchema = z.infer<typeof userRoleSchema>;
 
 export const userStatusSchema = z.enum([
@@ -58,7 +53,6 @@ export const talentBaseSchema = z.object({
   name: z.string().min(1, "Name is required."),
   description: z.string().min(1, "Description is required."),
   image: z.string(),
-  accepting: z.coerce.number(), // this is for .getTime() date meaning talent will be accepting applications until this date
   members: z.string().array(),
   type: talentTypeSchema,
   keywords: z.string().array(),
@@ -142,12 +136,8 @@ export type MessageBaseSchema = z.infer<typeof messageBaseSchema>;
  */
 export const applicationStatusSchema = z.enum([
   "pending",
-  "tryout",
   "accepted",
   "rejected",
-  "cancelled",
-  "removed",
-  "left",
 ]);
 export type ApplicationStatusSchema = z.infer<typeof applicationStatusSchema>;
 
@@ -170,7 +160,7 @@ export const notificationBaseSchema = z.object({
   receiver: z.string(),
   title: z.string(),
   body: z.string(),
-  isRead: z.string().array(),
+  isRead: z.boolean(),
 });
 export type NotificationBaseSchema = z.infer<typeof notificationBaseSchema>;
 

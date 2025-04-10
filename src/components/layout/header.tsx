@@ -3,13 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  Bell,
-  ChevronDown,
-  LayoutDashboard,
-  Loader,
-  LogOut,
-} from "lucide-react";
+import { Bell, ChevronDown, Loader, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import {
@@ -171,7 +165,7 @@ function Header(props: HeaderProps) {
 
                     <DropdownMenuSeparator />
 
-                    {userData.role !== "unassigned" && (
+                    {/* {userData.role !== "unassigned" && (
                       <>
                         <DropdownMenuItem asChild>
                           <Link href={`/${userData.role}`}>
@@ -180,7 +174,7 @@ function Header(props: HeaderProps) {
                           </Link>
                         </DropdownMenuItem>
                       </>
-                    )}
+                    )} */}
 
                     <DropdownMenuItem onClick={handleLogout}>
                       <LogOut className="size-4" />

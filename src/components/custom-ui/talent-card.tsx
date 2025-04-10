@@ -17,7 +17,7 @@ export interface TalentCardProps {
 }
 
 function TalentCard(props: TalentCardProps) {
-  const { href, talent, talentType } = props;
+  const { href, talent } = props;
 
   return (
     <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 p-4">

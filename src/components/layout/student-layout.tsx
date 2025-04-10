@@ -38,8 +38,7 @@ function StudentLayout(props: StudentLayoutProps) {
 
   useEffect(() => {
     if (isLoaded && userData) {
-      if (userData.role === "unassigned" || userData.status === "pending")
-        return router.replace("/pending");
+      if (userData.status === "pending") return router.replace("/pending");
       if (userData.role !== "student") router.replace(`/${userData.role}`);
     }
   }, [isLoaded, router, userData]);

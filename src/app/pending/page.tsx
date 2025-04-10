@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { Loading } from "~/components/custom-ui/loading";
@@ -33,10 +32,10 @@ export default function PendingPage() {
     }
   }
 
-  useEffect(() => {
-    if (userData && userData.role !== "unassigned")
-      router.replace(`/${userData.role}`);
-  }, [userData, router]);
+  // useEffect(() => {
+  //   if (userData && userData.role !== "unassigned")
+  //     router.replace(`/${userData.role}`);
+  // }, [userData, router]);
 
   if (!userData) return <Loading />;
 

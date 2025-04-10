@@ -16,12 +16,7 @@ import {
   TableRow,
 } from "~/components/ui/table";
 import { useApplications } from "~/hooks/firestore/use-applications";
-import { useAlert } from "~/hooks/use-alert";
-import { usePdf } from "~/hooks/use-pdf";
-import {
-  getUsersRealtime,
-  updateTalent,
-} from "~/lib/firebase/client/firestore";
+import { getUsersRealtime } from "~/lib/firebase/client/firestore";
 import { TalentSchema, UserSchema } from "~/schema/data-client";
 import { ButtonLink } from "../../button-link";
 
@@ -35,7 +30,7 @@ function TalentDetailsFacultyMembers(props: TalentDetailsFacultyMembersProps) {
 
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [loadingState, setLoadingState] = useState<"none" | "removing">("none");
+  // const [loadingState, setLoadingState] = useState<"none" | "removing">("none");
   const [openState, setOpenState] = useState<
     "none" | "generate" | "remove-member"
   >("none");
@@ -43,11 +38,7 @@ function TalentDetailsFacultyMembers(props: TalentDetailsFacultyMembersProps) {
   const { count: applicationsCount } = useApplications({
     talentId,
     talentType,
-    status: ["pending", "tryout"],
-  });
-  const { component, openAlert } = useAlert();
-  const { toPDF, targetRef } = usePdf({
-    filename: `${talentId}-members-${new Date().getTime()}.pdf`,
+    status: ["pending"],
   });
 
   let applicationsUrl = `/admin/${talentType}/${talentId}/applicants`;
@@ -56,29 +47,29 @@ function TalentDetailsFacultyMembers(props: TalentDetailsFacultyMembersProps) {
     applicationsUrl = `/admin/${talentType}/${talent.parentId}/event/${talent.id}/applicants`;
   }
 
-  async function handleRemoveMember(memberId: string) {
-    setLoadingState("removing");
+  // async function handleRemoveMember(memberId: string) {
+  //   setLoadingState("removing");
 
-    try {
-      await updateTalent(talentId, {
-        members: talent.members.filter((m) => m !== memberId),
-      });
+  //   try {
+  //     await updateTalent(talentId, {
+  //       members: talent.members.filter((m) => m !== memberId),
+  //     });
 
-      openAlert({
-        title: "Success",
-        description: "Successfully removed student.",
-      });
-    } catch (error) {
-      console.log("handleRemoveMember error:", error);
+  //     openAlert({
+  //       title: "Success",
+  //       description: "Successfully removed student.",
+  //     });
+  //   } catch (error) {
+  //     console.log("handleRemoveMember error:", error);
 
-      openAlert({
-        title: "Failed",
-        description: "Failed removing member.",
-      });
-    }
+  //     openAlert({
+  //       title: "Failed",
+  //       description: "Failed removing member.",
+  //     });
+  //   }
 
-    setLoadingState("none");
-  }
+  //   setLoadingState("none");
+  // }
 
   function handleGenerateReport() {
     setOpenState("generate");
@@ -148,7 +139,7 @@ function TalentDetailsFacultyMembers(props: TalentDetailsFacultyMembersProps) {
       </div>
 
       <Card className="p-0">
-        <Table ref={targetRef}>
+        <Table>
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
@@ -267,8 +258,6 @@ function TalentDetailsFacultyMembers(props: TalentDetailsFacultyMembersProps) {
         onOpenChange={(o) => setOpenState(() => (o ? "generate" : "none"))}
         talent={talent}
       />
-
-      {component}
     </div>
   );
 }

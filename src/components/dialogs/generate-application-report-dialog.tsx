@@ -28,7 +28,6 @@ import { usePdf } from "~/hooks/use-pdf";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,

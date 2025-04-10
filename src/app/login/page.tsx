@@ -23,7 +23,7 @@ export default function LoginPage() {
       const { uid } = await dispatch(loginWithGoogle()).unwrap();
       const udata = await getUser(uid);
 
-      if (udata.role === "unassigned") return router.replace("/pending");
+      // if (udata.role === "unassigned") return router.replace("/pending");
 
       router.replace(`/${udata.role}`);
     } catch (error) {

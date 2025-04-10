@@ -35,8 +35,7 @@ function AdminLayout(props: AdminLayoutProps) {
 
   useEffect(() => {
     if (isLoaded && userData) {
-      if (userData.role === "unassigned" || userData.status === "pending")
-        return router.replace("/pending");
+      if (userData.status === "pending") return router.replace("/pending");
       if (userData.role !== "admin") router.replace(`/${userData.role}`);
     }
   }, [isLoaded, router, userData]);

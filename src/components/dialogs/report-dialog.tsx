@@ -31,6 +31,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 interface ReportDialogProps {
   open?: boolean;
@@ -47,11 +54,21 @@ function ReportDialog(props: ReportDialogProps) {
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [title, setTitle] = useState<string>("");
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
+  const [filter, setFilter] = useState<{
+    gender: string;
+  }>({ gender: "all" });
 
   const { toPDF, targetRef } = usePdf({
     filename: `${talent.id}-members-${new Date().getTime()}.pdf`,
   });
   const { component, openAlert } = useAlert();
+
+  const filteredMembers = members.filter((m) => {
+    const filterGender =
+      filter.gender === "all" ? true : m.gender === filter.gender;
+
+    return filterGender;
+  });
 
   async function handleDownload() {
     if (selectedMembers.length === 0) {
@@ -144,6 +161,31 @@ function ReportDialog(props: ReportDialogProps) {
                   onChange={(e) => setTitle(e.target.value)}
                 />
               </div>
+
+              <div className="flex items-center gap-2">
+                <span>Gender:</span>
+
+                <Select
+                  value={filter.gender}
+                  onValueChange={(v) => {
+                    setSelectedMembers([]);
+                    setFilter((f) => ({
+                      ...f,
+                      gender: v,
+                    }));
+                  }}
+                >
+                  <SelectTrigger className="w-40">
+                    <SelectValue placeholder="Filter by gender" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value="male">Male</SelectItem>
+                    <SelectItem value="female">Female</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div
@@ -166,12 +208,15 @@ function ReportDialog(props: ReportDialogProps) {
                   <TableRow>
                     <TableHead data-html2canvas-ignore>
                       <Checkbox
-                        checked={members.length === selectedMembers.length}
+                        checked={
+                          filteredMembers.length > 0 &&
+                          filteredMembers.length === selectedMembers.length
+                        }
                         onCheckedChange={() =>
                           setSelectedMembers((mIds) =>
-                            mIds.length === members.length
+                            mIds.length === filteredMembers.length
                               ? []
-                              : members.map((m) => m.id),
+                              : filteredMembers.map((m) => m.id),
                           )
                         }
                       />
@@ -199,7 +244,7 @@ function ReportDialog(props: ReportDialogProps) {
                     </TableRow>
                   )}
 
-                  {!loading && members.length === 0 && (
+                  {!loading && filteredMembers.length === 0 && (
                     <TableRow>
                       <TableCell
                         className="text-center text-gray-500"
@@ -210,7 +255,7 @@ function ReportDialog(props: ReportDialogProps) {
                     </TableRow>
                   )}
 
-                  {members.map((member) => (
+                  {filteredMembers.map((member) => (
                     <TableRow
                       key={member.id}
                       {...(selectedMembers.includes(member.id)
