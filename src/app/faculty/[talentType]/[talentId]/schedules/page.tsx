@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import { format } from "date-fns";
 import { Calendar, ChevronLeft, List, Loader, Trash } from "lucide-react";
@@ -40,7 +40,13 @@ import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 import { TalentTryoutSchema } from "~/schema/data-client";
 import { getError } from "~/utils/error";
 
-export default function TalentSchedulesPage() {
+interface ComponentProps {
+  scheduleId: string | null;
+}
+
+function Component(props: ComponentProps) {
+  const { scheduleId } = props;
+
   const [filter, setFilter] = useState<{
     status: ApplicationStatusSchema | "all";
   }>({ status: "all" });
@@ -61,8 +67,6 @@ export default function TalentSchedulesPage() {
     talentId: string;
     talentType: TalentTypeSchema;
   }>();
-  const searchParams = useSearchParams();
-  const scheduleId = searchParams.get("scheduleId");
 
   const { talent, loading } = useTalentContext();
   const { data: talentTryouts, loading: talentTryoutsLoading } =
@@ -304,5 +308,16 @@ export default function TalentSchedulesPage() {
       {component}
       {/* MODALS */}
     </FacultyLayout>
+  );
+}
+
+export default function TalentSchedulesPage() {
+  const searchParams = useSearchParams();
+  const scheduleId = searchParams.get("scheduleId");
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <Component scheduleId={scheduleId} />
+    </Suspense>
   );
 }

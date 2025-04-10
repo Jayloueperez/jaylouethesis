@@ -1,10 +1,12 @@
 "use client";
 
+import { Suspense } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { Loading } from "~/components/custom-ui/loading";
 import { PageLayout } from "~/components/layout/page-layout";
 import { Button } from "~/components/ui/button";
 import {
@@ -21,13 +23,17 @@ import { useAppDispatch, useAppSelector } from "~/store";
 import { login } from "~/store/auth-slice";
 import { getError } from "~/utils/error";
 
-export default function AdminLoginPage() {
+interface ComponentProps {
+  redirect: string | null;
+}
+
+function Component(props: ComponentProps) {
+  const { redirect } = props;
+
   const router = useRouter();
 
   const { openAlert, component } = useAlert();
   const { loading } = useAppSelector((state) => state.auth);
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect");
 
   const dispatch = useAppDispatch();
 
@@ -116,5 +122,16 @@ export default function AdminLoginPage() {
 
       {component}
     </PageLayout>
+  );
+}
+
+export default function AdminLoginPage() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
+
+  return (
+    <Suspense fallback={<Loading />}>
+      <Component redirect={redirect} />
+    </Suspense>
   );
 }
