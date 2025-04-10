@@ -41,10 +41,10 @@ function TalentDetailsFacultyMembers(props: TalentDetailsFacultyMembersProps) {
     status: ["pending"],
   });
 
-  let applicationsUrl = `/admin/${talentType}/${talentId}/applicants`;
+  let applicationsUrl = `/faculty/${talentType}/${talentId}/applicants`;
 
   if (talent.node === "child") {
-    applicationsUrl = `/admin/${talentType}/${talent.parentId}/event/${talent.id}/applicants`;
+    applicationsUrl = `/faculty/${talentType}/${talent.parentId}/event/${talent.id}/applicants`;
   }
 
   // async function handleRemoveMember(memberId: string) {
