@@ -14,7 +14,6 @@ export async function createFaculty(data: NewUserFormSchema) {
     const {
       email,
       password,
-      /*eslint no-unused-vars: ["error", { "destructuredArrayIgnorePattern": "^_" }]*/
       confirmPassword: _confirmPassword,
       ...rest
     } = data;

@@ -12,7 +12,7 @@ export const generateKeywords = (
       strArr.push(generateKeywords(sp, false));
     });
   }
-  const keywords = Array.from(Array(str.length)).map((s, i) =>
+  const keywords = Array.from(Array(str.length)).map((_s, i) =>
     str.slice(0, i + 1).toLowerCase(),
   );
 
