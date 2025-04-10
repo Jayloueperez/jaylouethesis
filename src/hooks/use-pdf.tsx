@@ -257,6 +257,7 @@ function getOptions(options?: UsePdfParams) {
 }
 
 function usePdf(params?: UsePdfParams) {
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   const targetRef = useRef<any>(null);
 
   const toPDF = useCallback(
