@@ -40,13 +40,7 @@ import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 import { TalentTryoutSchema } from "~/schema/data-client";
 import { getError } from "~/utils/error";
 
-interface ComponentProps {
-  scheduleId: string | null;
-}
-
-function Component(props: ComponentProps) {
-  const { scheduleId } = props;
-
+function Component() {
   const [filter, setFilter] = useState<{
     status: ApplicationStatusSchema | "all";
   }>({ status: "all" });
@@ -67,6 +61,9 @@ function Component(props: ComponentProps) {
     talentId: string;
     talentType: TalentTypeSchema;
   }>();
+
+  const searchParams = useSearchParams();
+  const scheduleId = searchParams.get("scheduleId");
 
   const { talent, loading } = useTalentContext();
   const { data: talentTryouts, loading: talentTryoutsLoading } =
@@ -312,12 +309,9 @@ function Component(props: ComponentProps) {
 }
 
 export default function TalentSchedulesPage() {
-  const searchParams = useSearchParams();
-  const scheduleId = searchParams.get("scheduleId");
-
   return (
     <Suspense fallback={<Loading />}>
-      <Component scheduleId={scheduleId} />
+      <Component />
     </Suspense>
   );
 }

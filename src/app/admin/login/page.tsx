@@ -23,19 +23,16 @@ import { useAppDispatch, useAppSelector } from "~/store";
 import { login } from "~/store/auth-slice";
 import { getError } from "~/utils/error";
 
-interface ComponentProps {
-  redirect: string | null;
-}
-
-function Component(props: ComponentProps) {
-  const { redirect } = props;
-
+function Component() {
   const router = useRouter();
 
   const { openAlert, component } = useAlert();
   const { loading } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
+
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect");
 
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -126,12 +123,9 @@ function Component(props: ComponentProps) {
 }
 
 export default function AdminLoginPage() {
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get("redirect");
-
   return (
     <Suspense fallback={<Loading />}>
-      <Component redirect={redirect} />
+      <Component />
     </Suspense>
   );
 }
