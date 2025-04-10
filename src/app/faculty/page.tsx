@@ -126,8 +126,8 @@ export default function FacultyPage() {
                           <ButtonLink
                             href={
                               talentType === "sports"
-                                ? `/admin/${talentType}/${talentId}/applicants`
-                                : `/admin/${talentType}/${talent.parentId}/event/${talentId}/applicants`
+                                ? `/faculty/${talentType}/${talentId}/applicants`
+                                : `/faculty/${talentType}/${talent.parentId}/event/${talentId}/applicants`
                             }
                             type="button"
                             variant="blue"

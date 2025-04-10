@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
 import { GenerateApplicationReportDialog } from "~/components/dialogs/generate-application-report-dialog";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { FacultyLayout } from "~/components/layout/faculty-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -76,7 +76,7 @@ export default function FacultyRegistrationsPage() {
   });
 
   return (
-    <AdminLayout className="gap-4 p-4">
+    <FacultyLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">
           Sports/Culture & Arts Student Applications
@@ -322,8 +322,8 @@ export default function FacultyRegistrationsPage() {
                         <ButtonLink
                           href={
                             talentType === "sports"
-                              ? `/admin/${talentType}/${talentId}/applicants`
-                              : `/admin/${talentType}/${talent.parentId}/event/${talentId}/applicants`
+                              ? `/faculty/${talentType}/${talentId}/applicants`
+                              : `/faculty/${talentType}/${talent.parentId}/event/${talentId}/applicants`
                           }
                           type="button"
                           variant="blue"
@@ -346,6 +346,6 @@ export default function FacultyRegistrationsPage() {
         open={open}
         onOpenChange={setOpen}
       />
-    </AdminLayout>
+    </FacultyLayout>
   );
 }
