@@ -2,15 +2,7 @@
 
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  Drama,
-  Home,
-  ListTodo,
-  Megaphone,
-  Users,
-  UsersRound,
-  Volleyball,
-} from "lucide-react";
+import { Drama, Home, ListTodo, Megaphone, Volleyball } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { useAppSelector } from "~/store";
@@ -18,12 +10,12 @@ import { Loading } from "../custom-ui/loading";
 import { SidebarLink } from "../custom-ui/sidebar-link";
 import { Header } from "./header";
 
-interface AdminLayoutProps {
+interface CoachLayoutProps {
   children?: ReactNode;
   className?: string;
 }
 
-function AdminLayout(props: AdminLayoutProps) {
+function CoachLayout(props: CoachLayoutProps) {
   const { children, className } = props;
 
   const router = useRouter();
@@ -36,7 +28,7 @@ function AdminLayout(props: AdminLayoutProps) {
   useEffect(() => {
     if (isLoaded && userData) {
       if (userData.status === "pending") return router.replace("/pending");
-      if (userData.role !== "admin") router.replace(`/${userData.role}`);
+      if (userData.role !== "coach") router.replace(`/${userData.role}`);
     }
   }, [isLoaded, router, userData]);
 
@@ -44,7 +36,8 @@ function AdminLayout(props: AdminLayoutProps) {
     loading ||
     !isLoaded ||
     !userData ||
-    (userData && (userData.role !== "admin" || userData.status !== "confirmed"))
+    (userData &&
+      (userData.role !== "coach" || userData.status !== "confirmed"))
   )
     return <Loading />;
 
@@ -53,62 +46,50 @@ function AdminLayout(props: AdminLayoutProps) {
       <Header dashboard />
 
       <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white">
-        <SidebarLink href="/admin" icon={Home} active={pathname === "/admin"}>
+        <SidebarLink
+          href="/coach"
+          icon={Home}
+          active={pathname === "/coach"}
+        >
           Home
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/announcements"
+          href="/coach/announcements"
           icon={Megaphone}
-          active={pathname.startsWith("/admin/announcements")}
+          active={pathname.startsWith("/coach/announcements")}
         >
           Announcements
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/culture-and-arts"
+          href="/coach/culture-and-arts"
           icon={Drama}
-          active={pathname.startsWith("/admin/culture-and-arts")}
+          active={pathname.startsWith("/coach/culture-and-arts")}
         >
           Culture & Arts
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/sports"
+          href="/coach/sports"
           icon={Volleyball}
-          active={pathname.startsWith("/admin/sports")}
+          active={pathname.startsWith("/coach/sports")}
         >
           Sports
         </SidebarLink>
 
         <SidebarLink
-          href="/admin/coaches"
-          icon={Users}
-          active={pathname.startsWith("/admin/coaches")}
-        >
-          Coaches
-        </SidebarLink>
-
-        <SidebarLink
-          href="/admin/students"
-          icon={UsersRound}
-          active={pathname.startsWith("/admin/students")}
-        >
-          Students
-        </SidebarLink>
-
-        <SidebarLink
-          href="/admin/applications"
+          href="/coach/applications"
           icon={ListTodo}
-          active={pathname.startsWith("/admin/applications")}
+          active={pathname.startsWith("/coach/applications")}
         >
           Applications
         </SidebarLink>
 
         {/* <SidebarLink
-          href="/admin/messages"
+          href="/coach/messages"
           icon={MessageCircle}
-          active={pathname.startsWith("/admin/messages")}
+          active={pathname.startsWith("/coach/messages")}
         >
           Messages
         </SidebarLink> */}
@@ -126,4 +107,4 @@ function AdminLayout(props: AdminLayoutProps) {
   );
 }
 
-export { AdminLayout };
+export { CoachLayout };

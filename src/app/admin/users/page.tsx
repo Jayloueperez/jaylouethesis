@@ -90,7 +90,7 @@ export default function AdminUsersPage() {
 
   useEffect(() => {
     const unsubscribe = getUsersRealtime({
-      roles: ["student", "faculty"],
+      roles: ["student", "coach"],
     })((v) => {
       setUsers(v);
       setLoading(false);

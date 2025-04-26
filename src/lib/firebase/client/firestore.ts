@@ -30,6 +30,7 @@ import {
 } from "~/schema/crud";
 import {
   AnnouncementTypeSchema,
+  ApplicationBaseSchema,
   ApplicationStatusSchema,
   TalentNodeSchema,
   TalentTypeSchema,
@@ -882,6 +883,31 @@ export async function updateApplication(
   } catch (error) {
     console.log("updateApplication error:", error);
     const err = getError(error, "Failed updating application.");
+
+    throw err;
+  }
+}
+
+export async function updateApplications(
+  ids: string[],
+  data: Partial<ApplicationBaseSchema>,
+) {
+  try {
+    const batch = writeBatch(firestore);
+
+    ids.forEach((id) => {
+      batch.update(doc(APPLICATION_COLLECTION, id), {
+        ...data,
+        dateUpdated: new Date(),
+      });
+    });
+
+    await batch.commit();
+
+    return true;
+  } catch (error) {
+    console.log("updateApplications error:", error);
+    const err = getError(error, "Failed updating applications.");
 
     throw err;
   }

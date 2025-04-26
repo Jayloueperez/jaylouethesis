@@ -57,11 +57,11 @@ function AssignRoleDialog(props: AssignRoleDialogProps) {
           </Button>
           <Button
             variant="yellow"
-            onClick={() => handleRoleSelect("faculty")}
-            loading={loading === "faculty"}
-            disabled={!!(loading && loading !== "faculty")}
+            onClick={() => handleRoleSelect("coach")}
+            loading={loading === "coach"}
+            disabled={!!(loading && loading !== "coach")}
           >
-            Faculty
+            Coach
           </Button>
           <Button
             variant="outline"

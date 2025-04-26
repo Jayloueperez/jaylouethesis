@@ -12,7 +12,7 @@ const AUTH_PATHS = [
   "/login",
   "/register",
   "/admin/login",
-  "/faculty/login",
+  "/coach/login",
   "/create-admin",
 ];
 
@@ -54,9 +54,9 @@ export default function middleware(request: NextRequest) {
         });
       }
 
-      if (request.nextUrl.pathname.startsWith("/faculty")) {
+      if (request.nextUrl.pathname.startsWith("/coach")) {
         return redirectToLogin(request, {
-          path: "/faculty/login",
+          path: "/coach/login",
           publicPaths: PUBLIC_PATHS,
         });
       }

@@ -54,8 +54,8 @@ function Header(props: HeaderProps) {
           break;
         }
 
-        case "faculty": {
-          redirect = "/faculty/login";
+        case "coach": {
+          redirect = "/coach/login";
 
           break;
         }

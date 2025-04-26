@@ -1,21 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
 import { GenerateApplicationReportDialog } from "~/components/dialogs/generate-application-report-dialog";
-import { AdminLayout } from "~/components/layout/admin-layout";
+import { CoachLayout } from "~/components/layout/coach-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
-import { Checkbox } from "~/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import {
   Select,
@@ -35,11 +28,9 @@ import {
 import { courses, departments } from "~/const/courses";
 import { talentTypeText } from "~/const/text";
 import { useApplications } from "~/hooks/firestore/use-applications";
-import { useAlert } from "~/hooks/use-alert";
-import { updateApplications } from "~/lib/firebase/client/firestore";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 
-export default function AdminRegistrationsPage() {
+export default function CoachRegistrationsPage() {
   const [filter, setFilter] = useState<{
     department: string;
     course: string;
@@ -54,12 +45,8 @@ export default function AdminRegistrationsPage() {
     status: "all",
   });
   const [open, setOpen] = useState<boolean>(false);
-  const [selectedApplications, setSelectedApplications] = useState<string[]>(
-    [],
-  );
 
   const { data: applications, loading } = useApplications();
-  const { component, openAlert } = useAlert();
 
   const filteredApplications = applications.filter((a) => {
     const { user, talent } = a;
@@ -88,47 +75,8 @@ export default function AdminRegistrationsPage() {
     );
   });
 
-  const toggleSelect = (applicationId: string) => {
-    const exist = selectedApplications.includes(applicationId);
-
-    if (exist) {
-      setSelectedApplications((v) => v.filter((aid) => aid !== applicationId));
-    } else {
-      setSelectedApplications((v) => [...v, applicationId]);
-    }
-  };
-
-  const handleBulkAction = async (status: ApplicationStatusSchema) => {
-    try {
-      const filteredSelectedApplications = selectedApplications.filter(
-        (aid) => {
-          const aData = filteredApplications.find((a) => a.id === aid);
-
-          return aData ? aData.status === "pending" : true;
-        },
-      );
-
-      await updateApplications(filteredSelectedApplications, {
-        status,
-      });
-
-      openAlert({
-        title: "Success",
-        description: `Successfully ${status} applications.`,
-      });
-      setSelectedApplications([]);
-    } catch (error) {
-      console.log("handleBulkAction error:", error);
-
-      openAlert({
-        title: "Failed",
-        description: `Failed updating applications status.`,
-      });
-    }
-  };
-
   return (
-    <AdminLayout className="gap-4 p-4">
+    <CoachLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">
           Sports/Culture & Arts Student Applications
@@ -142,7 +90,6 @@ export default function AdminRegistrationsPage() {
           </Button>
         </div>
       </div>
-
       <div className="flex flex-wrap items-center gap-2">
         <div className="flex items-center gap-2">
           <span className="shrink-0">Type:</span>
@@ -154,7 +101,6 @@ export default function AdminRegistrationsPage() {
                 ...f,
                 type: v,
               }));
-              setSelectedApplications([]);
             }}
           >
             <SelectTrigger className="w-40">
@@ -178,7 +124,6 @@ export default function AdminRegistrationsPage() {
             value={filter.status}
             onValueChange={(v: ApplicationStatusSchema | "all") => {
               setFilter((f) => ({ ...f, status: v }));
-              setSelectedApplications([]);
             }}
           >
             <SelectTrigger className="w-40">
@@ -204,7 +149,6 @@ export default function AdminRegistrationsPage() {
                 department: v,
                 course: "all",
               }));
-              setSelectedApplications([]);
             }}
           >
             <SelectTrigger className="w-40">
@@ -232,7 +176,6 @@ export default function AdminRegistrationsPage() {
                 ...f,
                 course: v,
               }));
-              setSelectedApplications([]);
             }}
           >
             <SelectTrigger className="w-40">
@@ -266,7 +209,6 @@ export default function AdminRegistrationsPage() {
                 ...f,
                 gender: v,
               }));
-              setSelectedApplications([]);
             }}
           >
             <SelectTrigger className="w-40">
@@ -280,58 +222,27 @@ export default function AdminRegistrationsPage() {
             </SelectContent>
           </Select>
         </div>
-
-        {selectedApplications.length > 0 && (
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2 rounded-md border px-3 py-2">
-              <span>Bulk Action</span>
-
-              <ChevronDown className="size-4" />
-            </DropdownMenuTrigger>
-
-            <DropdownMenuContent>
-              <DropdownMenuItem
-                className="text-center hover:bg-green-100"
-                onClick={() => handleBulkAction("accepted")}
-              >
-                <span>Accept</span>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem
-                className="text-center hover:bg-red-100"
-                onClick={() => handleBulkAction("rejected")}
-              >
-                <span>Reject</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        )}
       </div>
 
       <Card className="p-0">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12">
+              {/* <TableHead className="w-12">
                 <Checkbox
-                  checked={
-                    selectedApplications.length === filteredApplications.length
-                  }
-                  onCheckedChange={() => {
-                    if (
-                      selectedApplications.length ===
-                      filteredApplications.length
-                    ) {
-                      setSelectedApplications([]);
+                  checked={all}
+                  onCheckedChange={(v) => {
+                    if (!!v) {
+                      setAll(true);
+                      setSelected(applications.map((d) => d.id));
                     } else {
-                      setSelectedApplications(
-                        filteredApplications.map((a) => a.id),
-                      );
+                      setAll(false);
+                      setSelected([]);
                     }
                   }}
-                  disabled={filteredApplications.length === 0}
+                  disabled={applications.length === 0}
                 />
-              </TableHead>
+              </TableHead> */}
               <TableHead>Name</TableHead>
               <TableHead>Sports/Culture & Arts</TableHead>
               <TableHead>Sports/Culture & Arts Name</TableHead>
@@ -369,12 +280,14 @@ export default function AdminRegistrationsPage() {
 
                 return (
                   <TableRow key={id}>
-                    <TableCell>
+                    {/* <TableCell>
                       <Checkbox
-                        checked={selectedApplications.includes(application.id)}
-                        onCheckedChange={() => toggleSelect(application.id)}
+                        checked={selected.includes(application.id)}
+                        onCheckedChange={() =>
+                          handleToggleApplication(application.id)
+                        }
                       />
-                    </TableCell>
+                    </TableCell> */}
                     <TableCell>
                       <div className="flex items-center gap-4">
                         <Avatar className="size-12">
@@ -409,8 +322,8 @@ export default function AdminRegistrationsPage() {
                         <ButtonLink
                           href={
                             talentType === "sports"
-                              ? `/admin/${talentType}/${talentId}/applicants`
-                              : `/admin/${talentType}/${talent.parentId}/event/${talentId}/applicants`
+                              ? `/coach/${talentType}/${talentId}/applicants`
+                              : `/coach/${talentType}/${talent.parentId}/event/${talentId}/applicants`
                           }
                           type="button"
                           variant="blue"
@@ -433,8 +346,6 @@ export default function AdminRegistrationsPage() {
         open={open}
         onOpenChange={setOpen}
       />
-
-      {component}
-    </AdminLayout>
+    </CoachLayout>
   );
 }

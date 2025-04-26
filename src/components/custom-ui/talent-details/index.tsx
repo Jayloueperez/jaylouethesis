@@ -27,9 +27,9 @@ import { TalentCard } from "../talent-card";
 import { TalentDetailsAdminAnnouncements } from "./admin/announcements";
 import { TalentDetailsAdminControls } from "./admin/controls";
 import { TalentDetailsAdminMembers } from "./admin/members";
-import { TalentDetailsFacultyAnnouncements } from "./faculty/announcements";
-import { TalentDetailsFacultyControls } from "./faculty/controls";
-import { TalentDetailsFacultyMembers } from "./faculty/members";
+import { TalentDetailsCoachAnnouncements } from "./coach/announcements";
+import { TalentDetailsCoachControls } from "./coach/controls";
+import { TalentDetailsCoachMembers } from "./coach/members";
 import { TalentDetailsStudentAnnouncements } from "./student/announcements";
 import { TalentDetailsStudentControls } from "./student/controls";
 import { TalentDetailsStudentMembers } from "./student/members";
@@ -111,8 +111,8 @@ function TalentDetails(props: TalentDetailsProps) {
                 <TalentDetailsAdminControls talent={talent} />
               )}
 
-              {userData.role === "faculty" && (
-                <TalentDetailsFacultyControls talent={talent} />
+              {userData.role === "coach" && (
+                <TalentDetailsCoachControls talent={talent} />
               )}
 
               {(talent.type === "sports" ||
@@ -139,8 +139,8 @@ function TalentDetails(props: TalentDetailsProps) {
               <TalentDetailsAdminAnnouncements talent={talent} />
             )}
 
-            {userData.role === "faculty" && (
-              <TalentDetailsFacultyAnnouncements talent={talent} />
+            {userData.role === "coach" && (
+              <TalentDetailsCoachAnnouncements talent={talent} />
             )}
 
             {userData.role === "student" && (
@@ -154,8 +154,8 @@ function TalentDetails(props: TalentDetailsProps) {
             <TalentDetailsAdminMembers talent={talent} />
           )}
 
-          {userData.role === "faculty" && (
-            <TalentDetailsFacultyMembers talent={talent} />
+          {userData.role === "coach" && (
+            <TalentDetailsCoachMembers talent={talent} />
           )}
 
           {userData.role === "student" && (

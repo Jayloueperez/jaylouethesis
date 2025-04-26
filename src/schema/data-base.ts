@@ -4,7 +4,7 @@ import { z } from "zod";
  * USER
  */
 
-export const userRoleSchema = z.enum(["admin", "student", "faculty"]);
+export const userRoleSchema = z.enum(["admin", "student", "coach"]);
 export type UserRoleSchema = z.infer<typeof userRoleSchema>;
 
 export const userStatusSchema = z.enum([
@@ -174,3 +174,13 @@ export const reportBaseSchema = z.object({
   members: z.string().array(),
 });
 export type ReportBaseSchema = z.infer<typeof reportBaseSchema>;
+
+/**
+ * COACH_ROLES
+ */
+export const coachRoleBaseSchema = z.object({
+  id: z.string(),
+  userId: z.string(),
+  talentId: z.string(),
+});
+export type CoachRoleBaseSchema = z.infer<typeof coachRoleBaseSchema>;
