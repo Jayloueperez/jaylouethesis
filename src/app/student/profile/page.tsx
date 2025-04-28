@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { differenceInYears, format, parse } from "date-fns";
 import { useForm } from "react-hook-form";
 
 import { StudentLayout } from "~/components/layout/student-layout";
@@ -55,6 +56,7 @@ export default function StudentProfilePage() {
       section: "",
       surname: "",
       year: "",
+      birthdate: "",
     },
   });
   const { control, handleSubmit, setValue } = form;
@@ -93,6 +95,7 @@ export default function StudentProfilePage() {
   useEffect(() => {
     if (userData) {
       setValue("address", userData.address);
+      setValue("birthdate", userData.birthdate);
       setValue("age", userData.age);
       setValue("contact", userData.contact);
       setValue("course", userData.course);
@@ -106,8 +109,8 @@ export default function StudentProfilePage() {
   }, [userData, setValue]);
 
   return (
-    <StudentLayout className="gap-4 p-4">
-      <Card>
+    <StudentLayout className="items-center gap-4 p-4">
+      <Card className="w-full lg:max-w-4xl">
         <CardHeader>
           <CardTitle>Student Information</CardTitle>
           <CardDescription>
@@ -119,9 +122,9 @@ export default function StudentProfilePage() {
           <Form {...form}>
             <form
               onSubmit={handleSubmit(handleUpdateUserInfo)}
-              className="flex flex-col gap-6 lg:min-w-2xl lg:flex-row"
+              className="flex w-full flex-col gap-6 lg:min-w-2xl lg:flex-row"
             >
-              <div className="flex shrink-0 flex-col gap-4">
+              <div className="flex shrink-0 flex-col items-center gap-4 lg:items-start">
                 <Avatar className="size-40">
                   <AvatarImage
                     src={
@@ -206,13 +209,43 @@ export default function StudentProfilePage() {
 
                 <FormField
                   control={control}
+                  name="birthdate"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col gap-2 space-y-0">
+                      <FormLabel className="px-1">Birthdate</FormLabel>
+
+                      <FormControl>
+                        <Input
+                          type="date"
+                          {...field}
+                          max={format(new Date(), "yyyy-MM-dd")}
+                          onChange={(v) => {
+                            field.onChange(v);
+                            form.setValue(
+                              "age",
+                              differenceInYears(
+                                new Date(),
+                                parse(v.target.value, "yyyy-MM-dd", new Date()),
+                              ).toString(),
+                            );
+                          }}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={control}
                   name="age"
                   render={({ field }) => (
                     <FormItem className="flex flex-col gap-2 space-y-0">
                       <FormLabel className="px-1">Age</FormLabel>
 
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <Input type="number" disabled {...field} />
                       </FormControl>
 
                       <FormMessage />

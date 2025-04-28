@@ -23,7 +23,7 @@ function SidebarLink(props: SidebarLinkProps) {
   return (
     <Comp
       className={cn(
-        "hover:bg-flush-orange-500 flex h-16 items-center gap-4 rounded-md bg-violet-950 px-4 py-2 text-white transition-all",
+        "hover:bg-flush-orange-500 flex h-16 items-center justify-center gap-4 rounded-md bg-violet-950 px-4 py-2 text-white transition-all lg:justify-start",
         className,
         active && "bg-flush-orange-500",
       )}
@@ -31,7 +31,7 @@ function SidebarLink(props: SidebarLinkProps) {
     >
       {!!Icon && <Icon className="h-6 w-6" />}
 
-      {children}
+      <div className="hidden items-center gap-2 lg:flex">{children}</div>
     </Comp>
   );
 }

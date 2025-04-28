@@ -246,6 +246,7 @@ export default function CoachRegistrationsPage() {
               <TableHead>Name</TableHead>
               <TableHead>Sports/Culture & Arts</TableHead>
               <TableHead>Sports/Culture & Arts Name</TableHead>
+              <TableHead>Age</TableHead>
               <TableHead>Course</TableHead>
               <TableHead>Year</TableHead>
               <TableHead>Section</TableHead>
@@ -311,6 +312,7 @@ export default function CoachRegistrationsPage() {
                     <TableCell className="">
                       {application.talent.name}
                     </TableCell>
+                    <TableCell>{user.age}</TableCell>
                     <TableCell>{user.course}</TableCell>
                     <TableCell>{user.year}</TableCell>
                     <TableCell>{user.section}</TableCell>

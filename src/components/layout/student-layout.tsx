@@ -65,7 +65,7 @@ function StudentLayout(props: StudentLayoutProps) {
 
       <div
         className={cn(
-          "fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white",
+          "fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-24 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white lg:w-64",
           sidebarHidden && "hidden",
         )}
       >
@@ -104,7 +104,7 @@ function StudentLayout(props: StudentLayoutProps) {
 
       <main
         className={cn(
-          "min-h mt-[calc(theme('spacing.24')+4px)] ml-64 flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col",
+          "min-h mt-[calc(theme('spacing.24')+4px)] ml-24 flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col lg:ml-64",
           className,
           sidebarHidden && "ml-0",
         )}

@@ -36,8 +36,7 @@ function CoachLayout(props: CoachLayoutProps) {
     loading ||
     !isLoaded ||
     !userData ||
-    (userData &&
-      (userData.role !== "coach" || userData.status !== "confirmed"))
+    (userData && (userData.role !== "coach" || userData.status !== "confirmed"))
   )
     return <Loading />;
 
@@ -45,12 +44,8 @@ function CoachLayout(props: CoachLayoutProps) {
     <div className="relative flex min-h-screen flex-col">
       <Header dashboard />
 
-      <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-64 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white">
-        <SidebarLink
-          href="/coach"
-          icon={Home}
-          active={pathname === "/coach"}
-        >
+      <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-24 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white lg:w-64">
+        <SidebarLink href="/coach" icon={Home} active={pathname === "/coach"}>
           Home
         </SidebarLink>
 
@@ -97,7 +92,7 @@ function CoachLayout(props: CoachLayoutProps) {
 
       <main
         className={cn(
-          "min-h mt-[calc(theme('spacing.24')+4px)] ml-64 flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col",
+          "min-h mt-[calc(theme('spacing.24')+4px)] ml-24 flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col lg:ml-64",
           className,
         )}
       >

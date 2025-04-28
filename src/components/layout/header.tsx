@@ -91,7 +91,7 @@ function Header(props: HeaderProps) {
           )}
         >
           <div className="flex items-center gap-4">
-            <Link href="/">
+            <Link className="shrink-0" href="/">
               <Image
                 className="size-12"
                 src="/images/logo.png"
@@ -101,7 +101,7 @@ function Header(props: HeaderProps) {
               />
             </Link>
 
-            <span className="">BISU - BALILIHAN CAMPUS</span>
+            <span className="hidden lg:inline">BISU - BALILIHAN CAMPUS</span>
           </div>
 
           <div className="flex items-center gap-8">

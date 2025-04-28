@@ -28,6 +28,7 @@ export const updateUserInfoSchema = userBaseSchema
     role: true,
     status: true,
     tokens: true,
+    talentsAssigned: true,
   })
   .superRefine(
     (

@@ -23,6 +23,7 @@ export const userBaseSchema = z.object({
   gender: z.string(),
   contact: z.string(),
   address: z.string(),
+  birthdate: z.string(),
   age: z.string(),
   course: z.string(),
   year: z.string(),
