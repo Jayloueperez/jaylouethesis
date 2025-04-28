@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { Loader } from "lucide-react";
 
+import { AssignCoachDialog } from "~/components/dialogs/assign-coach-dialog";
 import { CoachFormDialog } from "~/components/dialogs/coach-form-dialog";
 import { AdminLayout } from "~/components/layout/admin-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -130,7 +131,7 @@ export default function AdminCoachesPage() {
                     {format(coach.dateCreated, "MMM dd, yyyy")}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center justify-center gap-2"></div>
+                    <AssignCoachDialog coach={coach} />
                   </TableCell>
                 </TableRow>
               ))}

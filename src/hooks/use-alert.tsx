@@ -13,6 +13,7 @@ import {
 interface UseAlertData {
   title: string;
   description: string;
+  callback?: () => void;
 }
 
 function useAlert() {
@@ -32,7 +33,12 @@ function useAlert() {
           </AlertDialogHeader>
 
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setData(null)}>
+            <AlertDialogAction
+              onClick={() => {
+                data.callback?.();
+                setData(null);
+              }}
+            >
               Continue
             </AlertDialogAction>
           </AlertDialogFooter>

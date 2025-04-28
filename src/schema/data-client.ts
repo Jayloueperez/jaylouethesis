@@ -4,7 +4,6 @@ import { z } from "zod";
 import {
   announcementBaseSchema,
   applicationBaseSchema,
-  coachRoleBaseSchema,
   messageBaseSchema,
   messageContainerBaseSchema,
   notificationBaseSchema,
@@ -67,6 +66,3 @@ export type NotificationSchema = z.infer<typeof notificationSchema>;
 
 export const reportSchema = reportBaseSchema.and(dateSchema);
 export type ReportSchema = z.infer<typeof reportSchema>;
-
-export const coachRoleSchema = coachRoleBaseSchema.and(dateSchema);
-export type CoachRoleSchema = z.infer<typeof coachRoleSchema>;

@@ -7,7 +7,7 @@
 //   "BS Criminology",
 // ];
 
-const departments = [
+const collages = [
   {
     id: "CCJ",
     name: "College of Criminology",
@@ -26,33 +26,33 @@ const courses = [
   {
     id: "BSCRIM",
     name: "Bachelor of Science in Criminology",
-    department: "CCJ",
+    collage: "CCJ",
   },
   {
     id: "BSIT",
     name: "Bachelor of Science in Information Technology",
-    department: "CCIS",
+    collage: "CCIS",
   },
   {
     id: "BSCS",
     name: "Bachelor of Science in Computer Science",
-    department: "CCIS",
+    collage: "CCIS",
   },
   {
     id: "BSET",
     name: "Bachelor of Science in Electrical Technology",
-    department: "CTAS",
+    collage: "CTAS",
   },
   {
     id: "BSEET",
     name: "Bachelor of Science in Electronics Technology",
-    department: "CTAS",
+    collage: "CTAS",
   },
   {
     id: "BSIT-FPM",
     name: "Bachelor of Science in Industrial Technology Major in Food Preparation Services Management",
-    department: "CTAS",
+    collage: "CTAS",
   },
 ];
 
-export { courses, departments };
+export { courses, collages };

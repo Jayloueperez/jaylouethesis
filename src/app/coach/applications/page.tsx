@@ -25,20 +25,20 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { courses, departments } from "~/const/courses";
+import { courses, collages } from "~/const/courses";
 import { talentTypeText } from "~/const/text";
 import { useApplications } from "~/hooks/firestore/use-applications";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 
 export default function CoachRegistrationsPage() {
   const [filter, setFilter] = useState<{
-    department: string;
+    collage: string;
     course: string;
     gender: string;
     type: TalentTypeSchema | "all";
     status: ApplicationStatusSchema | "all";
   }>({
-    department: "all",
+    collage: "all",
     course: "all",
     gender: "all",
     type: "all",
@@ -53,10 +53,10 @@ export default function CoachRegistrationsPage() {
 
     const courseObj = courses.find((c) => c.id === user.course);
 
-    const filterDepartment =
-      filter.department === "all" || !courseObj
+    const filterCollage =
+      filter.collage === "all" || !courseObj
         ? true
-        : courseObj.department === filter.department;
+        : courseObj.collage === filter.collage;
     const filterCourse =
       filter.course === "all" ? true : user.course === filter.course;
     const filterGender =
@@ -67,7 +67,7 @@ export default function CoachRegistrationsPage() {
       filter.status === "all" ? true : a.status === filter.status;
 
     return (
-      filterDepartment &&
+      filterCollage &&
       filterCourse &&
       filterGender &&
       filterType &&
@@ -139,25 +139,25 @@ export default function CoachRegistrationsPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span>Department:</span>
+          <span>Collage:</span>
 
           <Select
-            value={filter.department}
+            value={filter.collage}
             onValueChange={(v) => {
               setFilter((f) => ({
                 ...f,
-                department: v,
+                collage: v,
                 course: "all",
               }));
             }}
           >
             <SelectTrigger className="w-40">
-              <SelectValue placeholder="Filter by department" />
+              <SelectValue placeholder="Filter by collage" />
             </SelectTrigger>
 
             <SelectContent>
               <SelectItem value="all">All</SelectItem>
-              {departments.map((c) => (
+              {collages.map((c) => (
                 <SelectItem key={c.id} value={c.id}>
                   {c.name}
                 </SelectItem>
@@ -186,9 +186,9 @@ export default function CoachRegistrationsPage() {
               <SelectItem value="all">All</SelectItem>
               {courses
                 .filter((c) =>
-                  filter.department === "all"
+                  filter.collage === "all"
                     ? true
-                    : filter.department === c.department,
+                    : filter.collage === c.collage,
                 )
                 .map((c) => (
                   <SelectItem key={c.id} value={c.id}>

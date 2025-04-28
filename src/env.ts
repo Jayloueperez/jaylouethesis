@@ -24,6 +24,7 @@ export const env = createEnv({
       .string()
       .min(1)
       .transform((v) => v.toLowerCase() === "true"),
+    UPLOADCARE_SECRET_KEY: z.string().min(1),
   },
   client: {
     NEXT_PUBLIC_FIREBASE_API_KEY: z.string().min(1),
@@ -33,6 +34,7 @@ export const env = createEnv({
     NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID: z.string().min(1),
     NEXT_PUBLIC_FIREBASE_APP_ID: z.string().min(1),
     NEXT_PUBLIC_FIREBASE_VAPID_KEY: z.string().min(1),
+    NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY: z.string().min(1),
   },
   runtimeEnv: {
     NEXT_PUBLIC_FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -65,5 +67,8 @@ export const env = createEnv({
     FIREBASE_AUTH_SIGNATURE_KEY_PREVIOUS:
       process.env.FIREBASE_AUTH_SIGNATURE_KEY_PREVIOUS,
     USE_SECURE_COOKIES: process.env.USE_SECURE_COOKIES,
+    NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY:
+      process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY,
+    UPLOADCARE_SECRET_KEY: process.env.UPLOADCARE_SECRET_KEY,
   },
 });

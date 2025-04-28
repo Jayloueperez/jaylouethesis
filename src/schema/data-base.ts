@@ -1,9 +1,6 @@
 import { z } from "zod";
 
-/**
- * USER
- */
-
+// USER
 export const userRoleSchema = z.enum(["admin", "student", "coach"]);
 export type UserRoleSchema = z.infer<typeof userRoleSchema>;
 
@@ -36,12 +33,11 @@ export const userBaseSchema = z.object({
   provider: z.enum(["email-password", "google"]),
   tokens: z.string().array(),
   status: userStatusSchema.default("pending"),
+  talentsAssigned: z.string().array().default([]),
 });
 export type UserBaseSchema = z.infer<typeof userBaseSchema>;
 
-/**
- * TALENT
- */
+// TALENT
 export const talentTypeSchema = z.enum(["culture-and-arts", "sports"]);
 export type TalentTypeSchema = z.infer<typeof talentTypeSchema>;
 
@@ -61,9 +57,7 @@ export const talentBaseSchema = z.object({
 });
 export type TalentBaseSchema = z.infer<typeof talentBaseSchema>;
 
-/**
- * TALENT_TEAM
- */
+// TALENT_TEAM
 export const talentTeamBaseSchema = z.object({
   id: z.string(),
   talentId: z.string(),
@@ -75,9 +69,7 @@ export const talentTeamBaseSchema = z.object({
 });
 export type TalentTeamBaseSchema = z.infer<typeof talentTeamBaseSchema>;
 
-/**
- * TALENT TRYOUT
- */
+// TALENT TRYOUT
 export const talentTryoutBaseSchema = z.object({
   id: z.string(),
   talentId: z.string(),
@@ -89,11 +81,7 @@ export const talentTryoutBaseSchema = z.object({
 });
 export type TalentTryoutBaseSchema = z.infer<typeof talentTryoutBaseSchema>;
 
-///////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * ANNOUNCEMENT
- */
+// ANNOUNCEMENT
 export const announcementTypeSchema = talentTypeSchema.or(
   z.enum(["all", "ids"]),
 );
@@ -110,9 +98,7 @@ export const announcementBaseSchema = z.object({
 });
 export type AnnouncementBaseSchema = z.infer<typeof announcementBaseSchema>;
 
-/**
- * MESSAGE_CONTAINER->MESSAGES
- */
+// MESSAGES
 export const messageContainerBaseSchema = z.object({
   id: z.string(),
   users: z.string().array(),
@@ -131,9 +117,7 @@ export const messageBaseSchema = z.object({
 });
 export type MessageBaseSchema = z.infer<typeof messageBaseSchema>;
 
-/**
- * APPLICATIONS
- */
+// APPLICATIONS
 export const applicationStatusSchema = z.enum([
   "pending",
   "accepted",
@@ -151,9 +135,7 @@ export const applicationBaseSchema = z.object({
 });
 export type ApplicationBaseSchema = z.infer<typeof applicationBaseSchema>;
 
-/**
- * NOTIFICATIONS
- */
+// NOTIFICATIONS
 export const notificationBaseSchema = z.object({
   id: z.string(),
   sender: z.string(),
@@ -164,9 +146,7 @@ export const notificationBaseSchema = z.object({
 });
 export type NotificationBaseSchema = z.infer<typeof notificationBaseSchema>;
 
-/**
- * REPORTS
- */
+// REPORTS
 export const reportBaseSchema = z.object({
   id: z.string(),
   talentId: z.string(),
@@ -174,13 +154,3 @@ export const reportBaseSchema = z.object({
   members: z.string().array(),
 });
 export type ReportBaseSchema = z.infer<typeof reportBaseSchema>;
-
-/**
- * COACH_ROLES
- */
-export const coachRoleBaseSchema = z.object({
-  id: z.string(),
-  userId: z.string(),
-  talentId: z.string(),
-});
-export type CoachRoleBaseSchema = z.infer<typeof coachRoleBaseSchema>;
