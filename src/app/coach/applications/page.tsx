@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, User2 } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
 import { GenerateApplicationReportDialog } from "~/components/dialogs/generate-application-report-dialog";
+import { ViewProfileDialog } from "~/components/dialogs/view-profile-dialog";
 import { CoachLayout } from "~/components/layout/coach-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -25,7 +26,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { courses, collages } from "~/const/courses";
+import { collages, courses } from "~/const/courses";
 import { talentTypeText } from "~/const/text";
 import { useApplications } from "~/hooks/firestore/use-applications";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
@@ -79,7 +80,7 @@ export default function CoachRegistrationsPage() {
     <CoachLayout className="gap-4 p-4">
       <div className="flex h-16 items-center justify-between">
         <span className="text-xl font-medium">
-          Sports/Culture & Arts Student Applications
+          Sports/Culture & Arts Student Applicants
         </span>
 
         <div className="flex items-center gap-2">
@@ -302,7 +303,9 @@ export default function CoachRegistrationsPage() {
                         </Avatar>
 
                         <span>
-                          {user.firstName} {user.middleInitial}. {user.surname}
+                          {user.firstName}{" "}
+                          {user.middleInitial ? `${user.middleInitial}.` : ""}{" "}
+                          {user.surname}
                         </span>
                       </div>
                     </TableCell>
@@ -321,6 +324,10 @@ export default function CoachRegistrationsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
+                        <ViewProfileDialog user={user} size="icon" shape="pill">
+                          <User2 className="size-4" />
+                        </ViewProfileDialog>
+
                         <ButtonLink
                           href={
                             talentType === "sports"

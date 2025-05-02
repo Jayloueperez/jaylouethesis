@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, ClipboardList, ListCheck, Loader } from "lucide-react";
+import { Bell, ClipboardList, ListCheck, Loader, User2 } from "lucide-react";
 
 import { GenerateReportDialog } from "~/components/dialogs/generate-report-dialog";
+import { ViewProfileDialog } from "~/components/dialogs/view-profile-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -195,6 +196,9 @@ function TalentDetailsCoachMembers(props: TalentDetailsCoachMembersProps) {
                 <TableCell>{member.section}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
+                    <ViewProfileDialog user={member} size="icon" shape="pill">
+                      <User2 className="size-4" />
+                    </ViewProfileDialog>
                     {/* <Button
                       type="button"
                       variant="blue"

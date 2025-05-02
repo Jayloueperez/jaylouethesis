@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, ClipboardList, ListCheck, Loader } from "lucide-react";
+import { Bell, ClipboardList, ListCheck, Loader, User2 } from "lucide-react";
 
 import { GenerateReportDialog } from "~/components/dialogs/generate-report-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -19,6 +19,7 @@ import { useApplications } from "~/hooks/firestore/use-applications";
 import { getUsersRealtime } from "~/lib/firebase/client/firestore";
 import { TalentSchema, UserSchema } from "~/schema/data-client";
 import { ButtonLink } from "../../button-link";
+import { ViewProfileDialog } from "~/components/dialogs/view-profile-dialog";
 
 interface TalentDetailsAdminMembersProps {
   talent: TalentSchema;
@@ -195,6 +196,9 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
                 <TableCell>{member.section}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
+                    <ViewProfileDialog user={member} size="icon" shape="pill">
+                      <User2 className="size-4" />
+                    </ViewProfileDialog>
                     {/* <Button
                       type="button"
                       variant="blue"

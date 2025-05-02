@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Loader } from "lucide-react";
+import { Loader, User2 } from "lucide-react";
 
+import { ViewProfileDialog } from "~/components/dialogs/view-profile-dialog";
 import { AdminLayout } from "~/components/layout/admin-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Card } from "~/components/ui/card";
@@ -125,7 +126,15 @@ export default function AdminStudentsPage() {
                     {format(student.dateCreated, "MMM dd, yyyy")}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center justify-center gap-2"></div>
+                    <div className="flex items-center justify-center gap-2">
+                      <ViewProfileDialog
+                        user={student}
+                        size="icon"
+                        shape="pill"
+                      >
+                        <User2 className="size-4" />
+                      </ViewProfileDialog>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { courses, collages } from "~/const/courses";
+import { collages, courses } from "~/const/courses";
 import { talentTypeText } from "~/const/text";
 import { ApplicationWithData } from "~/hooks/firestore/use-applications";
 import { useAlert } from "~/hooks/use-alert";
@@ -275,13 +275,27 @@ function GenerateApplicationReportDialog(
               ref={targetRef}
               className="flex flex-col gap-4 border border-gray-300 p-8"
             >
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center gap-4">
                 <Image
                   src="/images/logo.png"
                   alt="logo"
                   width={128}
                   height={128}
                 />
+
+                {/* <div className="flex flex-col">
+                  <span>Republic of the Philippines</span>
+                  <span className="font-medium">
+                    BOHOL ISLAND STATE UNIVERSITY
+                  </span>
+                  <span className="text-sm">
+                    Magsija, Balilihan, 6342, Bohol, Philippines
+                  </span>
+                  <span className="text-sm">Office of Instruction</span>
+                  <span className="text-sm italic">
+                    Balance | Integrity | Stewardship | Uprightness
+                  </span>
+                </div> */}
               </div>
 
               <Table>

@@ -78,7 +78,7 @@ function CoachLayout(props: CoachLayoutProps) {
           icon={ListTodo}
           active={pathname.startsWith("/coach/applications")}
         >
-          Applications
+          Applicants
         </SidebarLink>
 
         {/* <SidebarLink

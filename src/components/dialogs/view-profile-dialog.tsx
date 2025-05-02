@@ -1,0 +1,99 @@
+"use client";
+
+import { ReactNode } from "react";
+import Image from "next/image";
+import { format, parse } from "date-fns";
+
+import { UserSchema } from "~/schema/data-client";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Button, ButtonProps } from "../ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+
+interface ViewProfileDialogProps extends ButtonProps {
+  user: UserSchema;
+}
+
+function ViewProfileDialog({
+  user,
+  children,
+  ...props
+}: ViewProfileDialogProps) {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button variant="yellow" {...props}>
+          {children}
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent className="md:max-w-xs">
+        <DialogHeader>
+          <DialogTitle>{user.firstName}'s Profile</DialogTitle>
+
+          <DialogDescription>Viewing a {user.role}'s profile</DialogDescription>
+        </DialogHeader>
+
+        <div className="flex flex-col gap-8">
+          <div className="flex items-center justify-center">
+            <Avatar className="size-32">
+              <AvatarImage src={user.profile} alt={user.email} />
+              <AvatarFallback>
+                {user.firstName.substring(0, 1).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+
+          <table>
+            <tbody>
+              <tr>
+                <td className="pr-2 text-right font-medium">Name:</td>
+                <td>
+                  {user.firstName}{" "}
+                  {user.middleInitial ? `${user.middleInitial}.` : ""}{" "}
+                  {user.surname}
+                </td>
+              </tr>
+              <tr>
+                <td className="pr-2 text-right font-medium">Birthdate:</td>
+                <td>
+                  {user.birthdate
+                    ? format(
+                        parse(user.birthdate, "yyyy-MM-dd", new Date()),
+                        "MMM dd, yyyy",
+                      )
+                    : ""}
+                </td>
+              </tr>
+              <tr>
+                <td className="pr-2 text-right font-medium">Age:</td>
+                <td>{user.age}</td>
+              </tr>
+              <tr>
+                <td className="pr-2 text-right font-medium">Course:</td>
+                <td>{user.course}</td>
+              </tr>
+              <tr>
+                <td className="pr-2 text-right font-medium">Year:</td>
+                <td>{user.year}</td>
+              </tr>
+              <tr>
+                <td className="pr-2 text-right font-medium">Section:</td>
+                <td>{user.section}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+export { ViewProfileDialog };

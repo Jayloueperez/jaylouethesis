@@ -102,7 +102,7 @@ function AdminLayout(props: AdminLayoutProps) {
           icon={ListTodo}
           active={pathname.startsWith("/admin/applications")}
         >
-          Applications
+          Applicants
         </SidebarLink>
 
         {/* <SidebarLink

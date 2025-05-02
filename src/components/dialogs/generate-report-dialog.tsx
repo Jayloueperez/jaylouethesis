@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { courses, collages } from "~/const/courses";
+import { collages, courses } from "~/const/courses";
 import { useAlert } from "~/hooks/use-alert";
 import { usePdf } from "~/hooks/use-pdf";
 import {
@@ -262,13 +262,50 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
               ref={targetRef}
               className="flex flex-col gap-4 border border-gray-300 p-8"
             >
-              <div className="flex items-center justify-center">
-                <Image
-                  src="/images/logo.png"
-                  alt="logo"
-                  width={128}
-                  height={128}
-                />
+              <div className="flex items-center justify-around gap-8">
+                <div className="flex shrink-0 items-center gap-4">
+                  <Image
+                    src="/images/logo.png"
+                    alt="logo"
+                    width={72}
+                    height={72}
+                  />
+
+                  <div className="flex flex-col">
+                    <span className="text-sm leading-tight">
+                      Republic of the Philippines
+                    </span>
+                    <span className="text-sm leading-tight font-medium">
+                      BOHOL ISLAND STATE UNIVERSITY
+                    </span>
+                    <span className="text-xs leading-tight">
+                      Magsija, Balilihan, 6342, Bohol, Philippines
+                    </span>
+                    <span className="text-xs leading-tight">
+                      Office of Instruction
+                    </span>
+                    <span className="text-xs leading-tight italic">
+                      Balance | Integrity | Stewardship | Uprightness
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center">
+                  <Image
+                    className="h-16 w-auto"
+                    src="/images/report-header-1.png"
+                    alt="bagong-pilipinas"
+                    width={180}
+                    height={167}
+                  />
+                  <Image
+                    className="h-16 w-auto"
+                    src="/images/report-header-2.jpg"
+                    alt="bagong-pilipinas"
+                    width={456}
+                    height={231}
+                  />
+                </div>
               </div>
 
               {!!title && (
