@@ -1,13 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  ChevronUp,
-  X,
-} from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 
 import { buttonVariants } from "~/components/ui/button";
@@ -66,33 +60,15 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        Chevron: ({ className, orientation }) => {
-          let Icon = X;
-
-          switch (orientation) {
-            case "down": {
-              Icon = ChevronDown;
-              break;
-            }
-
-            case "left": {
-              Icon = ChevronLeft;
-              break;
-            }
-
-            case "right": {
-              Icon = ChevronRight;
-              break;
-            }
-
-            case "up": {
-              Icon = ChevronUp;
-              break;
-            }
-          }
-
-          return <Icon className={cn("size-4", className)} />;
-        },
+        IconLeft: ({ className, ...iconProps }) => (
+          <ChevronLeft className={cn("size-4", className)} {...iconProps} />
+        ),
+        IconRight: ({ className, ...iconProps }) => (
+          <ChevronRight className={cn("size-4", className)} {...iconProps} />
+        ),
+        IconDropdown: ({ className, ...iconProps }) => (
+          <ChevronDown className={cn("size-4", className)} {...iconProps} />
+        ),
       }}
       {...props}
     />

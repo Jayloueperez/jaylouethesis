@@ -2,7 +2,6 @@
 
 import { ChangeEvent, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FileUploaderRegular } from "@uploadcare/react-uploader/next";
 import { uploadDirect } from "@uploadcare/upload-client";
 import { differenceInYears, format, parse } from "date-fns";
 import { useForm } from "react-hook-form";

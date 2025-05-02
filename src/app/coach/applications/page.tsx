@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, User2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
 import { GenerateApplicationReportDialog } from "~/components/dialogs/generate-application-report-dialog";

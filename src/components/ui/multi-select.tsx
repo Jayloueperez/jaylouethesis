@@ -1,7 +1,6 @@
 "use client";
 
 import { ComponentProps, KeyboardEvent, useState } from "react";
-import { cva, VariantProps } from "class-variance-authority";
 import { Check, ChevronDown, LucideIcon, X } from "lucide-react";
 
 import { Badge } from "~/components/ui/badge";
@@ -22,17 +21,6 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { cn } from "~/lib/utils";
 
-const multiSelectVariants = cva("", {
-  variants: {
-    variant: {
-      default: "",
-    },
-  },
-  defaultVariants: {
-    variant: "default",
-  },
-});
-
 interface MultiSelectOption {
   label: string;
   value: string;
@@ -41,9 +29,7 @@ interface MultiSelectOption {
   options?: MultiSelectOption[];
 }
 
-interface MultiSelectProps
-  extends ComponentProps<"div">,
-    VariantProps<typeof multiSelectVariants> {
+interface MultiSelectProps extends ComponentProps<"div"> {
   options: MultiSelectOption[];
   onValueChange: (value: string[]) => void;
   value: string[];
@@ -114,7 +100,6 @@ function MultiSelect({
   onValueChange,
   defaultValue,
   placeholder,
-  variant,
   getOptionData,
   value,
   ...props

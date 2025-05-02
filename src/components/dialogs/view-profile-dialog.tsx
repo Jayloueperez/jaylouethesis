@@ -1,7 +1,5 @@
 "use client";
 
-import { ReactNode } from "react";
-import Image from "next/image";
 import { format, parse } from "date-fns";
 
 import { UserSchema } from "~/schema/data-client";
@@ -11,7 +9,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -36,9 +33,9 @@ function ViewProfileDialog({
 
       <DialogContent className="md:max-w-xs">
         <DialogHeader>
-          <DialogTitle>{user.firstName}'s Profile</DialogTitle>
+          <DialogTitle>{user.firstName}&apos;s Profile</DialogTitle>
 
-          <DialogDescription>Viewing a {user.role}'s profile</DialogDescription>
+          <DialogDescription>Viewing a {user.role}&apos;s profile</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-8">

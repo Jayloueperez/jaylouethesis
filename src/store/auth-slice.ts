@@ -123,6 +123,9 @@ export const loginWithGoogle = createAsyncThunk(
           provider: "google",
           tokens: [],
           status: "confirmed",
+          attachments: [],
+          birthdate: "",
+          talentsAssigned: [],
         });
       }
 

@@ -27,6 +27,9 @@ function CreateAdminPage() {
       surname: "",
       tokens: [],
       year: "",
+      attachments: [],
+      birthdate: "",
+      talentsAssigned: [],
     });
   }
 

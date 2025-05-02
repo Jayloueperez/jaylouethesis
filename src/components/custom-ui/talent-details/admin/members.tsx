@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bell, ClipboardList, ListCheck, Loader, User2 } from "lucide-react";
+import { Bell, ClipboardList, ListCheck, Loader } from "lucide-react";
 
 import { GenerateReportDialog } from "~/components/dialogs/generate-report-dialog";
 import { ViewProfileDialog } from "~/components/dialogs/view-profile-dialog";

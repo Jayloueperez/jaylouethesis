@@ -86,7 +86,7 @@ function AssignCoachDialog({ coach }: AssignCoachDialogProps) {
     } else {
       form.reset();
     }
-  }, [open, coach]);
+  }, [open, coach, form]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

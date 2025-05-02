@@ -41,6 +41,8 @@ export async function createCoach(data: NewUserFormSchema) {
       status: "confirmed",
       keywords: [],
       tokens: [],
+      attachments: [],
+      birthdate: "",
     });
 
     await signOut(auth2);

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { Loader, User2 } from "lucide-react";
+import { Loader } from "lucide-react";
 
 import { ViewProfileDialog } from "~/components/dialogs/view-profile-dialog";
 import { AdminLayout } from "~/components/layout/admin-layout";
