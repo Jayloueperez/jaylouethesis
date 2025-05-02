@@ -78,6 +78,7 @@ function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
+              <TableHead>Age</TableHead>
               <TableHead>Course</TableHead>
               <TableHead>Year</TableHead>
               <TableHead>Section</TableHead>
@@ -133,6 +134,7 @@ function TalentDetailsStudentMembers(props: TalentDetailsStudentMembersProps) {
                       </span>
                     </div>
                   </TableCell>
+                  <TableCell>{member.age}</TableCell>
                   <TableCell>{member.course}</TableCell>
                   <TableCell>{member.year}</TableCell>
                   <TableCell>{member.section}</TableCell>

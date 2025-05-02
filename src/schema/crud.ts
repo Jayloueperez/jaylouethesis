@@ -29,7 +29,13 @@ export const updateUserInfoSchema = userBaseSchema
     status: true,
     tokens: true,
     talentsAssigned: true,
+    attachments: true,
   })
+  .and(
+    z.object({
+      attachments: z.string().array(),
+    }),
+  )
   .superRefine(
     (
       {

@@ -127,12 +127,8 @@ export default function AdminStudentsPage() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center justify-center gap-2">
-                      <ViewProfileDialog
-                        user={student}
-                        size="icon"
-                        shape="pill"
-                      >
-                        <User2 className="size-4" />
+                      <ViewProfileDialog user={student}>
+                        View Profile
                       </ViewProfileDialog>
                     </div>
                   </TableCell>

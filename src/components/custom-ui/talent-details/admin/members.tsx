@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Bell, ClipboardList, ListCheck, Loader, User2 } from "lucide-react";
 
 import { GenerateReportDialog } from "~/components/dialogs/generate-report-dialog";
+import { ViewProfileDialog } from "~/components/dialogs/view-profile-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
@@ -19,7 +20,6 @@ import { useApplications } from "~/hooks/firestore/use-applications";
 import { getUsersRealtime } from "~/lib/firebase/client/firestore";
 import { TalentSchema, UserSchema } from "~/schema/data-client";
 import { ButtonLink } from "../../button-link";
-import { ViewProfileDialog } from "~/components/dialogs/view-profile-dialog";
 
 interface TalentDetailsAdminMembersProps {
   talent: TalentSchema;
@@ -144,6 +144,7 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
+              <TableHead>Age</TableHead>
               <TableHead>Course</TableHead>
               <TableHead>Year</TableHead>
               <TableHead>Section</TableHead>
@@ -191,13 +192,14 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
                     </span>
                   </div>
                 </TableCell>
+                <TableCell>{member.age}</TableCell>
                 <TableCell>{member.course}</TableCell>
                 <TableCell>{member.year}</TableCell>
                 <TableCell>{member.section}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <ViewProfileDialog user={member} size="icon" shape="pill">
-                      <User2 className="size-4" />
+                    <ViewProfileDialog user={member}>
+                      View Profile
                     </ViewProfileDialog>
                     {/* <Button
                       type="button"

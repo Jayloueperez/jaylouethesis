@@ -144,6 +144,7 @@ function TalentDetailsCoachMembers(props: TalentDetailsCoachMembersProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
+              <TableHead>Age</TableHead>
               <TableHead>Course</TableHead>
               <TableHead>Year</TableHead>
               <TableHead>Section</TableHead>
@@ -191,13 +192,14 @@ function TalentDetailsCoachMembers(props: TalentDetailsCoachMembersProps) {
                     </span>
                   </div>
                 </TableCell>
+                <TableCell>{member.age}</TableCell>
                 <TableCell>{member.course}</TableCell>
                 <TableCell>{member.year}</TableCell>
                 <TableCell>{member.section}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <ViewProfileDialog user={member} size="icon" shape="pill">
-                      <User2 className="size-4" />
+                    <ViewProfileDialog user={member}>
+                      View Profile
                     </ViewProfileDialog>
                     {/* <Button
                       type="button"

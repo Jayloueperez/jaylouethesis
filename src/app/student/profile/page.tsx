@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FileUploaderRegular } from "@uploadcare/react-uploader/next";
+import { uploadDirect } from "@uploadcare/upload-client";
 import { differenceInYears, format, parse } from "date-fns";
 import { useForm } from "react-hook-form";
 
@@ -31,14 +33,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { Separator } from "~/components/ui/separator";
 import { useAlert } from "~/hooks/use-alert";
 import { updateUser } from "~/lib/firebase/client/firestore";
 import { UpdateUserInfoSchema, updateUserInfoSchema } from "~/schema/crud";
 import { useAppSelector } from "~/store";
 import { generateKeywords } from "~/utils/string";
 
+import "@uploadcare/react-uploader/core.css";
+
+import Link from "next/link";
+import { X } from "lucide-react";
+
+import { Label } from "~/components/ui/label";
+import { env } from "~/env";
+
 export default function StudentProfilePage() {
   const [loading, setLoading] = useState<boolean>(false);
+  const [files, setFiles] = useState<File[]>([]);
 
   const { userData } = useAppSelector((state) => state.user);
   const { component, openAlert } = useAlert();
@@ -57,6 +69,7 @@ export default function StudentProfilePage() {
       surname: "",
       year: "",
       birthdate: "",
+      attachments: [],
     },
   });
   const { control, handleSubmit, setValue } = form;
@@ -67,8 +80,17 @@ export default function StudentProfilePage() {
     setLoading(true);
 
     try {
+      const attachments: string[] = [];
+
+      for (const file of files) {
+        const result = await uploadFile(file);
+
+        attachments.push(result);
+      }
+
       await updateUser(userData.id, {
         ...data,
+        attachments: [...userData.attachments, ...attachments],
         keywords: [
           ...generateKeywords(userData.email),
           ...generateKeywords(data.firstName),
@@ -80,6 +102,8 @@ export default function StudentProfilePage() {
         title: "Success",
         description: "Successfully updated user information.",
       });
+
+      setFiles([]);
     } catch (error) {
       console.log("handleUpdateUserInfo error:", error);
 
@@ -90,6 +114,44 @@ export default function StudentProfilePage() {
     }
 
     setLoading(false);
+  }
+
+  async function uploadFile(file: File) {
+    const result = await uploadDirect(file, {
+      publicKey: env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY,
+      store: true,
+    });
+
+    return result.cdnUrl;
+  }
+
+  function handleFileChange(e: ChangeEvent<HTMLInputElement>) {
+    const fileList = e.target.files;
+
+    if (!fileList) return;
+
+    const newFiles = [...files];
+    const currentLength = files.length;
+    const left = 5 - currentLength;
+
+    if (left === 0) {
+      openAlert({
+        title: "Warning",
+        description: "Maximum of 5 files only.",
+      });
+
+      e.target.value = "";
+
+      return;
+    }
+
+    Array.from({
+      length: fileList.length > left ? left : fileList.length,
+    }).forEach((_v, i) => newFiles.push(fileList[i]));
+
+    setFiles(newFiles);
+
+    e.target.value = "";
   }
 
   useEffect(() => {
@@ -118,7 +180,7 @@ export default function StudentProfilePage() {
           </CardDescription>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="flex flex-col gap-6">
           <Form {...form}>
             <form
               onSubmit={handleSubmit(handleUpdateUserInfo)}
@@ -364,12 +426,67 @@ export default function StudentProfilePage() {
                   )}
                 />
 
+                <div className="flex flex-col gap-2 space-y-0">
+                  <Label className="px-1">
+                    Attach Sports/Culture & Arts Background
+                  </Label>
+
+                  <Input
+                    type="file"
+                    onChange={handleFileChange}
+                    accept="image/*,application/pdf,application/msword,.doc,.docx"
+                    multiple
+                  />
+
+                  {files.length > 0 && (
+                    <div className="flex flex-wrap items-center gap-1">
+                      {files.map((f, i) => (
+                        <div
+                          className="flex items-center gap-1 rounded-full border border-gray-300 px-2 py-1 text-xs"
+                          key={`file-${i}`}
+                        >
+                          <span>{f.name}</span>
+
+                          <button
+                            className="shrink-0 cursor-pointer"
+                            type="button"
+                            onClick={() =>
+                              setFiles((v) => v.filter((_f, o) => o !== i))
+                            }
+                          >
+                            <X className="size-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 <Button type="submit" variant="yellow" loading={loading}>
                   Save Changes
                 </Button>
               </div>
             </form>
           </Form>
+
+          <Separator />
+
+          <div className="flex flex-col gap-4">
+            <span>Attachments:</span>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {userData?.attachments.map((a, i) => (
+                <Link
+                  className="rounded-full border border-gray-300 px-2 py-1 text-xs"
+                  key={`attachment-${i}`}
+                  href={a}
+                  target="_blank"
+                >
+                  {a}
+                </Link>
+              ))}
+            </div>
+          </div>
         </CardContent>
       </Card>
 

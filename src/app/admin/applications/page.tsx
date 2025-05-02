@@ -411,8 +411,8 @@ export default function AdminRegistrationsPage() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <ViewProfileDialog user={user} size="icon" shape="pill">
-                          <User2 className="size-4" />
+                        <ViewProfileDialog user={user}>
+                          View Profile
                         </ViewProfileDialog>
 
                         <ButtonLink

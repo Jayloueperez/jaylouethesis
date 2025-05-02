@@ -35,6 +35,7 @@ export const userBaseSchema = z.object({
   tokens: z.string().array(),
   status: userStatusSchema.default("pending"),
   talentsAssigned: z.string().array().default([]),
+  attachments: z.string().array().default([]),
 });
 export type UserBaseSchema = z.infer<typeof userBaseSchema>;
 

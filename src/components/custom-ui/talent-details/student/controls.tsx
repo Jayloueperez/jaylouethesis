@@ -269,7 +269,15 @@ function TalentDetailsStudentControls(
         <Button
           variant="yellow"
           loading={loadingState === "joining"}
-          onClick={() => setOpenState("join-talent")}
+          onClick={() =>
+            handleJoin({
+              message: "",
+              status: "pending",
+              talentId: talent.id,
+              talentType: talent.type,
+              userId: userData?.id,
+            })
+          }
         >
           <Plus className="size-4" />
 
