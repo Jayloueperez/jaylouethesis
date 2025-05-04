@@ -59,6 +59,8 @@ export default function StudentInfoPage() {
       section: "",
       surname: "",
       year: "",
+      attachments: [],
+      birthdate: "",
     },
   });
   const { control, handleSubmit, setValue } = form;
