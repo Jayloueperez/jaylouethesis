@@ -106,7 +106,7 @@ function StudentLayout(props: StudentLayoutProps) {
         className={cn(
           "min-h mt-[calc(theme('spacing.24')+4px)] ml-24 flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col lg:ml-64",
           className,
-          sidebarHidden && "ml-0",
+          sidebarHidden && "ml-0 lg:ml-0",
         )}
       >
         {children}
