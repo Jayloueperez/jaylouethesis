@@ -123,7 +123,7 @@ function TalentDetailsAdminMembers(props: TalentDetailsAdminMembersProps) {
             <span>
               {applicationsCount > 0
                 ? `${applicationsCount} New ${applicationsCount === 1 ? "Applicant" : "Applicants"}`
-                : "View Applications"}
+                : "View Applicants"}
             </span>
           </ButtonLink>
 

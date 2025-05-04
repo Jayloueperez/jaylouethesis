@@ -258,7 +258,7 @@ export default function Page() {
               {!applicationsLoading && filteredApplications.length === 0 && (
                 <TableRow>
                   <TableCell className="text-center text-gray-500" colSpan={5}>
-                    No student applications.
+                    No student applicants.
                   </TableCell>
                 </TableRow>
               )}

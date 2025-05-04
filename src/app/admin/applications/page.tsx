@@ -358,7 +358,7 @@ export default function AdminRegistrationsPage() {
               <TableRow>
                 <TableCell className="text-center" colSpan={7}>
                   <span className="text-gray-500">
-                    No student applications.
+                    No student applicants.
                   </span>
                 </TableCell>
               </TableRow>

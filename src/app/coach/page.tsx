@@ -30,7 +30,7 @@ export default function CoachPage() {
     <CoachLayout className="gap-4 p-4">
       <div className="grid grid-cols-1 gap-4">
         <Card className="border-b-flush-orange-500 flex flex-col gap-4 border-b-4 bg-violet-950 p-4 text-white">
-          <span>Pending Applications</span>
+          <span>Pending Applicants</span>
 
           <div className="flex h-16 items-center">
             {pendingApplicationsLoading ? (
@@ -83,7 +83,7 @@ export default function CoachPage() {
                     <TableCell colSpan={6}>
                       <div className="flex items-center justify-center">
                         <span className="text-center text-gray-500">
-                          No pending applications.
+                          No pending applicants.
                         </span>
                       </div>
                     </TableCell>
