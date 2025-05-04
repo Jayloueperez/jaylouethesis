@@ -8,6 +8,7 @@ import { ButtonLink } from "~/components/custom-ui/button-link";
 import { Loading } from "~/components/custom-ui/loading";
 import { BooleanDialog } from "~/components/dialogs/boolean-dialog";
 import { ScheduleTryoutDialog } from "~/components/dialogs/schedule-tryout-dialog";
+import { ViewProfileDialog } from "~/components/dialogs/view-profile-dialog";
 import { AdminLayout } from "~/components/layout/admin-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -324,6 +325,10 @@ export default function Page() {
                               </Button>
                             </>
                           )}
+
+                          <ViewProfileDialog user={application.user}>
+                            View Profile
+                          </ViewProfileDialog>
 
                           {/* {status === "tryout" && (
                             <>
