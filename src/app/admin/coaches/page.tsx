@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
+import _ from "lodash";
 import { Loader } from "lucide-react";
 
 import { AssignCoachDialog } from "~/components/dialogs/assign-coach-dialog";
@@ -19,8 +20,11 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { getUsersRealtime } from "~/lib/firebase/client/firestore";
-import { UserSchema } from "~/schema/data-client";
+import {
+  getTalentsRealtime,
+  getUsersRealtime,
+} from "~/lib/firebase/client/firestore";
+import { TalentSchema, UserSchema } from "~/schema/data-client";
 
 function toLowerTrim(s: string) {
   return s.toLowerCase().trim();
@@ -31,6 +35,7 @@ export default function AdminCoachesPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [search, setSearch] = useState<string>("");
   const [open, setOpen] = useState<boolean>(false);
+  const [talents, setTalents] = useState<TalentSchema[]>([]);
 
   const filteredCoaches = coaches.filter((t) => {
     const lowerSearch = toLowerTrim(search);
@@ -52,6 +57,18 @@ export default function AdminCoachesPage() {
 
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    const talentIds = coaches.reduce((p, c) => {
+      return _.uniq([...p, ...c.talentsAssigned]);
+    }, [] as string[]);
+
+    if (talentIds.length === 0) return;
+
+    const unsubscribe = getTalentsRealtime({ ids: talentIds })(setTalents);
+
+    return unsubscribe;
+  }, [coaches]);
 
   return (
     <AdminLayout className="gap-4 p-4">
@@ -78,6 +95,7 @@ export default function AdminCoachesPage() {
               <TableHead className="w-16"></TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
+              <TableHead>Assigned To</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date Created</TableHead>
               <TableHead className="w-36 text-center"></TableHead>
@@ -106,35 +124,43 @@ export default function AdminCoachesPage() {
             )}
 
             {!loading &&
-              filteredCoaches.map((coach) => (
-                <TableRow key={coach.id}>
-                  <TableCell>
-                    <Avatar className="size-12">
-                      <AvatarImage
-                        src={coach.profile}
-                        alt={coach.firstName[0].toUpperCase()}
-                      />
+              filteredCoaches.map((coach) => {
+                const coachTalents = talents.filter((t) =>
+                  coach.talentsAssigned.includes(t.id),
+                );
+                const coachTalentsName = coachTalents.map((ct) => ct.name);
 
-                      <AvatarFallback>
-                        {coach.firstName[0].toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  </TableCell>
-                  <TableCell>
-                    {coach.firstName}{" "}
-                    {coach.middleInitial ? `${coach.middleInitial}.` : ""}{" "}
-                    {coach.surname}
-                  </TableCell>
-                  <TableCell>{coach.email}</TableCell>
-                  <TableCell className="uppercase">{coach.status}</TableCell>
-                  <TableCell className="uppercase">
-                    {format(coach.dateCreated, "MMM dd, yyyy")}
-                  </TableCell>
-                  <TableCell>
-                    <AssignCoachDialog coach={coach} />
-                  </TableCell>
-                </TableRow>
-              ))}
+                return (
+                  <TableRow key={coach.id}>
+                    <TableCell>
+                      <Avatar className="size-12">
+                        <AvatarImage
+                          src={coach.profile}
+                          alt={coach.firstName[0].toUpperCase()}
+                        />
+
+                        <AvatarFallback>
+                          {coach.firstName[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </TableCell>
+                    <TableCell>
+                      {coach.firstName}{" "}
+                      {coach.middleInitial ? `${coach.middleInitial}.` : ""}{" "}
+                      {coach.surname}
+                    </TableCell>
+                    <TableCell>{coach.email}</TableCell>
+                    <TableCell>{coachTalentsName.join(", ")}</TableCell>
+                    <TableCell className="uppercase">{coach.status}</TableCell>
+                    <TableCell className="uppercase">
+                      {format(coach.dateCreated, "MMM dd, yyyy")}
+                    </TableCell>
+                    <TableCell>
+                      <AssignCoachDialog coach={coach} />
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </Card>

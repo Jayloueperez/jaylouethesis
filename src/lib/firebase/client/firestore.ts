@@ -248,15 +248,17 @@ export function getUsersRealtime(params?: {
   ids?: string[];
   role?: UserRoleSchema;
   roles?: UserRoleSchema[];
+  talentId?: string;
 }) {
   return function (callback: (users: UserSchema[]) => void) {
-    const { ids, role, roles } = params ?? {};
+    const { ids, role, roles, talentId } = params ?? {};
 
     let q = query(USERS_COLLECTION);
 
     if (ids && ids.length > 0) q = query(q, where("id", "in", ids));
     if (role) q = query(q, where("role", "==", role));
     if (roles && roles.length > 0) q = query(q, where("role", "in", roles));
+    if (talentId) q = query(q, where("talentsAssigned", "array-contains", talentId));
 
     return onSnapshot(q, (snapshot) => {
       if (snapshot.size === 0) return callback([]);

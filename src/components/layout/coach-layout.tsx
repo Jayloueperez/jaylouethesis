@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Drama, Home, ListTodo, Megaphone, Volleyball } from "lucide-react";
+import { Drama, Home, ListTodo, Megaphone, NotebookPen, Volleyball } from "lucide-react";
 
 import { cn } from "~/lib/utils";
 import { useAppSelector } from "~/store";
@@ -79,6 +79,14 @@ function CoachLayout(props: CoachLayoutProps) {
           active={pathname.startsWith("/coach/applications")}
         >
           Applicants
+        </SidebarLink>
+
+        <SidebarLink
+          href="/coach/assigned-roles"
+          icon={NotebookPen}
+          active={pathname.startsWith("/coach/assigned-roles")}
+        >
+          Assigned Roles
         </SidebarLink>
 
         {/* <SidebarLink

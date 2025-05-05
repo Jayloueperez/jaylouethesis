@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
 import { GenerateApplicationReportDialog } from "~/components/dialogs/generate-application-report-dialog";
@@ -11,6 +11,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import { Input } from "~/components/ui/input";
 import {
   Select,
@@ -269,6 +275,32 @@ export default function CoachRegistrationsPage() {
             </SelectContent>
           </Select>
         </div>
+
+        {selectedApplications.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-2 rounded-md border px-3 py-2">
+              <span>Bulk Action</span>
+
+              <ChevronDown className="size-4" />
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                className="text-center hover:bg-green-100"
+                onClick={() => handleBulkAction("accepted")}
+              >
+                <span>Accept</span>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem
+                className="text-center hover:bg-red-100"
+                onClick={() => handleBulkAction("rejected")}
+              >
+                <span>Reject</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
       </div>
 
       <Card className="p-0">
@@ -402,6 +434,8 @@ export default function CoachRegistrationsPage() {
         open={open}
         onOpenChange={setOpen}
       />
+
+      {component}
     </CoachLayout>
   );
 }

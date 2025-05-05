@@ -18,8 +18,9 @@ import {
 import {
   getReportsRealtime,
   getTalentsRealtime,
+  getUsersRealtime,
 } from "~/lib/firebase/client/firestore";
-import { ReportSchema, TalentSchema } from "~/schema/data-client";
+import { ReportSchema, TalentSchema, UserSchema } from "~/schema/data-client";
 import { useAppSelector } from "~/store";
 import { ButtonLink } from "../button-link";
 import { Loading } from "../loading";
@@ -47,6 +48,7 @@ function TalentDetails(props: TalentDetailsProps) {
   const [selectedReport, setSelectedReport] = useState<ReportSchema | null>(
     null,
   );
+  const [coaches, setCoaches] = useState<UserSchema[]>([]);
 
   const { userData, loading: userDataLoading } = useAppSelector(
     (state) => state.user,
@@ -71,6 +73,12 @@ function TalentDetails(props: TalentDetailsProps) {
     const unsubscribe = getReportsRealtime({ talentId: talent.id })((v) => {
       setReports(v);
     });
+
+    return unsubscribe;
+  }, [talent]);
+
+  useEffect(() => {
+    const unsubscribe = getUsersRealtime({ talentId: talent.id })(setCoaches);
 
     return unsubscribe;
   }, [talent]);
@@ -127,6 +135,25 @@ function TalentDetails(props: TalentDetailsProps) {
         </div>
       </div>
       {/* HEADER */}
+
+      <div className="flex flex-col gap-2">
+        <span className="text-lg">Assigned Coaches: </span>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {coaches.map((coach) => (
+            <div
+              key={coach.id}
+              className="bg-flush-orange-600 rounded-full px-2 py-1 text-white"
+            >
+              <span>
+                {coach.firstName}{" "}
+                {coach.middleInitial ? `${coach.middleInitial}.` : ""}{" "}
+                {coach.surname}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
 
       {(talent.type === "sports" ||
         (talent.type === "culture-and-arts" && talent.node === "child")) && (
