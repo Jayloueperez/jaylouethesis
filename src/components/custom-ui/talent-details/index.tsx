@@ -143,7 +143,7 @@ function TalentDetails(props: TalentDetailsProps) {
           {coaches.map((coach) => (
             <div
               key={coach.id}
-              className="bg-flush-orange-600 rounded-full px-2 py-1 text-white"
+              className="bg-flush-orange-600 rounded-full px-3 py-1 text-white"
             >
               <span>
                 {coach.firstName}{" "}

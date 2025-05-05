@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { format, parse } from "date-fns";
 
 import { UserSchema } from "~/schema/data-client";
@@ -13,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import { Separator } from "../ui/separator";
 
 interface ViewProfileDialogProps extends ButtonProps {
   user: UserSchema;
@@ -35,7 +37,9 @@ function ViewProfileDialog({
         <DialogHeader>
           <DialogTitle>{user.firstName}&apos;s Profile</DialogTitle>
 
-          <DialogDescription>Viewing a {user.role}&apos;s profile</DialogDescription>
+          <DialogDescription>
+            Viewing a {user.role}&apos;s profile
+          </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-8">
@@ -87,6 +91,25 @@ function ViewProfileDialog({
               </tr>
             </tbody>
           </table>
+
+          <Separator />
+
+          <div className="flex flex-col gap-4">
+            <span>Attachments:</span>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {user.attachments.map((a, i) => (
+                <Link
+                  className="rounded-full border border-gray-300 px-2 py-1 text-xs"
+                  key={`attachment-${i}`}
+                  href={a}
+                  target="_blank"
+                >
+                  {a}
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
