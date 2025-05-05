@@ -331,6 +331,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
                       />
                     </TableHead>
                     <TableHead>Name</TableHead>
+                    <TableHead>Age</TableHead>
                     <TableHead>Course</TableHead>
                     <TableHead>Year</TableHead>
                     <TableHead>Section</TableHead>
@@ -394,6 +395,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
                           </span>
                         </div>
                       </TableCell>
+                      <TableCell>{member.age}</TableCell>
                       <TableCell>{member.course}</TableCell>
                       <TableCell>{member.year}</TableCell>
                       <TableCell>{member.section}</TableCell>

@@ -10,6 +10,7 @@ import { CoachLayout } from "~/components/layout/coach-layout";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Card } from "~/components/ui/card";
+import { Checkbox } from "~/components/ui/checkbox";
 import { Input } from "~/components/ui/input";
 import {
   Select,
@@ -29,6 +30,8 @@ import {
 import { collages, courses } from "~/const/courses";
 import { talentTypeText } from "~/const/text";
 import { useApplications } from "~/hooks/firestore/use-applications";
+import { useAlert } from "~/hooks/use-alert";
+import { updateApplications } from "~/lib/firebase/client/firestore";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 
 export default function CoachRegistrationsPage() {
@@ -46,8 +49,12 @@ export default function CoachRegistrationsPage() {
     status: "all",
   });
   const [open, setOpen] = useState<boolean>(false);
+  const [selectedApplications, setSelectedApplications] = useState<string[]>(
+    [],
+  );
 
   const { data: applications, loading } = useApplications();
+  const { component, openAlert } = useAlert();
 
   const filteredApplications = applications.filter((a) => {
     const { user, talent } = a;
@@ -75,6 +82,45 @@ export default function CoachRegistrationsPage() {
       filterStatus
     );
   });
+
+  const toggleSelect = (applicationId: string) => {
+    const exist = selectedApplications.includes(applicationId);
+
+    if (exist) {
+      setSelectedApplications((v) => v.filter((aid) => aid !== applicationId));
+    } else {
+      setSelectedApplications((v) => [...v, applicationId]);
+    }
+  };
+
+  const handleBulkAction = async (status: ApplicationStatusSchema) => {
+    try {
+      const filteredSelectedApplications = selectedApplications.filter(
+        (aid) => {
+          const aData = filteredApplications.find((a) => a.id === aid);
+
+          return aData ? aData.status === "pending" : true;
+        },
+      );
+
+      await updateApplications(filteredSelectedApplications, {
+        status,
+      });
+
+      openAlert({
+        title: "Success",
+        description: `Successfully ${status} applications.`,
+      });
+      setSelectedApplications([]);
+    } catch (error) {
+      console.log("handleBulkAction error:", error);
+
+      openAlert({
+        title: "Failed",
+        description: `Failed updating applications status.`,
+      });
+    }
+  };
 
   return (
     <CoachLayout className="gap-4 p-4">
@@ -229,21 +275,26 @@ export default function CoachRegistrationsPage() {
         <Table>
           <TableHeader>
             <TableRow>
-              {/* <TableHead className="w-12">
+              <TableHead className="w-12">
                 <Checkbox
-                  checked={all}
-                  onCheckedChange={(v) => {
-                    if (!!v) {
-                      setAll(true);
-                      setSelected(applications.map((d) => d.id));
+                  checked={
+                    selectedApplications.length === filteredApplications.length
+                  }
+                  onCheckedChange={() => {
+                    if (
+                      selectedApplications.length ===
+                      filteredApplications.length
+                    ) {
+                      setSelectedApplications([]);
                     } else {
-                      setAll(false);
-                      setSelected([]);
+                      setSelectedApplications(
+                        filteredApplications.map((a) => a.id),
+                      );
                     }
                   }}
-                  disabled={applications.length === 0}
+                  disabled={filteredApplications.length === 0}
                 />
-              </TableHead> */}
+              </TableHead>
               <TableHead>Name</TableHead>
               <TableHead>Sports/Culture & Arts</TableHead>
               <TableHead>Sports/Culture & Arts Name</TableHead>
@@ -268,9 +319,7 @@ export default function CoachRegistrationsPage() {
             {!loading && filteredApplications.length === 0 && (
               <TableRow>
                 <TableCell className="text-center" colSpan={7}>
-                  <span className="text-gray-500">
-                    No student applicants.
-                  </span>
+                  <span className="text-gray-500">No student applicants.</span>
                 </TableCell>
               </TableRow>
             )}
@@ -282,14 +331,12 @@ export default function CoachRegistrationsPage() {
 
                 return (
                   <TableRow key={id}>
-                    {/* <TableCell>
+                    <TableCell>
                       <Checkbox
-                        checked={selected.includes(application.id)}
-                        onCheckedChange={() =>
-                          handleToggleApplication(application.id)
-                        }
+                        checked={selectedApplications.includes(application.id)}
+                        onCheckedChange={() => toggleSelect(application.id)}
                       />
-                    </TableCell> */}
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-4">
                         <Avatar className="size-12">
