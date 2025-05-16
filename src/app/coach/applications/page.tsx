@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import _ from "lodash";
 import { ArrowRight, ChevronDown } from "lucide-react";
 
 import { ButtonLink } from "~/components/custom-ui/button-link";
@@ -37,7 +38,11 @@ import { collages, courses } from "~/const/courses";
 import { talentTypeText } from "~/const/text";
 import { useApplications } from "~/hooks/firestore/use-applications";
 import { useAlert } from "~/hooks/use-alert";
-import { updateApplications } from "~/lib/firebase/client/firestore";
+import {
+  updateApplications,
+  updateTalent,
+  updateTalentAddMembers,
+} from "~/lib/firebase/client/firestore";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 
 export default function CoachRegistrationsPage() {
@@ -108,10 +113,47 @@ export default function CoachRegistrationsPage() {
           return aData ? aData.status === "pending" : true;
         },
       );
+      const selectedApplicationsWithData = filteredSelectedApplications
+        .map((applicationId) => {
+          const applicationData = applications.find(
+            (a) => a.id === applicationId,
+          );
 
-      await updateApplications(filteredSelectedApplications, {
+          return applicationData ?? null;
+        })
+        .filter((a) => !!a);
+
+      if (selectedApplicationsWithData.length === 0) {
+        openAlert({
+          title: "Success",
+          description: "Nothing to update.",
+        });
+        setSelectedApplications([]);
+        return;
+      }
+
+      const selectedApplicationsWithDataIds = selectedApplicationsWithData.map(
+        (a) => a.id,
+      );
+
+      await updateApplications(selectedApplicationsWithDataIds, {
         status,
       });
+
+      if (status === "accepted") {
+        const groupedByTalent = _.groupBy(
+          selectedApplicationsWithData,
+          (a) => a.talentId,
+        );
+        const promises = _.map(groupedByTalent, (v, k) => {
+          return updateTalentAddMembers(
+            k,
+            v.map((a) => a.userId),
+          );
+        });
+
+        await Promise.all(promises);
+      }
 
       openAlert({
         title: "Success",

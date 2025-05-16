@@ -258,7 +258,8 @@ export function getUsersRealtime(params?: {
     if (ids && ids.length > 0) q = query(q, where("id", "in", ids));
     if (role) q = query(q, where("role", "==", role));
     if (roles && roles.length > 0) q = query(q, where("role", "in", roles));
-    if (talentId) q = query(q, where("talentsAssigned", "array-contains", talentId));
+    if (talentId)
+      q = query(q, where("talentsAssigned", "array-contains", talentId));
 
     return onSnapshot(q, (snapshot) => {
       if (snapshot.size === 0) return callback([]);
@@ -309,6 +310,24 @@ export async function updateTalent(id: string, data: UpdateTalentInputSchema) {
     });
   } catch (error) {
     console.log("updateTalent error:", error);
+    const err = getError(error, "Failed updating talent.");
+
+    throw err;
+  }
+}
+
+export async function updateTalentAddMembers(id: string, memberIds: string[]) {
+  try {
+    const ref = doc(TALENTS_COLLECTION, id);
+
+    const currentData = await getTalent(id);
+
+    return updateDoc(ref, {
+      members: _.uniq([...currentData.members, ...memberIds]),
+      dateUpdated: new Date(),
+    });
+  } catch (error) {
+    console.log("updateTalentAddMembers error:", error);
     const err = getError(error, "Failed updating talent.");
 
     throw err;
