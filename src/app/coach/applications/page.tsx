@@ -40,7 +40,6 @@ import { useApplications } from "~/hooks/firestore/use-applications";
 import { useAlert } from "~/hooks/use-alert";
 import {
   updateApplications,
-  updateTalent,
   updateTalentAddMembers,
 } from "~/lib/firebase/client/firestore";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
