@@ -20,7 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { collages, courses } from "~/const/courses";
+import { colleges, courses } from "~/const/courses";
 import { useAlert } from "~/hooks/use-alert";
 import { usePdf } from "~/hooks/use-pdf";
 import {
@@ -54,10 +54,10 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
   const [members, setMembers] = useState<UserSchema[]>([]);
   const [title, setTitle] = useState<string>("");
   const [filter, setFilter] = useState<{
-    collage: string;
+    college: string;
     course: string;
     gender: string;
-  }>({ collage: "all", course: "all", gender: "all" });
+  }>({ college: "all", course: "all", gender: "all" });
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
 
   const { toPDF, targetRef } = usePdf({
@@ -68,16 +68,16 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
   const filteredMembers = members.filter((m) => {
     const courseObj = courses.find((c) => c.id === m.course);
 
-    const filterCollage =
-      filter.collage === "all" || !courseObj
+    const filterCollege =
+      filter.college === "all" || !courseObj
         ? true
-        : courseObj.collage === filter.collage;
+        : courseObj.college === filter.college;
     const filterCourse =
       filter.course === "all" ? true : m.course === filter.course;
     const filterGender =
       filter.gender === "all" ? true : m.gender === filter.gender;
 
-    return filterCollage && filterCourse && filterGender;
+    return filterCollege && filterCourse && filterGender;
   });
 
   async function handleDownload() {
@@ -169,26 +169,26 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
 
               <div className="flex items-center gap-2">
                 <div className="flex items-center gap-2">
-                  <span>Collage:</span>
+                  <span>College:</span>
 
                   <Select
-                    value={filter.collage}
+                    value={filter.college}
                     onValueChange={(v) => {
                       setSelectedMembers([]);
                       setFilter((f) => ({
                         ...f,
-                        collage: v,
+                        college: v,
                         course: "all",
                       }));
                     }}
                   >
                     <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Filter by collage" />
+                      <SelectValue placeholder="Filter by college" />
                     </SelectTrigger>
 
                     <SelectContent>
                       <SelectItem value="all">All</SelectItem>
-                      {collages.map((c) => (
+                      {colleges.map((c) => (
                         <SelectItem key={c.id} value={c.id}>
                           {c.name}
                         </SelectItem>
@@ -218,9 +218,9 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
                       <SelectItem value="all">All</SelectItem>
                       {courses
                         .filter((c) =>
-                          filter.collage === "all"
+                          filter.college === "all"
                             ? true
-                            : filter.collage === c.collage,
+                            : filter.college === c.college,
                         )
                         .map((c) => (
                           <SelectItem key={c.id} value={c.id}>
