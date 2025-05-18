@@ -100,7 +100,7 @@ function TalentDetails(props: TalentDetailsProps) {
           </ButtonLink>
         )}
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col items-center gap-4 lg:flex-row">
           <Avatar className="size-40">
             <AvatarImage src={talent.image} alt={talent.name} />
 
@@ -114,7 +114,7 @@ function TalentDetails(props: TalentDetailsProps) {
             <span className="">{talent.description}</span>
 
             {/* CONTROLS */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {userData.role === "admin" && (
                 <TalentDetailsAdminControls talent={talent} />
               )}

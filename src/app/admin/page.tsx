@@ -68,7 +68,7 @@ export default function AdminPage() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <span className="text-xl font-medium">Pending Applicants</span>
 
           <ButtonLink href="/admin/applications" variant="yellow" size="sm">

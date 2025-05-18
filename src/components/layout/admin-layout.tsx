@@ -52,7 +52,7 @@ function AdminLayout(props: AdminLayoutProps) {
     <div className="relative flex min-h-screen flex-col">
       <Header dashboard />
 
-      <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-24 flex-col gap-2 overflow-auto bg-violet-950 p-4 text-white lg:w-64">
+      <div className="fixed top-[calc(theme('spacing.24')+4px)] bottom-0 left-0 z-50 flex h-[calc(100vh-theme('spacing.24')-4px)] w-20 flex-col gap-2 overflow-auto bg-violet-950 p-2 text-white lg:w-64 lg:p-4">
         <SidebarLink href="/admin" icon={Home} active={pathname === "/admin"}>
           Home
         </SidebarLink>
@@ -116,7 +116,7 @@ function AdminLayout(props: AdminLayoutProps) {
 
       <main
         className={cn(
-          "min-h mt-[calc(theme('spacing.24')+4px)] ml-24 flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col lg:ml-64",
+          "mt-[calc(theme('spacing.24')+4px)] ml-20 flex min-h-[calc(100vh-theme('spacing.24')-4px)] flex-col lg:ml-64",
           className,
         )}
       >

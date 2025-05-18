@@ -45,7 +45,7 @@ export default function CoachPage() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <span className="text-xl font-medium">Pending Applications</span>
 
           <ButtonLink href="/coach/applications" variant="yellow" size="sm">

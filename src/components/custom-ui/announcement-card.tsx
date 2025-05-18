@@ -33,7 +33,7 @@ function AnnouncementCard(props: AnnouncementCardProps) {
       <div className="flex flex-col">
         <span className="text-xl font-medium">{announcement.title}</span>
 
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
           <span className="text-sm uppercase">{announcement.subject}</span>
 
           <span className="text-sm">{typeText[announcement.type]}</span>
@@ -44,7 +44,7 @@ function AnnouncementCard(props: AnnouncementCardProps) {
 
       <span className="line-clamp-3 flex-1">{announcement.description}</span>
 
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <span className="text-sm font-light uppercase">
           {format(announcement.date, "MMM dd, yyyy @ hh:mma")}
         </span>

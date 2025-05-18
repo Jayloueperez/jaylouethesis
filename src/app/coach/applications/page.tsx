@@ -171,12 +171,12 @@ export default function CoachRegistrationsPage() {
 
   return (
     <CoachLayout className="gap-4 p-4">
-      <div className="flex h-16 items-center justify-between">
+      <div className="flex lg:h-16 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <span className="text-xl font-medium">
           Sports/Culture & Arts Student Applicants
         </span>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Input placeholder="Search..." />
 
           <Button variant="blue" onClick={() => setOpen(true)}>

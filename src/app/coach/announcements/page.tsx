@@ -31,10 +31,10 @@ export default function CoachAnnouncementsPage() {
 
   return (
     <CoachLayout className="gap-4 p-4">
-      <div className="flex h-16 items-center justify-between">
+      <div className="flex lg:h-16 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <span className="text-xl font-medium">Announcements</span>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-2">
             <span>Sort:</span>
 

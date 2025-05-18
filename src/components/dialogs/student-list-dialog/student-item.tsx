@@ -137,7 +137,7 @@ function StudentItem(props: StudentItemProps) {
 
   return (
     <>
-      <div className="flex items-center justify-between gap-4 rounded-lg border-b border-gray-300 border-b-gray-300 py-2 last:border-b-0">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border-b border-gray-300 border-b-gray-300 py-2 last:border-b-0">
         <div className="flex flex-col">
           <div className="flex items-center gap-2">
             <Avatar className="size-12">

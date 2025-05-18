@@ -112,7 +112,7 @@ function Component() {
   return (
     <CoachLayout className="gap-8 p-4">
       {/* HEADER */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <ButtonLink
             variant="outline"

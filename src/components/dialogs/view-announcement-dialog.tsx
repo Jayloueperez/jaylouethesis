@@ -53,7 +53,7 @@ function ViewAnnouncementDialog(props: ViewAnnouncementDialogProps) {
         <DialogHeader>
           <DialogTitle>{announcement.title}</DialogTitle>
 
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <span className="text-sm uppercase">{announcement.subject}</span>
 
             <span className="text-sm">{typeText[announcement.type]}</span>

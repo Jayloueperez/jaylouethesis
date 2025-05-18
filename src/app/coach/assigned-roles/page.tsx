@@ -46,7 +46,7 @@ function AssignedRolePage() {
 
   return (
     <CoachLayout className="gap-4 p-4">
-      <div className="flex h-16 items-center justify-between">
+      <div className="flex lg:h-16 flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <span className="text-xl font-medium">Assigned Roles</span>
       </div>
 
