@@ -39,17 +39,17 @@ const courses = [
     collage: "CCIS",
   },
   {
-    id: "BSET",
+    id: "BSELEC",
     name: "Bachelor of Science in Electrical Technology",
     collage: "CTAS",
   },
   {
-    id: "BSEET",
+    id: "BSELEX",
     name: "Bachelor of Science in Electronics Technology",
     collage: "CTAS",
   },
   {
-    id: "BSIT-FPM",
+    id: "BSIT-FPSM",
     name: "Bachelor of Science in Industrial Technology Major in Food Preparation Services Management",
     collage: "CTAS",
   },
