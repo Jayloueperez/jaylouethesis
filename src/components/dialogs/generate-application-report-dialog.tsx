@@ -28,6 +28,7 @@ import { usePdf } from "~/hooks/use-pdf";
 import { ApplicationStatusSchema, TalentTypeSchema } from "~/schema/data-base";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { Input } from "../ui/input";
 import {
   Select,
   SelectContent,
@@ -47,6 +48,7 @@ function GenerateApplicationReportDialog(
 ) {
   const { applications, ...rest } = props;
 
+  const [title, setTitle] = useState<string>("");
   const [generating, setGenerating] = useState<boolean>(false);
   const [filter, setFilter] = useState<{
     college: string;
@@ -138,6 +140,17 @@ function GenerateApplicationReportDialog(
 
           <div className="flex flex-1 flex-col gap-8">
             <div className="flex flex-wrap items-center gap-2">
+              <div className="flex items-center gap-2">
+                <span>Title:</span>
+
+                <Input
+                  wrapperClassName="flex-1"
+                  placeholder="Report Title"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </div>
+
               <div className="flex items-center gap-2">
                 <span className="shrink-0">Type:</span>
 
@@ -320,6 +333,10 @@ function GenerateApplicationReportDialog(
                   />
                 </div>
               </div>
+
+              {!!title && (
+                <span className="text-center text-xl font-medium">{title}</span>
+              )}
 
               <Table>
                 <TableHeader>
