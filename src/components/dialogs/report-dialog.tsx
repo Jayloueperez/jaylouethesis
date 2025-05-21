@@ -44,10 +44,11 @@ interface ReportDialogProps {
   onOpenChange?: (open: boolean) => void;
   talent: TalentSchema;
   report: ReportSchema | null;
+  hideActions?: boolean;
 }
 
 function ReportDialog(props: ReportDialogProps) {
-  const { talent, report, ...rest } = props;
+  const { talent, report, hideActions = false, ...rest } = props;
 
   const [loading, setLoading] = useState<boolean>(true);
   const [generating, setGenerating] = useState<boolean>(false);
@@ -150,43 +151,45 @@ function ReportDialog(props: ReportDialogProps) {
           </DialogHeader>
 
           <div className="flex flex-1 flex-col gap-8">
-            <div className="flex flex-col gap-2">
-              <div className="flex flex-1 items-center gap-2">
-                <span>Title:</span>
+            {!hideActions && (
+              <div className="flex flex-col gap-2">
+                <div className="flex flex-1 items-center gap-2">
+                  <span>Title:</span>
 
-                <Input
-                  wrapperClassName="flex-1"
-                  placeholder="Report Title"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
+                  <Input
+                    wrapperClassName="flex-1"
+                    placeholder="Report Title"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span>Gender:</span>
+
+                  <Select
+                    value={filter.gender}
+                    onValueChange={(v) => {
+                      setSelectedMembers([]);
+                      setFilter((f) => ({
+                        ...f,
+                        gender: v,
+                      }));
+                    }}
+                  >
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="Filter by gender" />
+                    </SelectTrigger>
+
+                    <SelectContent>
+                      <SelectItem value="all">All</SelectItem>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
-
-              <div className="flex items-center gap-2">
-                <span>Gender:</span>
-
-                <Select
-                  value={filter.gender}
-                  onValueChange={(v) => {
-                    setSelectedMembers([]);
-                    setFilter((f) => ({
-                      ...f,
-                      gender: v,
-                    }));
-                  }}
-                >
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Filter by gender" />
-                  </SelectTrigger>
-
-                  <SelectContent>
-                    <SelectItem value="all">All</SelectItem>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+            )}
 
             <div
               ref={targetRef}
@@ -243,21 +246,23 @@ function ReportDialog(props: ReportDialogProps) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead data-html2canvas-ignore>
-                      <Checkbox
-                        checked={
-                          filteredMembers.length > 0 &&
-                          filteredMembers.length === selectedMembers.length
-                        }
-                        onCheckedChange={() =>
-                          setSelectedMembers((mIds) =>
-                            mIds.length === filteredMembers.length
-                              ? []
-                              : filteredMembers.map((m) => m.id),
-                          )
-                        }
-                      />
-                    </TableHead>
+                    {!hideActions && (
+                      <TableHead data-html2canvas-ignore>
+                        <Checkbox
+                          checked={
+                            filteredMembers.length > 0 &&
+                            filteredMembers.length === selectedMembers.length
+                          }
+                          onCheckedChange={() =>
+                            setSelectedMembers((mIds) =>
+                              mIds.length === filteredMembers.length
+                                ? []
+                                : filteredMembers.map((m) => m.id),
+                            )
+                          }
+                        />
+                      </TableHead>
+                    )}
                     <TableHead>Name</TableHead>
                     <TableHead>Course</TableHead>
                     <TableHead>Year</TableHead>
@@ -299,12 +304,16 @@ function ReportDialog(props: ReportDialogProps) {
                         ? {}
                         : { "data-html2canvas-ignore": true })}
                     >
-                      <TableCell data-html2canvas-ignore>
-                        <Checkbox
-                          checked={selectedMembers.includes(member.id)}
-                          onCheckedChange={() => handleToggleSelect(member.id)}
-                        />
-                      </TableCell>
+                      {!hideActions && (
+                        <TableCell data-html2canvas-ignore>
+                          <Checkbox
+                            checked={selectedMembers.includes(member.id)}
+                            onCheckedChange={() =>
+                              handleToggleSelect(member.id)
+                            }
+                          />
+                        </TableCell>
+                      )}
                       <TableCell>
                         <div className="flex items-center gap-4">
                           <Avatar className="size-12">
@@ -332,17 +341,19 @@ function ReportDialog(props: ReportDialogProps) {
             </div>
           </div>
 
-          <DialogFooter>
-            <Button
-              variant="blue"
-              disabled={selectedMembers.length === 0}
-              onClick={handleDownload}
-              loading={generating}
-            >
-              <span>Proceed</span>
-              <ArrowRight className="size-4" />
-            </Button>
-          </DialogFooter>
+          {!hideActions && (
+            <DialogFooter>
+              <Button
+                variant="blue"
+                disabled={selectedMembers.length === 0}
+                onClick={handleDownload}
+                loading={generating}
+              >
+                <span>Proceed</span>
+                <ArrowRight className="size-4" />
+              </Button>
+            </DialogFooter>
+          )}
         </div>
       </DialogContent>
 

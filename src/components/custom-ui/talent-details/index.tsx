@@ -190,7 +190,7 @@ function TalentDetails(props: TalentDetailsProps) {
           )}
           {/* MEMBERS */}
 
-          {userData.role !== "student" && reports.length > 0 && (
+          {reports.length > 0 && (
             <>
               <div className="flex flex-col gap-4">
                 <span className="text-lg">Reports</span>
@@ -236,6 +236,7 @@ function TalentDetails(props: TalentDetailsProps) {
                 report={selectedReport}
                 open={!!selectedReport}
                 onOpenChange={(v) => setSelectedReport((r) => (v ? r : null))}
+                hideActions={userData.role === "student"}
               />
             </>
           )}
