@@ -144,7 +144,7 @@ function GenerateReportDialog(props: GenerateReportDialogProps) {
 
   return (
     <Dialog {...rest}>
-      <DialogContent className="flex w-full flex-col gap-4 sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-3xl 2xl:max-w-4xl">
+      <DialogContent className="flex max-h-[calc(100vh-4rem)] w-full flex-col gap-4 overflow-y-auto sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-3xl 2xl:max-w-4xl">
         <div className="flex flex-col gap-4">
           <DialogHeader>
             <DialogTitle>Generate Report</DialogTitle>
