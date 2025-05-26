@@ -88,6 +88,23 @@ function Wrapper(props: WrapperProps) {
     return unsubscribe;
   }, []);
 
+  useEffect(() => {
+    const userAgent = navigator.userAgent || navigator.vendor;
+    const isInstagram = userAgent.indexOf("Instagram") > -1;
+    const isFacebook = userAgent.indexOf("FB_IAB") > -1;
+    const isFacebookIphone = userAgent.indexOf("FBIOS") > -1;
+
+    if (isInstagram || isFacebook || isFacebookIphone) {
+      if (/iPad|iPhone|iPod/.test(userAgent)) {
+        window.location.href = `x-safari-${window.location.href}`;
+        return;
+      }
+
+      window.location.href = `intent:${window.location.href}#Intent;end`;
+      return;
+    }
+  }, []);
+
   return <>{children}</>;
 }
 
