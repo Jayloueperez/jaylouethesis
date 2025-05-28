@@ -286,6 +286,7 @@ async function generatePdf(
     useCORS: options?.canvas?.useCORS,
     logging: options?.canvas?.logging,
     scale: options?.resolution,
+    windowWidth: 1440,
     ...options?.overrides?.canvas,
   });
   const converter = new Converter(canvas, options);

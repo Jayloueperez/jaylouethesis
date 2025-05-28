@@ -195,8 +195,8 @@ function ReportDialog(props: ReportDialogProps) {
               ref={targetRef}
               className="flex flex-col gap-4 border border-gray-300 p-8"
             >
-              <div className="flex items-center justify-around gap-8">
-                <div className="flex shrink-0 items-center gap-4">
+              <div className="flex flex-col items-center justify-around gap-8 lg:flex-row">
+                <div className="flex shrink-0 flex-col items-center gap-4 lg:flex-row">
                   <Image
                     src="/images/logo.png"
                     alt="logo"
