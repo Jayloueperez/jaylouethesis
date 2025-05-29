@@ -42,7 +42,7 @@ import { generateKeywords } from "~/utils/string";
 import "@uploadcare/react-uploader/core.css";
 
 import Link from "next/link";
-import { X } from "lucide-react";
+import { Download, X } from "lucide-react";
 
 import { Label } from "~/components/ui/label";
 import { env } from "~/env";
@@ -72,6 +72,23 @@ export default function StudentProfilePage() {
     },
   });
   const { control, handleSubmit, setValue } = form;
+
+  async function handleRemoveAttachment(index: number) {
+    if (!userData) return;
+
+    try {
+      await updateUser(userData.id, {
+        attachments: userData.attachments.filter((_a, i) => i !== index),
+      });
+    } catch (error) {
+      console.log("handleRemoveAttachment error:", error);
+
+      openAlert({
+        title: "Failed",
+        description: "Failed removing attachment.",
+      });
+    }
+  }
 
   async function handleUpdateUserInfo(data: UpdateUserInfoSchema) {
     if (!userData) return;
@@ -473,16 +490,28 @@ export default function StudentProfilePage() {
           <div className="flex flex-col gap-4">
             <span>Attachments:</span>
 
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-col lg:flex-wrap items-center gap-2 lg:flex-row">
               {userData?.attachments.map((a, i) => (
-                <Link
-                  className="rounded-full border border-gray-300 px-2 py-1 text-xs"
+                <div
+                  className="flex items-center rounded-md border border-gray-300 text-xs"
                   key={`attachment-${i}`}
-                  href={a}
-                  target="_blank"
                 >
-                  {a}
-                </Link>
+                  <Link
+                    className="flex cursor-pointer items-center gap-2 px-4 py-3"
+                    href={a}
+                    target="_blank"
+                  >
+                    <span>{a}</span>
+                  </Link>
+
+                  <button
+                    type="button"
+                    className="cursor-pointer px-4 py-3"
+                    onClick={() => handleRemoveAttachment(i)}
+                  >
+                    <X className="size-4" />
+                  </button>
+                </div>
               ))}
             </div>
           </div>
