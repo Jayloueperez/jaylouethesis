@@ -42,7 +42,7 @@ import { generateKeywords } from "~/utils/string";
 import "@uploadcare/react-uploader/core.css";
 
 import Link from "next/link";
-import { Download, X } from "lucide-react";
+import { X } from "lucide-react";
 
 import { Label } from "~/components/ui/label";
 import { env } from "~/env";
@@ -490,7 +490,7 @@ export default function StudentProfilePage() {
           <div className="flex flex-col gap-4">
             <span>Attachments:</span>
 
-            <div className="flex flex-col lg:flex-wrap items-center gap-2 lg:flex-row">
+            <div className="flex flex-col items-center gap-2 lg:flex-row lg:flex-wrap">
               {userData?.attachments.map((a, i) => (
                 <div
                   className="flex items-center rounded-md border border-gray-300 text-xs"
